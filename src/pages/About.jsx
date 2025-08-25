@@ -22,7 +22,7 @@ const About = () => {
             <img 
               src={flower}
               alt="Decorative graphic" 
-              className="absolute top-0 -left-8 w-20 h-24 lg:-left-16 lg:w-58 lg:h-80" 
+              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-58 lg:h-80" 
             />
           </div>
 
@@ -60,7 +60,7 @@ const About = () => {
 
           {/* Left Column */}
           <div className="relative w-full max-w-sm mx-auto lg:w-[450px] lg:mx-0 order-1 lg:order-2">
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:size-120 lg:w-170 lg:h-180 lg:mb-65">
+            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:size-120 lg:w-160 lg:h-130 lg:mb-65">
               <img 
                 src={img}
                 alt="Vivek and Shubhra" 
@@ -70,7 +70,7 @@ const About = () => {
             <img 
               src={flower}
               alt="Decorative graphic" 
-              className="absolute top-0 -left-8 w-20 h-24 lg:-left-16 lg:w-65 lg:h-100 lg:-mt-10" 
+              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-65 lg:h-100 lg:-mt-10" 
             />
           </div>
         </div>
@@ -91,7 +91,7 @@ const About = () => {
           {/* Right Side - Text */}
           <div className="text-center lg:text-left">
             <h2 className="text-3xl lg:text-4xl font-bold mb-6 text-gray-800">Our Vision</h2>
-            <p className="text-gray-700 text-lg leading-relaxed">
+            <p className="text-gray-600 text-lg lg:text-xl leading-relaxed">
               Based in Bangalore, we're known for our unique and fun aesthetic that celebrates 
               Indian design, created for a modern global lifestyle. Everything we create is a 
               tribute in some way to our brand pillars of Wit, Warmth, Honesty, Creativity, 

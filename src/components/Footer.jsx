@@ -61,7 +61,7 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t text-center py-4 text-sm text-gray-500">
-        © Copyright 2025 <span className="font-semibold">Bigsmall Gifts Pvt. Ltd.</span> All Rights Reserved.
+        © Copyright 2025 <span className="font-semibold">Triovation</span> All Rights Reserved.
       </div>
     </footer>
   );

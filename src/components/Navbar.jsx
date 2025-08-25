@@ -22,7 +22,7 @@ const Navbar = () => {
             className="flex items-center space-x-2 cursor-pointer"
             onClick={() => navigate("/")}
           >
-            <img src={Logo} alt="Logo" className="h-12 w-auto" />
+            <img src={Logo} alt="Logo" className="h-14 w-auto" />
           </div>
 
           {/* Desktop Links */}
@@ -30,42 +30,42 @@ const Navbar = () => {
             <Link
               to="/"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors"
+              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
             >
               Home
             </Link>
             <Link
               to="/About"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors"
+              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
             >
               About Us
             </Link>
             <Link
               to="/Products"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors"
+              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
             >
               Products
             </Link>
             <Link
               to="/Service"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors"
+              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
             >
               Service
             </Link>
             <Link
               to="/Work_Education"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors"
+              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
             >
               Work & Education
             </Link>
             <Link
               to="/ContactUs"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors"
+              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
             >
               Contact Us
             </Link>
@@ -75,9 +75,9 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Search For Decor"
-                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400"
+                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 text-[17px]"
               />
-              <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500" />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500 " />
             </div>
           </div>
 

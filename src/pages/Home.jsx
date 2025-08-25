@@ -24,7 +24,7 @@ const Home = () => {
             <img 
               src={flower}
               alt="Decorative graphic" 
-              className="absolute top-0 -left-8 w-20 h-24 lg:-left-16 lg:w-58 lg:h-80" 
+              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-58 lg:h-80" 
             />
           </div>
 
@@ -55,7 +55,7 @@ const Home = () => {
           <div className="relative w-full max-w-sm mx-auto lg:w-[450px] lg:mx-0 order-1 lg:order-2"> 
             
             {/* The clipping container with the semi-circle shape */}
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:w-170 lg:h-180 lg:mb-65">
+            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:w-160 lg:h-130 lg:mb-65">
               <img 
                 src={img}
                 alt="Vivek and Shubhra" 
@@ -65,7 +65,7 @@ const Home = () => {
             <img 
               src={flower}
               alt="Decorative graphic" 
-              className="absolute top-0 -left-8 w-20 h-24 lg:-left-16 lg:w-65 lg:h-100 lg:-mt-10" 
+              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-65 lg:h-100 lg:-mt-10" 
             />
           </div>
 
@@ -74,8 +74,8 @@ const Home = () => {
 
       {/* Our Services Section */}
       <div className='flex flex-col items-center justify-center text-center px-4 md:px-8 py-12 mt-16 lg:-mt-20'>
-        <h1 className='text-2xl font-bold leading-relaxed mb-4'>Our Services</h1>
-        <p className="max-w-3xl mx-auto">
+        <h1 className='text-4xl font-bold mb-6 text-gray-800 leading-relaxed mb-4'>Our Services</h1>
+        <p className="max-w-3xl mx-auto text-gray-600 text-lg lg:text-xl leading-relaxed">
           We blend creativity with technology to deliver exceptional solutions. With a team of skilled professionals,
           we've been transforming ideas into reality since 2024. Our commitment to quality, innovation, and client satisfaction sets us apart as.
         </p>
@@ -84,69 +84,69 @@ const Home = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-20 mt-10 mb-20 lg:mb-30 px-4 lg:ml-15">
 
         <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-24 h-24 lg:w-90 lg:h-90 mb-3">
+          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 mb-4 lg:mb-3">
             <img 
               src={img}
-              alt="Vivek and Shubhra" 
+              alt="Corporate Gifting" 
               className="w-full h-full object-cover" 
             />
           </div>
-          <p className="text-lg font-semibold text-gray-800">Corporate Gifting</p>
+          <p className="text-2xl font-semibold text-gray-800">Corporate Gifting</p>
         </div>
 
         <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-24 h-24 lg:w-90 lg:h-90 mb-3">
+          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 mb-4 lg:mb-3">
             <img 
               src={img}
-              alt="Vivek and Shubhra" 
+              alt="Customized Gifting" 
               className="w-full h-full object-cover" 
             />
           </div>
-          <p className="text-lg font-semibold text-gray-800">Customized Gifting</p>
+          <p className="text-2xl font-semibold text-gray-800">Customized Gifting</p>
         </div>
 
         <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-24 h-24 lg:w-90 lg:h-90 mb-3">
+          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 mb-4 lg:mb-3">
             <img 
               src={img}
-              alt="Vivek and Shubhra" 
+              alt="Design Consultancy" 
               className="w-full h-full object-cover" 
             />
           </div>
-          <p className="text-lg font-semibold text-gray-800">Design Consultancy</p>
+          <p className="text-2xl font-semibold text-gray-800">Design Consultancy</p>
         </div>
 
         <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-24 h-24 lg:w-90 lg:h-90 mb-3">
+          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 mb-4 lg:mb-3">
             <img 
               src={img}
-              alt="Vivek and Shubhra" 
+              alt="Learn and Fabricate" 
               className="w-full h-full object-cover" 
             />
           </div>
-          <p className="text-lg font-semibold text-gray-800">Learn and Fabricate</p>
+          <p className="text-2xl font-semibold text-gray-800">Learn and Fabricate</p>
         </div>
 
         <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-24 h-24 lg:w-90 lg:h-90 mb-3">
+          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 mb-4 lg:mb-3">
             <img 
               src={img}
-              alt="Vivek and Shubhra" 
+              alt="Learning zone" 
               className="w-full h-full object-cover" 
             />
           </div>
-          <p className="text-lg font-semibold text-gray-800">Learning zone</p>
+          <p className="text-2xl font-semibold text-gray-800">Learning zone</p>
         </div>
 
         <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-24 h-24 lg:w-90 lg:h-90 mb-3">
+          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 mb-4 lg:mb-3">
             <img 
               src={img}
-              alt="Vivek and Shubhra" 
+              alt="Education" 
               className="w-full h-full object-cover" 
             />
           </div>
-          <p className="text-lg font-semibold text-gray-800">Education</p>
+          <p className="text-2xl font-semibold text-gray-800">Education</p>
         </div>
 
       </div>
