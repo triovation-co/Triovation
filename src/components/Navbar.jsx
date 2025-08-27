@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Earth, Search, Menu, X } from "lucide-react"; // Added Menu + X icons
+import { Earth, Search, Menu, X } from "lucide-react";
 import Logo from "../assets/Logo.png";
 
 const Navbar = () => {
@@ -19,7 +19,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between px-6 py-3">
           {/* Left: Logo */}
           <div
-            className="flex items-center space-x-2 cursor-pointer"
+            className="flex items-center space-x-2 cursor-pointer transition-transform hover:scale-105"
             onClick={() => navigate("/")}
           >
             <img src={Logo} alt="Logo" className="h-14 w-auto" />
@@ -30,108 +30,127 @@ const Navbar = () => {
             <Link
               to="/"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-[17px] relative group"
             >
               Home
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/About"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-[17px] relative group"
             >
               About Us
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/Products"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-[17px] relative group"
             >
               Products
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/Service"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-[17px] relative group"
             >
               Service
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/Work_Education"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-[17px] relative group"
             >
               Work & Education
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
             </Link>
             <Link
               to="/ContactUs"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500 transition-colors text-[17px]"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-[17px] relative group"
             >
               Contact Us
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
             </Link>
 
             {/* Search Box */}
-            <div className="relative flex">
+            <div className="relative flex mr-10 ">
               <input
                 type="text"
                 placeholder="Search For Decor"
-                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 text-[17px]"
+                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 text-[17px] transition-all duration-300 focus:shadow-md focus:border-red-300"
               />
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500 " />
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500 transition-colors duration-300" />
             </div>
           </div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-gray-700"
+            className="md:hidden text-gray-700 transition-all duration-500 hover:text-red-500 hover:scale-110"
             onClick={() => setIsOpen(!isOpen)}
           >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
+            <div className="relative">
+              <Menu 
+                size={28} 
+                className={`transition-all duration-300 ${isOpen ? 'opacity-0 rotate-180 scale-0' : 'opacity-100 rotate-0 scale-100'}`}
+              />
+              <X 
+                size={28} 
+                className={`absolute top-0 left-0 transition-all duration-500 ${isOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 rotate-180 scale-0'}`}
+              />
+            </div>
           </button>
         </div>
 
         {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden px-6 pb-4 flex flex-col space-y-4 bg-white border-t">
+        <div className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+          isOpen 
+            ? 'max-h-96 opacity-100' 
+            : 'max-h-0 opacity-0'
+        }`}>
+          <div className="px-6 pb-4 flex flex-col space-y-4 bg-white border-t">
             <Link
               to="/"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
             >
               Home
             </Link>
             <Link
               to="/About"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
             >
               About Us
             </Link>
             <Link
               to="/Products"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
             >
               Products
             </Link>
             <Link
               to="/Service"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
             >
               Service
             </Link>
             <Link
               to="/Work_Education"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
             >
               Work & Education
             </Link>
             <Link
               to="/ContactUs"
               onClick={() => setIsOpen(false)}
-              className="text-gray-700 font-medium hover:text-red-500"
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
             >
               Contact Us
             </Link>
@@ -141,12 +160,12 @@ const Navbar = () => {
               <input
                 type="text"
                 placeholder="Search For Decor"
-                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 w-full"
+                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 w-full transition-all duration-300 focus:shadow-md focus:border-red-300"
               />
-              <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500" />
+              <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500 transition-colors duration-300" />
             </div>
           </div>
-        )}
+        </div>
       </nav>
     </header>
   );
