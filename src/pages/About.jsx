@@ -8,11 +8,11 @@ const About = () => {
     <>
       {/* First Section - Brand Description */}
       <main className="container mx-auto mt-5 px-4 md:px-8 bg-white min-h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-60">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-32 2xl:gap-60">
           
           {/* Left Column */}
-          <div className="relative w-full max-w-sm mx-auto lg:w-[450px] lg:mx-0">
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] lg:size-120 lg:w-160 lg:h-130">
+          <div className="relative w-full max-w-sm mx-auto lg:w-80 xl:w-96 2xl:w-[450px] lg:mx-0">
+            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] lg:w-80 lg:h-80 xl:w-130 xl:h-130 2xl:w-160 2xl:h-130">
               <img 
                 src={img}
                 alt="Vivek and Shubhra" 
@@ -22,13 +22,13 @@ const About = () => {
             <img 
               src={flower}
               alt="Decorative graphic" 
-              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-58 lg:h-80" 
+              className="absolute top-0 -left-6 w-24 h-32 lg:-left-12 lg:w-28 lg:h-36 xl:-left-15 xl:w-55 xl:h-90 xl:-mt-10 2xl:w-58 2xl:h-80" 
             />
           </div>
 
           {/* Right Column */}
-          <div className='mt-8 lg:mt-30 lg:mr-30 text-center lg:text-left'>
-            <h1 className="text-3xl lg:text-4xl font-bold mb-6 lg:mb-8 text-gray-800">Brand Description</h1>
+          <div className='mt-8 lg:mt-24 xl:mt-28 2xl:mt-30 lg:mr-16 xl:mr-24 2xl:mr-30 text-center lg:text-left'>
+            <h1 className="text-3xl lg:text-4xl font-bold mb-6 lg:mb-8 text-gray-800">Our Story</h1>
             <p className="text-gray-600 text-lg lg:text-xl mb-4 leading-relaxed">
               It all began (like all good things do) over a (good) bottle of wine. 
               Vivek and Shubhra were tired of all the random souvenirs that India had to offer. 
@@ -44,12 +44,12 @@ const About = () => {
       </main>
 
       {/* Second Section - Why Choose Us */}
-      <main className="container mx-auto px-4 md:px-8 mt-16 lg:-mt-30 min-h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-100 items-center">
+      <main className="container mx-auto px-4 md:px-8 mt-16 lg:-mt-24 xl:-mt-28 2xl:-mt-30 min-h-screen flex items-center justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-60 2xl:gap-100 items-center">
           
           {/* Right Column */}
           <div className="text-center lg:text-left order-2 lg:order-1">
-            <h1 className="text-3xl lg:text-4xl font-bold mb-6 text-gray-800">Why Choose Us</h1>
+            <h1 className="text-3xl lg:text-4xl font-bold mb-6 text-gray-800">Our Approach</h1>
             <p className="text-gray-600 text-lg lg:text-xl mb-4 leading-relaxed">
               We blend creativity with technology to deliver exceptional solutions.
               With a team of skilled professionals, we've been transforming ideas
@@ -59,8 +59,8 @@ const About = () => {
           </div>
 
           {/* Left Column */}
-          <div className="relative w-full max-w-sm mx-auto lg:w-[450px] lg:mx-0 order-1 lg:order-2">
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:size-120 lg:w-160 lg:h-130 lg:mb-65">
+          <div className="relative w-full max-w-sm mx-auto lg:w-80 xl:w-96 2xl:w-[450px] lg:mx-0 order-1 lg:order-2">
+            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:w-80 lg:h-80 lg:mb-12 xl:w-130 xl:mr-4 xl:h-120 xl:mb-60 2xl:w-160 2xl:h-130 2xl:mb-65">
               <img 
                 src={img}
                 alt="Vivek and Shubhra" 
@@ -70,7 +70,7 @@ const About = () => {
             <img 
               src={flower}
               alt="Decorative graphic" 
-              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-65 lg:h-100 lg:-mt-10" 
+              className="absolute top-0 -left-6 w-24 h-32 lg:-left-12 lg:w-32 lg:h-40 lg:-mt-2 xl:-left-15 xl:w-55 xl:h-90 xl:-mt-10 2xl:-left-16 2xl:w-65 2xl:h-100 2xl:-mt-10" 
             />
           </div>
         </div>
@@ -78,14 +78,14 @@ const About = () => {
 
       {/* Third Section - Our Vision */}
       <section className="py-8 lg:py-16">
-        <div className="container mx-auto px-4 md:px-6 mt-16 lg:-mt-30 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-60 items-center">
+        <div className="container mx-auto px-4 md:px-6 mt-16 lg:-mt-24 xl:-mt-28 2xl:-mt-30 grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-32 2xl:gap-60 items-center">
           
           {/* Left Side - Image Grid */}
-          <div className="grid grid-cols-2 gap-4 lg:gap-30 max-w-md mx-auto lg:max-w-none">
-            <img src={design} alt="Vision 1" className="rounded-t-full overflow-hidden shadow-md w-full aspect-square lg:w-80 lg:h-80" />
-            <img src={design} alt="Vision 2" className="rounded-t-full overflow-hidden shadow-md w-full aspect-square lg:w-80 lg:h-80" />
-            <img src={design} alt="Vision 3" className="rounded-t-full overflow-hidden shadow-md w-full aspect-square lg:w-80 lg:h-80" />
-            <img src={design} alt="Vision 4" className="rounded-t-full overflow-hidden shadow-md w-full aspect-square lg:w-80 lg:h-80" />
+          <div className="grid grid-cols-2 gap-4 lg:gap-6 xl:gap-8 2xl:gap-30 max-w-md mx-auto lg:max-w-none">
+            <img src={design} alt="Vision 1" className="rounded-t-full shadow-md w-full aspect-square object-cover lg:w-32 lg:h-32 xl:w-40 xl:h-40 2xl:w-80 2xl:h-80" />
+            <img src={design} alt="Vision 2" className="rounded-t-full shadow-md w-full aspect-square object-cover lg:w-32 lg:h-32 xl:w-40 xl:h-40 2xl:w-80 2xl:h-80" />
+            <img src={design} alt="Vision 3" className="rounded-t-full shadow-md w-full aspect-square object-cover lg:w-32 lg:h-32 xl:w-40 xl:h-40 2xl:w-80 2xl:h-80" />
+            <img src={design} alt="Vision 4" className="rounded-t-full shadow-md w-full aspect-square object-cover lg:w-32 lg:h-32 xl:w-40 xl:h-40 2xl:w-80 2xl:h-80" />
           </div>
 
           {/* Right Side - Text */}
