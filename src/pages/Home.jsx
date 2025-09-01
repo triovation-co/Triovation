@@ -15,7 +15,7 @@ const Home = () => {
           <div className="relative w-full max-w-sm mx-auto lg:w-[450px] lg:mx-0 xl:w-[450px] xl:mx-0"> 
             
             {/* The clipping container with the semi-circle shape */}
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] lg:w-160 lg:h-130 xl:w-160 xl:h-130">
+            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] lg:w-80 lg:h-80 xl:w-130 xl:h-130 xl:mb-20 xl:ml-20 2xl:w-160 2xl:h-130 2xl:-ml-15">
               <img 
                 src={img}
                 alt="Vivek and Shubhra" 
@@ -25,7 +25,7 @@ const Home = () => {
             <img 
               src={flower}
               alt="Decorative graphic" 
-              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-58 lg:h-80 xl:-left-16 xl:w-58 xl:h-80" 
+              className="absolute top-0 -left-6 w-24 h-32 lg:-left-12 lg:w-28 lg:h-36 xl:-left-2 xl:w-55 xl:h-90 xl:-mt-10 2xl:w-58 2xl:h-80 2xl:-ml-25" 
             />
           </div>
 

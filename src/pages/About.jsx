@@ -12,7 +12,7 @@ const About = () => {
           
           {/* Left Column */}
           <div className="relative w-full max-w-sm mx-auto lg:w-80 xl:w-96 2xl:w-[450px] lg:mx-0">
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] lg:w-80 lg:h-80 xl:w-130 xl:h-130 2xl:w-160 2xl:h-130">
+            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] lg:w-80 lg:h-80 xl:w-130 xl:h-130 xl:mb-20 2xl:w-160 2xl:h-130">
               <img 
                 src={img}
                 alt="Vivek and Shubhra" 
@@ -60,7 +60,7 @@ const About = () => {
 
           {/* Left Column */}
           <div className="relative w-full max-w-sm mx-auto lg:w-80 xl:w-96 2xl:w-[450px] lg:mx-0 order-1 lg:order-2">
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:w-80 lg:h-80 lg:mb-12 xl:w-130 xl:mr-4 xl:h-120 xl:mb-60 2xl:w-160 2xl:h-130 2xl:mb-65">
+            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:w-80 lg:h-80 lg:mb-12 xl:w-130 xl:mr-4 xl:h-120 xl:mb-30 2xl:w-160 2xl:h-130 2xl:mb-65">
               <img 
                 src={img}
                 alt="Vivek and Shubhra" 
