@@ -1,9 +1,15 @@
 import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 import { categories } from "../assets/data.jsx";
 
 const Category_page = () => {
   const { categoryName } = useParams();
   const decodedName = decodeURIComponent(categoryName);
+
+  // Scroll to top when component mounts or category changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [categoryName]); // Re-run when categoryName changes
 
   // find category object
   const category = categories.find(cat => cat.title === decodedName);
