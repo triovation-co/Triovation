@@ -38,6 +38,128 @@ const sections = [
   },
 ];
 
+// New data for the Raksha Bandhan Gifts layout
+const rakhiBandhanGifts = [
+  {
+    id: 1,
+    name: "Personalized Caricature Wooden Print With Easel",
+    description: "COD Not Available",
+    price: 1999,
+    originalPrice: null,
+    discount: null,
+    rating: null,
+    reviews: null,
+    image: image2,
+    buyNowText: "BUY NOW"
+  },
+  {
+    id: 2,
+    name: "Digital Photo & Video Frame",
+    description: "daughter to daughter, now you get love from",
+    price: 2016,
+    originalPrice: null,
+    discount: null,
+    rating: 5.0,
+    reviews: 16,
+    image: image2,
+    buyNowText: "BUY NOW",
+    savePercent: "40%"
+  },
+  {
+    id: 3,
+    name: "Reel Bro Rakhi",
+    description: "",
+    price: 299,
+    originalPrice: null,
+    discount: null,
+    rating: 5.0,
+    reviews: 5,
+    image: image2,
+    buyNowText: "BUY NOW"
+  },
+  {
+    id: 4,
+    name: "Little Man Cave Hanging Board",
+    description: "",
+    price: 299,
+    originalPrice: null,
+    discount: null,
+    rating: null,
+    reviews: null,
+    image: image2,
+    buyNowText: "BUY NOW",
+    savePercent: "25%"
+  },
+  {
+    id: 5,
+    name: "Blend of Elegance Gift Set",
+    description: "Every's body smoothing balm and smooth Lime Moisturising luxury on the go!",
+    price: 2499,
+    originalPrice: null,
+    discount: null,
+    rating: null,
+    reviews: null,
+    image: image2,
+    buyNowText: "BUY NOW"
+  },
+  {
+    id: 6,
+    name: "Fabulous Boy Badge With Magnet",
+    description: "",
+    price: 99,
+    originalPrice: null,
+    discount: null,
+    rating: null,
+    reviews: null,
+    image: image2,
+    buyNowText: "BUY NOW"
+  },
+  {
+    id: 7,
+    name: "Netflix Bro Unique Rakhi",
+    description: "",
+    price: 299,
+    originalPrice: 399,
+    discount: null,
+    rating: 5.0,
+    reviews: 5,
+    image: image2,
+    buyNowText: "BUY NOW"
+  },
+  {
+    id: 8,
+    name: "Desi Bhai Latest Rakhi",
+    description: "",
+    price: 299,
+    originalPrice: 399,
+    discount: null,
+    rating: 5.0,
+    reviews: 1,
+    image: image2,
+    buyNowText: "BUY NOW"
+  }
+];
+
+// Star Rating Component
+const StarRating = ({ rating, reviews }) => {
+  if (!rating) return null;
+  
+  return (
+    <div className="flex items-center gap-1 mb-2">
+      <div className="flex">
+        {[...Array(5)].map((_, i) => (
+          <span key={i} className="text-yellow-400 text-sm">
+            ★
+          </span>
+        ))}
+      </div>
+      <span className="text-sm text-gray-600">
+        {rating} ({reviews} reviews)
+      </span>
+    </div>
+  );
+};
+
 const Products = () => {
   return (
     <main className="mx-auto px-15 py-12">
@@ -100,6 +222,72 @@ const Products = () => {
       <img src={image2} alt="" className="w-90 h-90 object-cover group-hover:scale-105 transition-transform duration-300"/>
       <p className="text-xl text-center font-semibold text-gray-600">Gifts For Women</p>
     </div>
+  </div>
+
+  {/* NEW RAKSHA BANDHAN GIFTS LAYOUT */}
+  <div className="flex items-center my-10">
+    <div className="flex-grow border-t-2 border-gray-300"></div>
+    <span className="mx-4 text-gray-800 font-semibold text-xl"> Raksha Bandhan Gifts </span>
+    <div className="flex-grow border-t-2 border-gray-300"></div>
+  </div>
+
+  {/* Raksha Bandhan Products Grid */}
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
+    {rakhiBandhanGifts.map((product) => (
+      <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col">
+        {/* Product Image with Save Badge */}
+        <div className="relative">
+          <img 
+            src={product.image} 
+            alt={product.name} 
+            className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+          />
+          {product.savePercent && (
+            <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+              Save {product.savePercent}
+            </div>
+          )}
+        </div>
+        
+        {/* Details */}
+        <div className="p-4 flex flex-col flex-grow text-center">
+          <h2 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">
+            {product.name}
+          </h2>
+          <p className="text-gray-600 text-xs sm:text-sm mb-3 leading-relaxed">
+            {product.description || `A unique and quirky way to preserve your memories — gift your loved ones this ${product.name}.`}
+          </p>
+
+          {/* Rating */}
+          <div className="flex justify-center items-center text-xs sm:text-sm mb-2">
+            {product.rating ? (
+              <>⭐ <span className="ml-1">{product.rating} ({product.reviews} reviews)</span></>
+            ) : (
+              <>⭐ <span className="ml-1">5.0 (2 reviews)</span></>
+            )}
+          </div>
+
+          {/* Price */}
+          <p className="font-medium text-gray-800 mb-4 text-sm sm:text-base">
+            {product.originalPrice ? (
+              <>
+                <span className="line-through text-gray-500 mr-2">₹{product.originalPrice}</span>
+                from ₹{product.price}
+              </>
+            ) : (
+              `from ₹${product.price}`
+            )}
+          </p>
+
+          {/* Add to Cart */}
+          <div className="w-full flex justify-center">
+            <button className="bg-blue-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-md rounded-md hover:bg-blue-600 w-auto">
+              Buy Now
+            </button>
+          </div>
+        </div>
+      </div>
+    ))}
   </div>
    
 </div>

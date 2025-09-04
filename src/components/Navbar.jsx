@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Menu, X } from "lucide-react";
-import Logo from "../assets/Logo.png";
-
-// Using a placeholder for the logo since we can't import the actual image
+import Logo from "../assets/Logo.png"
 
 // Dropdown menu data - Products
 const menuData = {
@@ -61,7 +59,8 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [expandedCategory, setExpandedCategory] = useState(null);
+  // Changed: Use Set to track multiple expanded categories
+  const [expandedCategories, setExpandedCategories] = useState(new Set());
   const timeoutRef = useRef(null);
 
   // Scroll detection
@@ -94,8 +93,22 @@ const Navbar = () => {
     // Set a delay before hiding the dropdown
     timeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
-      setExpandedCategory(null); // reset expanded when closing
+      // Changed: Clear all expanded categories when dropdown closes
+      setExpandedCategories(new Set());
     }, 300); // 300ms delay - you can adjust this value
+  };
+
+  // Changed: New function to toggle category expansion
+  const toggleCategoryExpansion = (categoryTitle) => {
+    setExpandedCategories(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(categoryTitle)) {
+        newSet.delete(categoryTitle);
+      } else {
+        newSet.add(categoryTitle);
+      }
+      return newSet;
+    });
   };
 
   // Clean up timeout on component unmount
@@ -120,7 +133,7 @@ const Navbar = () => {
       <nav className="w-full bg-white shadow-sm relative">
         <div className="flex items-center justify-between px-6 py-3">
           {/* Left: Logo */}
-          <div
+ <div
             className="flex items-center space-x-2 cursor-pointer transition-transform hover:scale-105"
             onClick={() => (window.location.href = "/")}
           >
@@ -149,13 +162,12 @@ const Navbar = () => {
                   {/* Dropdown Menu - Only for Products */}
                   {item === "Products" && activeDropdown === item && (
                     <div
-                      className="absolute top-full left-0 right-0 mt-2 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
+                      className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
                       style={{
                         animation: "fadeIn 0.3s ease-out forwards",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                        width: "90vw",
-                        maxWidth: "1200px"
+                        width: "100vw",
+                        left: "0",
+                        transform: "none"
                       }}
                       onMouseEnter={() => {
                         // Clear timeout when mouse enters dropdown
@@ -168,7 +180,8 @@ const Navbar = () => {
                       <div className="p-8">
                         <div className="grid grid-cols-6 gap-8">
                           {menuData.Products.categories.map((category, idx) => {
-                            const isExpanded = expandedCategory === category.title;
+                            // Changed: Check if this category is in the expanded set
+                            const isExpanded = expandedCategories.has(category.title);
                             const itemsToShow = isExpanded
                               ? category.allItems
                               : category.defaultItems;
@@ -194,11 +207,7 @@ const Navbar = () => {
                                 {/* View All / View Less toggle */}
                                 {category.allItems.length > category.defaultItems.length && (
                                   <button
-                                    onClick={() =>
-                                      setExpandedCategory(
-                                        isExpanded ? null : category.title
-                                      )
-                                    }
+                                    onClick={() => toggleCategoryExpansion(category.title)}
                                     className="text-red-500 text-sm font-medium hover:text-red-600 transition-colors"
                                   >
                                     {isExpanded ? "View Less ↑" : "View All →"}
@@ -289,11 +298,11 @@ const Navbar = () => {
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateX(-50%) translateY(-10px);
+            transform: translateY(-10px);
           }
           to {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(0);
           }
         }
       `}</style>
