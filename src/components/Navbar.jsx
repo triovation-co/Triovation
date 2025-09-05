@@ -156,16 +156,34 @@ const Navbar = () => {
                               : category.defaultItems;
 
                             return (
-                              <div key={idx} className="space-y-4 text-center">
-                                <h3 className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide pb-2">
-                                  {category.title}
+                              <div key={idx} className="space-y-4">
+                                <h3 className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide pb-2 text-center">
+                                  {(() => {
+                                    // Only break specific titles as shown in the image
+                                    if (category.title === "Customisation & Merchandising") {
+                                      return (
+                                        <>
+                                          Customisation &<br />Merchandising
+                                        </>
+                                      );
+                                    } else if (category.title === "Design, prototyping & Consultancy") {
+                                      return (
+                                        <>
+                                          Design, prototyping &<br />Consultancy
+                                        </>
+                                      );
+                                    } 
+                                     else {
+                                      return category.title;
+                                    }
+                                  })()}
                                 </h3>
                                 <ul className="space-y-2">
                                   {itemsToShow.map((subItem, subIdx) => (
                                     <li key={subIdx}>
                                       <a
                                         href={`/category/${encodeURIComponent(subItem)}`}
-                                        className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-center hover:scale-105 transform transition-transform"
+                                        className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
                                       >
                                         {subItem}
                                       </a>
