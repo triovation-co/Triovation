@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Menu, X } from "lucide-react";
-import Logo from "../assets/Logo.png"
+import Logo from "../assets/Logo.png";
 
-// Dropdown menu data - Products
 const menuData = {
   Products: {
     categories: [
@@ -59,7 +58,6 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  // Changed: Use Set to track multiple expanded categories
   const [expandedCategories, setExpandedCategories] = useState(new Set());
   const timeoutRef = useRef(null);
 
@@ -79,69 +77,51 @@ const Navbar = () => {
   }, [lastScrollY]);
 
   const handleMenuHover = (item) => {
-    // Clear any existing timeout
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    
-    if (menuData[item]) {
-      setActiveDropdown(item);
-    }
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    if (menuData[item]) setActiveDropdown(item);
   };
 
   const handleMenuLeave = () => {
-    // Set a delay before hiding the dropdown
     timeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
-      // Changed: Clear all expanded categories when dropdown closes
       setExpandedCategories(new Set());
-    }, 300); // 300ms delay - you can adjust this value
+    }, 300);
   };
 
-  // Changed: New function to toggle category expansion
   const toggleCategoryExpansion = (categoryTitle) => {
     setExpandedCategories(prev => {
       const newSet = new Set(prev);
-      if (newSet.has(categoryTitle)) {
-        newSet.delete(categoryTitle);
-      } else {
-        newSet.add(categoryTitle);
-      }
+      newSet.has(categoryTitle) ? newSet.delete(categoryTitle) : newSet.add(categoryTitle);
       return newSet;
     });
   };
 
-  // Clean up timeout on component unmount
   useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
+    return () => timeoutRef.current && clearTimeout(timeoutRef.current);
   }, []);
 
   return (
     <header
-      className={`w-auto sticky top-0 z-50 transition-transform duration-300 ${
+      className={`w-full sticky top-0 z-50 transition-transform duration-300 ${
         showNavbar ? "translate-y-0" : "-translate-y-full"
       }`}
     >
       {/* Top Bar */}
-      <div className="w-full bg-[#8C91D1] text-white text-xs text-center py-4"></div>
+      <div className="w-full bg-[#8C91D1] text-white text-xs sm:text-sm md:text-base text-center py-2 md:py-4"></div>
 
       {/* Main Navbar */}
       <nav className="w-full bg-white shadow-sm relative">
-        <div className="flex items-center justify-between px-6 py-3">
-          {/* Left: Logo */}
- <div
-            className="flex items-center space-x-2 cursor-pointer transition-transform hover:scale-105"
+        <div className="flex items-center justify-between px-4 sm:px-6 md:px-8 py-2 md:py-3">
+          {/* Logo */}
+          <div
+            className="flex items-center cursor-pointer transition-transform hover:scale-105"
             onClick={() => (window.location.href = "/")}
           >
-            <img src={Logo} alt="Logo" className="h-14 w-auto" />
+            <img src={Logo} alt="Logo" className="h-10 sm:h-12 md:h-14 w-auto" />
           </div>
 
           {/* Desktop Links */}
-          <div className="hidden md:flex items-center space-x-8 ml-auto">
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
             {["Home", "About", "Products", "Service", "Work_Education", "Contact Us"].map(
               (item, i) => (
                 <div
@@ -153,42 +133,31 @@ const Navbar = () => {
                   <a
                     href={`/${item === "Home" ? "" : item}`}
                     onClick={() => setIsOpen(false)}
-                    className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-[17px] relative group"
+                    className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-sm lg:text-[17px] relative group"
                   >
                     {item.replace("_", " ")}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                   </a>
 
-                  {/* Dropdown Menu - Only for Products */}
+                  {/* Dropdown Menu */}
                   {item === "Products" && activeDropdown === item && (
                     <div
                       className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
-                      style={{
-                        animation: "fadeIn 0.3s ease-out forwards",
-                        width: "100vw",
-                        left: "0",
-                        transform: "none"
-                      }}
-                      onMouseEnter={() => {
-                        // Clear timeout when mouse enters dropdown
-                        if (timeoutRef.current) {
-                          clearTimeout(timeoutRef.current);
-                        }
-                      }}
+                      style={{ animation: "fadeIn 0.3s ease-out forwards" }}
+                      onMouseEnter={() => timeoutRef.current && clearTimeout(timeoutRef.current)}
                       onMouseLeave={handleMenuLeave}
                     >
-                      <div className="p-8">
-                        <div className="grid grid-cols-6 gap-8">
+                      <div className="p-6 sm:p-8">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8">
                           {menuData.Products.categories.map((category, idx) => {
-                            // Changed: Check if this category is in the expanded set
                             const isExpanded = expandedCategories.has(category.title);
                             const itemsToShow = isExpanded
                               ? category.allItems
                               : category.defaultItems;
 
                             return (
-                              <div key={idx} className="space-y-4">
-                                <h3 className="font-semibold text-gray-900 text-sm uppercase tracking-wide border-b border-red-200 pb-2">
+                              <div key={idx} className="space-y-4 text-center">
+                                <h3 className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide pb-2">
                                   {category.title}
                                 </h3>
                                 <ul className="space-y-2">
@@ -196,19 +165,17 @@ const Navbar = () => {
                                     <li key={subIdx}>
                                       <a
                                         href={`/category/${encodeURIComponent(subItem)}`}
-                                        className="text-gray-600 hover:text-red-500 transition-colors duration-200 text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
+                                        className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-center hover:scale-105 transform transition-transform"
                                       >
                                         {subItem}
                                       </a>
                                     </li>
                                   ))}
                                 </ul>
-
-                                {/* View All / View Less toggle */}
                                 {category.allItems.length > category.defaultItems.length && (
                                   <button
                                     onClick={() => toggleCategoryExpansion(category.title)}
-                                    className="text-red-500 text-sm font-medium hover:text-red-600 transition-colors"
+                                    className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
                                   >
                                     {isExpanded ? "View Less ↑" : "View All →"}
                                   </button>
@@ -225,13 +192,13 @@ const Navbar = () => {
             )}
 
             {/* Search Box */}
-            <div className="relative flex mr-10">
+            <div className="relative flex mr-6 lg:mr-10">
               <input
                 type="text"
                 placeholder="Search For Decor"
-                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 text-[17px] transition-all duration-300 focus:shadow-md focus:border-red-300"
+                className="pl-10 pr-4 py-1.5 border rounded-md text-sm lg:text-[17px] w-full max-w-xs focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-300 focus:shadow-md focus:border-red-300"
               />
-              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500 transition-colors duration-300" />
+              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
             </div>
           </div>
 
@@ -244,17 +211,13 @@ const Navbar = () => {
               <Menu
                 size={28}
                 className={`transition-all duration-300 ${
-                  isOpen
-                    ? "opacity-0 rotate-180 scale-0"
-                    : "opacity-100 rotate-0 scale-100"
+                  isOpen ? "opacity-0 rotate-180 scale-0" : "opacity-100 rotate-0 scale-100"
                 }`}
               />
               <X
                 size={28}
                 className={`absolute top-0 left-0 transition-all duration-500 ${
-                  isOpen
-                    ? "opacity-100 rotate-0 scale-100"
-                    : "opacity-0 rotate-180 scale-0"
+                  isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-180 scale-0"
                 }`}
               />
             </div>
@@ -264,11 +227,11 @@ const Navbar = () => {
         {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+            isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          <div className="px-6 pb-4 flex flex-col space-y-4 bg-white border-t">
-            {["Home", "About", "Products", "Service", "Work_Education", "ContactUs"].map(
+          <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
+            {["Home", "About", "Products", "Service", "Work_Education", "Contact Us"].map(
               (item, i) => (
                 <a
                   key={i}
@@ -281,14 +244,14 @@ const Navbar = () => {
               )
             )}
 
-            {/* Search Box for Mobile */}
+            {/* Search Box Mobile */}
             <div className="relative flex">
               <input
                 type="text"
                 placeholder="Search For Decor"
-                className="pl-10 pr-4 py-1.5 border rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 w-full transition-all duration-300 focus:shadow-md focus:border-red-300"
+                className="pl-10 pr-4 py-1.5 border rounded-md text-sm w-full focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-300 focus:shadow-md focus:border-red-300"
               />
-              <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500 transition-colors duration-300" />
+              <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500" />
             </div>
           </div>
         </div>

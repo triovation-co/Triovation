@@ -2,13 +2,27 @@ import React from 'react'
 import image1 from '../assets/image1.jpg'
 
 const Service = () => {
+  // Smooth scroll function
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   return (
     <>
       <div className="mx-auto flex justify-center">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-15 mt-20 mx-20">
           
-          {/* Card 1 */}
-          <div className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer">
+          {/* Card 1 - Design Consultancy */}
+          <div 
+            className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+            onClick={() => scrollToSection('design-consultancy')}
+          >
             <img
               src={image1}
               className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-300"
@@ -21,8 +35,11 @@ const Service = () => {
             </div>
           </div>
 
-          {/* Card 2 */}
-          <div className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer">
+          {/* Card 2 - Learning Zone */}
+          <div 
+            className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+            onClick={() => scrollToSection('learning-zone')}
+          >
             <img
               src={image1}
               className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-300"
@@ -35,8 +52,11 @@ const Service = () => {
             </div>
           </div>
 
-          {/* Card 3 */}
-          <div className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer">
+          {/* Card 3 - Learn and Make */}
+          <div 
+            className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+            onClick={() => scrollToSection('learn-and-make')}
+          >
             <img
               src={image1}
               className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-300"
@@ -53,7 +73,7 @@ const Service = () => {
       </div>
       
       {/* Design Consultancy Section */}
-      <main className="container mx-auto px-4 md:px-8 xl:px-8 mt-20 lg:mt-25 xl:mt-25 min-h-auto flex items-center justify-center">
+      <main id="design-consultancy" className="container mx-auto px-4 md:px-8 xl:px-8 mt-20 lg:mt-25 xl:mt-25 min-h-auto flex items-center justify-center scroll-mt-20">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 mb-30 items-center mt-70">
                 
                 {/* Right Column: Text Description */}
@@ -83,7 +103,7 @@ const Service = () => {
             </main>
 
        {/* Learning Zone Section */}
-       <main className="mx-auto max-w-[1440px] min-h-auto md:px-8 xl:px-8 flex items-center justify-center mt-10">
+       <main id="learning-zone" className="mx-auto max-w-[1440px] min-h-auto md:px-8 xl:px-8 flex items-center justify-center mt-10 scroll-mt-20">
       
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 mb-30">
                 
@@ -112,7 +132,7 @@ const Service = () => {
             </main>
       
             {/* Learn And Make Section */}
-            <main className="container mx-auto px-4 md:px-8 xl:px-8 mt-10 min-h-auto flex items-center justify-center">
+            <main id="learn-and-make" className="container mx-auto px-4 md:px-8 xl:px-8 mt-10 min-h-auto flex items-center justify-center scroll-mt-20">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 items-center">
                 
                 {/* Right Column: Text Description */}
