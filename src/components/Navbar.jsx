@@ -15,7 +15,7 @@ const menuData = {
         ]
       },
       {
-        title: "Customisation & Merchandising",
+        title: "Customisation & <br />&nbsp;Merchandising",
         defaultItems: ["Ceramic Cups", "Keychains", "Lithophane Frame", "T-shirts"],
         allItems: [
           "Ceramic Cups", "Keychains", "Lithophane Frame", "T-shirts", "Bottle engraving",
@@ -37,7 +37,7 @@ const menuData = {
         allItems: ["Kinetic Clock", "Sanitiser Dispenser", "Small Furniture", "Touch Lamps"]
       },
       {
-        title: "Design, prototyping & Consultancy",
+        title: "Design, Prototyping <br /> &nbsp; &nbsp;  & Consultancy",
         defaultItems: ["Design Consultancy", "Branding", "UI/UX", "Zine"],
         allItems: [
           "Design Consultancy", "Branding", "UI/UX", "Zine", "Books", "Poster & Infographics",
@@ -45,7 +45,7 @@ const menuData = {
         ]
       },
       {
-        title: "Education & Workshops",
+        title: "Education &<br />  Workshops",
         defaultItems: ["Design Consultancy", "Branding", "UI/UX", "Zine"],
         allItems: ["Design Consultancy", "Branding", "UI/UX", "Zine", "Books", "Poster & Graphics"]
       }
@@ -157,27 +157,10 @@ const Navbar = () => {
 
                             return (
                               <div key={idx} className="space-y-4">
-                                <h3 className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide pb-2 text-center">
-                                  {(() => {
-                                    // Only break specific titles as shown in the image
-                                    if (category.title === "Customisation & Merchandising") {
-                                      return (
-                                        <>
-                                          Customisation &<br />Merchandising
-                                        </>
-                                      );
-                                    } else if (category.title === "Design, prototyping & Consultancy") {
-                                      return (
-                                        <>
-                                          Design, prototyping &<br />Consultancy
-                                        </>
-                                      );
-                                    } 
-                                     else {
-                                      return category.title;
-                                    }
-                                  })()}
-                                </h3>
+                                <h3
+                                  className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide text-left leading-tight whitespace-normal min-h-[48px] flex items-start"
+                                  dangerouslySetInnerHTML={{ __html: category.title }}
+                                />
                                 <ul className="space-y-2">
                                   {itemsToShow.map((subItem, subIdx) => (
                                     <li key={subIdx}>
@@ -289,6 +272,6 @@ const Navbar = () => {
       `}</style>
     </header>
   );
-};
+}; 
 
 export default Navbar;
