@@ -166,7 +166,7 @@ const Products = () => {
             size={20}
             className="transform group-hover:translate-y-1 transition-transform duration-300"
           />
-          <span className="font-medium tracking-wide">View More</span>
+          <span className="font-medium tracking-wide">View All</span>
         </>
       )}
     </button>
@@ -267,7 +267,7 @@ const Products = () => {
             size={20}
             className="transform group-hover:translate-y-1 transition-transform duration-300"
           />
-          <span className="font-medium tracking-wide">View More</span>
+          <span className="font-medium tracking-wide">View All</span>
         </>
       )}
     </button>
