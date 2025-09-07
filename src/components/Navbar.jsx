@@ -15,7 +15,7 @@ const menuData = {
         ]
       },
       {
-        title: "Customisation & <br />&nbsp;Merchandising",
+        title: "Customisation & <br />Merchandising",
         defaultItems: ["Ceramic Cups", "Keychains", "Lithophane Frame", "T-shirts"],
         allItems: [
           "Ceramic Cups", "Keychains", "Lithophane Frame", "T-shirts", "Bottle engraving",
@@ -37,7 +37,7 @@ const menuData = {
         allItems: ["Kinetic Clock", "Sanitiser Dispenser", "Small Furniture", "Touch Lamps"]
       },
       {
-        title: "Design, Prototyping <br /> &nbsp; &nbsp;  & Consultancy",
+        title: "Design, Prototyping <br />& Consultancy",
         defaultItems: ["Design Consultancy", "Branding", "UI/UX", "Zine"],
         allItems: [
           "Design Consultancy", "Branding", "UI/UX", "Zine", "Books", "Poster & Infographics",
