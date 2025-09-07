@@ -59,26 +59,22 @@ const Navbar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState(new Set());
+  const [currentPage, setCurrentPage] = useState('');
   const timeoutRef = useRef(null);
 
-  // Scroll detection
+  // Get current page from URL
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > lastScrollY) {
-        setShowNavbar(false);
-      } else {
-        setShowNavbar(true);
-      }
-      setLastScrollY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+    const pathname = window.location.pathname;
+    const page = pathname === '/' ? 'Home' : pathname.substring(1);
+    setCurrentPage(page);
+  }, []);
 
   const handleMenuHover = (item) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    if (menuData[item]) setActiveDropdown(item);
+    // Only show dropdown for Products if we're on the Products page
+    if (menuData[item] && (item !== 'Products' || currentPage === 'Products')) {
+      setActiveDropdown(item);
+    }
   };
 
   const handleMenuLeave = () => {
@@ -132,15 +128,18 @@ const Navbar = () => {
                 >
                   <a
                     href={`/${item === "Home" ? "" : item}`}
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setCurrentPage(item === "Home" ? "Home" : item);
+                    }}
                     className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-sm lg:text-[17px] relative group"
                   >
                     {item.replace("_", " ")}
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                   </a>
 
-                  {/* Dropdown Menu */}
-                  {item === "Products" && activeDropdown === item && (
+                  {/* Dropdown Menu - Only show for Products and only on Products page */}
+                  {item === "Products" && activeDropdown === item && currentPage === "Products" && (
                     <div
                       className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
                       style={{ animation: "fadeIn 0.3s ease-out forwards" }}
@@ -237,7 +236,10 @@ const Navbar = () => {
                 <a
                   key={i}
                   href={`/${item === "Home" ? "" : item}`}
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    setIsOpen(false);
+                    setCurrentPage(item === "Home" ? "Home" : item);
+                  }}
                   className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
                 >
                   {item.replace("_", " ")}
