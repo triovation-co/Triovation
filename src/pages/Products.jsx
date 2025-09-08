@@ -150,28 +150,21 @@ const Products = () => {
           setShowAllFestive(true); // just expand, no scroll
         }
       }}
-     className="group flex items-center gap-2 text-gray-900 font-medium text-lg hover:text-red-500 transition-colors duration-300"
+      className="group flex items-center gap-2 rounded-xl px-12 py-1.5 font-medium text-lg bg-blue-400 text-white"
     >
       {showAllFestive ? (
-        <>
-          <ChevronUp
-            size={20}
-            className="transform group-hover:-translate-y-1 transition-transform duration-300"
-          />
-          <span className="font-medium tracking-wide">View Less</span>
-        </>
+        <span className="font-medium tracking-wide transition-transform duration-300 group-hover:scale-105">
+          View Less
+        </span>
       ) : (
-        <>
-          <ChevronDown
-            size={20}
-            className="transform group-hover:translate-y-1 transition-transform duration-300"
-          />
-          <span className="font-medium tracking-wide">View All</span>
-        </>
+        <span className="font-medium tracking-wide transition-transform duration-300 group-hover:scale-105">
+          View All
+        </span>
       )}
     </button>
   </div>
 )}
+
 
 
         {/* Corporate Gifting Section */}
@@ -240,39 +233,36 @@ const Products = () => {
         </div>
 
 {/* View More Button for Corporate Gifting */}
-{corporateGiftingProducts.length > 8 && (
+{FestiveSeason.length > 8 && (
   <div className="flex justify-center mb-20">
     <button
       onClick={() => {
-        if (showAllCorporate) {
-          setShowAllCorporate(false);
-          setTimeout(() => scrollToRef(corporateRef), 100); // scroll only on View Less
+        if (showAllFestive) {
+          setShowAllFestive(false);
+          setTimeout(() => scrollToRef(festiveRef), 100); // scroll only on View Less
         } else {
-          setShowAllCorporate(true); // just expand, no scroll
+          setShowAllFestive(true); // just expand, no scroll
         }
       }}
-     className="group flex items-center gap-2 text-gray-900 font-medium text-lg hover:text-red-500 transition-colors duration-300"
+      className="group flex items-center gap-2 rounded-xl px-12 py-1.5 font-medium text-lg bg-blue-400 text-white"
     >
-      {showAllCorporate ? (
+      {showAllFestive ? (
         <>
-          <ChevronUp
-            size={20}
-            className="transform group-hover:-translate-y-1 transition-transform duration-300"
-          />
-          <span className="font-medium tracking-wide">View Less</span>
+          <span className="font-medium tracking-wide transition-transform duration-300 group-hover:scale-105">
+            View Less
+          </span>
         </>
       ) : (
         <>
-          <ChevronDown
-            size={20}
-            className="transform group-hover:translate-y-1 transition-transform duration-300"
-          />
-          <span className="font-medium tracking-wide">View All</span>
+          <span className="font-medium tracking-wide transition-transform duration-300 group-hover:scale-105">
+            View All
+          </span>
         </>
       )}
     </button>
   </div>
 )}
+
 
 
       </div>

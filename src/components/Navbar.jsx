@@ -56,28 +56,37 @@ const menuData = {
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showNavbar, setShowNavbar] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState(new Set());
   const [currentPage, setCurrentPage] = useState('');
   const timeoutRef = useRef(null);
 
-  // Get current page from URL
+  // Get current page from URL and Debug
   useEffect(() => {
     const pathname = window.location.pathname;
     const page = pathname === '/' ? 'Home' : pathname.substring(1);
     setCurrentPage(page);
+    console.log("Current page:", page);
   }, []);
 
+  // Hover handler with 600ms delay for Products dropdown on non-Products pages
   const handleMenuHover = (item) => {
+    console.log(`Hover on: ${item}, currentPage: ${currentPage}`);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    // Only show dropdown for Products if we're on the Products page
-    if (menuData[item] && (item !== 'Products' || currentPage === 'Products')) {
+
+    if (item === "Products" && currentPage !== "Products") {
+      // 600ms delay on non-Products pages
+      timeoutRef.current = setTimeout(() => {
+        setActiveDropdown(item);
+      }, 600);
+    } else {
+      // Immediate open on Products page
       setActiveDropdown(item);
     }
   };
 
   const handleMenuLeave = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
       setExpandedCategories(new Set());
@@ -98,9 +107,7 @@ const Navbar = () => {
 
   return (
     <header
-      className={`w-full sticky top-0 z-50 transition-transform duration-300 ${
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      }`}
+      className={`w-full sticky top-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
     >
       {/* Top Bar */}
       <div className="w-full bg-[#8C91D1] text-white text-xs sm:text-sm md:text-base text-center py-2 md:py-4"></div>
@@ -138,8 +145,8 @@ const Navbar = () => {
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                   </a>
 
-                  {/* Dropdown Menu - Only show for Products and only on Products page */}
-                  {item === "Products" && activeDropdown === item && currentPage === "Products" && (
+                  {/* FIXED: Removed currentPage === "Products" condition */}
+                  {item === "Products" && activeDropdown === item && (
                     <div
                       className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
                       style={{ animation: "fadeIn 0.3s ease-out forwards" }}
@@ -191,7 +198,6 @@ const Navbar = () => {
               )
             )}
 
-            {/* Search Box */}
             <div className="relative flex mr-6 lg:mr-10">
               <input
                 type="text"
@@ -210,15 +216,11 @@ const Navbar = () => {
             <div className="relative">
               <Menu
                 size={28}
-                className={`transition-all duration-300 ${
-                  isOpen ? "opacity-0 rotate-180 scale-0" : "opacity-100 rotate-0 scale-100"
-                }`}
+                className={`transition-all duration-300 ${isOpen ? "opacity-0 rotate-180 scale-0" : "opacity-100 rotate-0 scale-100"}`}
               />
               <X
                 size={28}
-                className={`absolute top-0 left-0 transition-all duration-500 ${
-                  isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-180 scale-0"
-                }`}
+                className={`absolute top-0 left-0 transition-all duration-500 ${isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-180 scale-0"}`}
               />
             </div>
           </button>
@@ -226,9 +228,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
             {["Home", "About", "Products", "Service", "Work_Education", "Contact Us"].map(
@@ -247,7 +247,6 @@ const Navbar = () => {
               )
             )}
 
-            {/* Search Box Mobile */}
             <div className="relative flex">
               <input
                 type="text"
@@ -274,6 +273,6 @@ const Navbar = () => {
       `}</style>
     </header>
   );
-}; 
+};
 
 export default Navbar;
