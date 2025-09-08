@@ -145,7 +145,7 @@ const Navbar = () => {
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                   </a>
 
-                  {/* FIXED: Removed currentPage === "Products" condition */}
+                  {/* Dropdown with increased spacing and original View All functionality */}
                   {item === "Products" && activeDropdown === item && (
                     <div
                       className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
@@ -153,43 +153,46 @@ const Navbar = () => {
                       onMouseEnter={() => timeoutRef.current && clearTimeout(timeoutRef.current)}
                       onMouseLeave={handleMenuLeave}
                     >
-                      <div className="p-6 sm:p-8">
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6 lg:gap-8">
-                          {menuData.Products.categories.map((category, idx) => {
-                            const isExpanded = expandedCategories.has(category.title);
-                            const itemsToShow = isExpanded
-                              ? category.allItems
-                              : category.defaultItems;
+                      <div className="p-8 sm:p-10 flex justify-center">
+                        {/* Container with increased padding for more uniform spacing */}
+                        <div className="w-full max-w-7xl px-4">
+                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-10">
+                            {menuData.Products.categories.map((category, idx) => {
+                              const isExpanded = expandedCategories.has(category.title);
+                              const itemsToShow = isExpanded
+                                ? category.allItems
+                                : category.defaultItems;
 
-                            return (
-                              <div key={idx} className="space-y-4">
-                                <h3
-                                  className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide text-left leading-tight whitespace-normal min-h-[48px] flex items-start"
-                                  dangerouslySetInnerHTML={{ __html: category.title }}
-                                />
-                                <ul className="space-y-2">
-                                  {itemsToShow.map((subItem, subIdx) => (
-                                    <li key={subIdx}>
-                                      <a
-                                        href={`/category/${encodeURIComponent(subItem)}`}
-                                        className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
-                                      >
-                                        {subItem}
-                                      </a>
-                                    </li>
-                                  ))}
-                                </ul>
-                                {category.allItems.length > category.defaultItems.length && (
-                                  <button
-                                    onClick={() => toggleCategoryExpansion(category.title)}
-                                    className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
-                                  >
-                                    {isExpanded ? "View Less ↑" : "View All →"}
-                                  </button>
-                                )}
-                              </div>
-                            );
-                          })}
+                              return (
+                                <div key={idx} className="space-y-4">
+                                  <h3
+                                    className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide text-left leading-tight whitespace-normal min-h-[48px] flex items-start"
+                                    dangerouslySetInnerHTML={{ __html: category.title }}
+                                  />
+                                  <ul className="space-y-2">
+                                    {itemsToShow.map((subItem, subIdx) => (
+                                      <li key={subIdx}>
+                                        <a
+                                          href={`/category/${encodeURIComponent(subItem)}`}
+                                          className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
+                                        >
+                                          {subItem}
+                                        </a>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                  {category.allItems.length > category.defaultItems.length && (
+                                    <button
+                                      onClick={() => toggleCategoryExpansion(category.title)}
+                                      className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
+                                    >
+                                      {isExpanded ? "View Less ↑" : "View All →"}
+                                    </button>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -276,3 +279,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+ 
