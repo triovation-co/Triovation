@@ -1,158 +1,150 @@
-import React from 'react';
-// Make sure to import your images correctly
-import img from "../assets/image1.jpg"; // The image of the people
-import flower from "../assets/flower.png"; // The flower graphic
+import React from "react";
+import img from "../assets/image1.jpg"; // Main image
+import flower from "../assets/flower.png"; // Decorative graphic
 
 const Home = () => {
+  const services = [
+    "Corporate Gifting",
+    "Customized Gifting",
+    "Design Consultancy",
+    "Learn and Fabricate",
+    "Learning Zone",
+    "Education",
+  ];
+
   return (
     <>
-      {/* Main Content Section */}
-      <main className="container mx-auto max-w-[1440px] mt-5 bg-white min-h-screen px-4 md:px-8 xl:px-8 flex items-center justify-center">
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-60 xl:gap-60">
-          
-          {/* Left Column: Image and Graphic */}
-          <div className="relative w-full max-w-sm mx-auto lg:w-[450px] lg:mx-0 xl:w-[450px] xl:mx-0"> 
-            
-            {/* The clipping container with the semi-circle shape */}
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] lg:w-80 lg:h-80 xl:w-130 xl:h-130 xl:mb-20 xl:ml-20 2xl:w-160 2xl:h-130 2xl:-ml-15">
-              <img 
-                src={img}
-                alt="Vivek and Shubhra" 
-                className="w-full h-full object-cover" 
+      <div className="overflow-x-hidden">
+        {/* Main Content Section */}
+        <main className="container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
+            {/* Left Column - Image */}
+            <div className="relative flex justify-center md:justify-start">
+              <div className="rounded-t-full overflow-hidden 
+                w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
+                h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
+                mx-auto">
+                <img
+                  src={img}
+                  alt="Vivek and Shubhra"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <img
+                src={flower}
+                alt="Decorative graphic"
+                className="absolute -top-3 -left-3 w-25 h-30
+                          sm:-top-5 sm:-left-5 sm:w-28 sm:h-34
+                          md:-top-6 md:-left-2 md:w-38 md:h-42
+                          lg:-top-8 lg:-left-4 lg:w-42 lg:h-46
+                          xl:-top-10 xl:-left-8 xl:w-56 xl:h-60"
               />
             </div>
-            <img 
-              src={flower}
-              alt="Decorative graphic" 
-              className="absolute top-0 -left-6 w-24 h-32 lg:-left-12 lg:w-28 lg:h-36 xl:-left-2 xl:w-55 xl:h-90 xl:-mt-10 2xl:w-58 2xl:h-80 2xl:-ml-25" 
-            />
-          </div>
 
-          {/* Right Column: Text Description */}
-          <div className='mt-8 lg:mt-30 lg:mr-30 xl:mt-30 xl:mr-30 text-center lg:text-left xl:text-left'>
-            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">Brand Description</h1>
-            <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">It all began (like all good things do) over a (good) bottle of wine. Vivek and Shubhra were tired of all the random souvenirs that India had to offer. They set out to start a company that would go on to sell souvenirs that depicted India, the way you and I saw it. Mad, Crazy, Colourful. In 2010, they founded Chumbak.</p>
-            <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed">Over the years, we grew from a company selling just souvenirs to some of the nicest homeware and accessories you'll find anywhere.</p>
-          </div>
-          
-        </div>
-      </main>
-
-      {/* Why Choose Us Section */}
-      <main className="container mx-auto px-4 md:px-8 xl:px-8 mt-16 lg:-mt-30 xl:-mt-30 min-h-screen flex items-center justify-center">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-100 xl:gap-100 items-center">
-          
-          {/* Right Column: Text Description */}
-          <div className='text-center lg:text-left xl:text-left order-2 lg:order-1 xl:order-1'>
-            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 text-gray-800">Why Choose Us</h1>
-            <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">We blend creativity with technology to deliver exceptional solutions.
-               With a team of skilled professionals, we've been transforming ideas
-                into reality since 2024. Our commitment to quality, innovation, and 
-                client satisfaction sets us apart as.</p>
-          </div>
-
-          {/* Left Column: Image and Graphic */}
-          <div className="relative w-full max-w-sm mx-auto lg:w-[450px] lg:mx-0 xl:w-[450px] xl:mx-0 order-1 lg:order-2 xl:order-2"> 
-            
-            {/* The clipping container with the semi-circle shape */}
-            <div className="rounded-t-full overflow-hidden w-full aspect-[4/5] mb-8 lg:w-160 lg:h-130 lg:mb-65 xl:w-160 xl:h-130 xl:mb-65">
-              <img 
-                src={img}
-                alt="Vivek and Shubhra" 
-                className="w-full h-full object-cover" 
-              />
+            {/* Right Column - Text */}
+            <div className="text-center md:text-left">
+              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
+                Brand Description
+              </h1>
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
+                It all began (like all good things do) over a (good) bottle of
+                wine. Vivek and Shubhra were tired of all the random souvenirs
+                that India had to offer. They set out to start a company that
+                would go on to sell souvenirs that depicted India, the way you
+                and I saw it. Mad, Crazy, Colourful. In 2010, they founded
+                Chumbak.
+              </p>
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed">
+                Over the years, we grew from a company selling just souvenirs to
+                some of the nicest homeware and accessories you'll find
+                anywhere.
+              </p>
             </div>
-            <img 
-              src={flower}
-              alt="Decorative graphic" 
-              className="absolute top-0 -left-6 w-30 h-54 lg:-left-16 lg:w-65 lg:h-100 lg:-mt-10 xl:-left-16 xl:w-65 xl:h-100 xl:-mt-10" 
-            />
           </div>
+        </main>
 
-        </div>
-      </main>
+        {/* Second Section - Why Choose Us */}
+        <main className="container mx-auto py-2 sm:py-4 md:py-7 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
+            {/* Left Column - Text */}
+            <div className="text-center md:text-left order-2 md:order-1">
+              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
+                Why Choose Us
+              </h1>
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed">
+                We blend creativity with technology to deliver exceptional
+                solutions. With a team of skilled professionals, we've been
+                transforming ideas into reality since 2024. Our commitment to
+                quality, innovation, and client satisfaction sets us apart.
+              </p>
+            </div>
 
-      {/* Our Services Section */}
-      <div className='flex flex-col items-center justify-center text-center px-4 md:px-8 xl:px-8 py-12 mt-16 lg:-mt-20 xl:-mt-20'>
-        <h1 className='text-4xl xl:text-4xl font-bold mb-6 text-gray-800 leading-relaxed mb-4'>Our Services</h1>
-        <p className="max-w-3xl xl:max-w-3xl mx-auto text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed">
-          We blend creativity with technology to deliver exceptional solutions. With a team of skilled professionals,
-          we've been transforming ideas into reality since 2024. Our commitment to quality, innovation, and client satisfaction sets us apart as.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-10 lg:gap-20 xl:gap-20 mt-10 mb-20 lg:mb-30 xl:mb-30 px-4 lg:ml-15 xl:ml-15">
-
-        <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 xl:w-90 xl:h-90 mb-4 lg:mb-3 xl:mb-3">
-            <img 
-              src={img}
-              alt="Corporate Gifting" 
-              className="w-full h-full object-cover" 
-            />
+            {/* Right Column - Image */}
+            <div className="relative flex justify-center md:justify-end order-1 md:order-2">
+              <div className="rounded-t-full overflow-hidden 
+                              w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
+                              h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
+                              mx-auto">
+                <img
+                  src={img}
+                  alt="Vivek and Shubhra"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+                <img
+                  src={flower}
+                  alt="Decorative graphic"
+                  className="absolute -top-3 -left-3 w-25 h-30
+                             sm:-top-5 sm:-left-5 sm:w-28 sm:h-34
+                             md:-top-6 md:-left-2 md:w-38 md:h-42
+                             lg:-top-8 lg:-left-4 lg:w-42 lg:h-46
+                             xl:-top-10 xl:-left-8 xl:w-56 xl:h-60"
+                />
+            </div>
           </div>
-          <p className="text-2xl xl:text-2xl font-semibold text-gray-800">Corporate Gifting</p>
-        </div>
+        </main>
 
-        <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 xl:w-90 xl:h-90 mb-4 lg:mb-3 xl:mb-3">
-            <img 
-              src={img}
-              alt="Customized Gifting" 
-              className="w-full h-full object-cover" 
-            />
+        {/* Services Section */}
+        <section className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 text-gray-800">
+            Our Services
+          </h1>
+          <p className="max-w-2xl mx-auto text-gray-600 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed mb-8 lg:mb-12">
+            We blend creativity with technology to deliver exceptional
+            solutions. With a team of skilled professionals, we've been
+            transforming ideas into reality since 2024. Our commitment to
+            quality, innovation, and client satisfaction sets us apart.
+          </p>
+
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
+            {services.map((service, index) => (
+              <div key={index} className="flex flex-col items-center">
+                {/* Service Thumbnails */}
+                <div
+                  className="rounded-t-full overflow-hidden 
+                            w-28 h-28 
+                            sm:w-36 sm:h-36 
+                            md:w-44 md:h-44 
+                            lg:w-48 lg:h-48 
+                            xl:w-56 xl:h-56 
+                            mb-6"
+                >
+                  <img
+                    src={img}
+                    alt={service}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800">
+                  {service}
+                </p>
+              </div>
+            ))}
           </div>
-          <p className="text-2xl xl:text-2xl font-semibold text-gray-800">Customized Gifting</p>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 xl:w-90 xl:h-90 mb-4 lg:mb-3 xl:mb-3">
-            <img 
-              src={img}
-              alt="Design Consultancy" 
-              className="w-full h-full object-cover" 
-            />
-          </div>
-          <p className="text-2xl xl:text-2xl font-semibold text-gray-800">Design Consultancy</p>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 xl:w-90 xl:h-90 mb-4 lg:mb-3 xl:mb-3">
-            <img 
-              src={img}
-              alt="Learn and Fabricate" 
-              className="w-full h-full object-cover" 
-            />
-          </div>
-          <p className="text-2xl xl:text-2xl font-semibold text-gray-800">Learn and Fabricate</p>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 xl:w-90 xl:h-90 mb-4 lg:mb-3 xl:mb-3">
-            <img 
-              src={img}
-              alt="Learning zone" 
-              className="w-full h-full object-cover" 
-            />
-          </div>
-          <p className="text-2xl xl:text-2xl font-semibold text-gray-800">Learning zone</p>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="rounded-t-full overflow-hidden w-40 h-40 lg:w-90 lg:h-90 xl:w-90 xl:h-90 mb-4 lg:mb-3 xl:mb-3">
-            <img 
-              src={img}
-              alt="Education" 
-              className="w-full h-full object-cover" 
-            />
-          </div>
-          <p className="text-2xl xl:text-2xl font-semibold text-gray-800">Education</p>
-        </div>
-
+        </section>
       </div>
     </>
   );
 };
-
 export default Home;

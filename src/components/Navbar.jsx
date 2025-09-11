@@ -145,7 +145,7 @@ const Navbar = () => {
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                   </a>
 
-                  {/* Dropdown with increased spacing and original View All functionality */}
+                  {/* Dropdown with updated links to redirect to Products page with highlight parameter */}
                   {item === "Products" && activeDropdown === item && (
                     <div
                       className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
@@ -173,8 +173,12 @@ const Navbar = () => {
                                     {itemsToShow.map((subItem, subIdx) => (
                                       <li key={subIdx}>
                                         <a
-                                          href={`/category/${encodeURIComponent(subItem)}`}
+                                          href={`/Products?highlight=${encodeURIComponent(subItem)}`}
                                           className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
+                                          onClick={() => {
+                                            setActiveDropdown(null);
+                                            setExpandedCategories(new Set());
+                                          }}
                                         >
                                           {subItem}
                                         </a>
@@ -279,4 +283,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
- 

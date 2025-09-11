@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -24,6 +24,11 @@ const scrollToRef = (ref) => {
   }
 };
 
+// Helper function to get URL parameters
+const useQuery = () => {
+  return new URLSearchParams(window.location.search);
+};
+
 const Products = () => {
   const [showAllFestive, setShowAllFestive] = useState(false);
   const [showAllCorporate, setShowAllCorporate] = useState(false);
@@ -32,6 +37,9 @@ const Products = () => {
   const [showAllMechanical, setShowAllMechanical] = useState(false);
   const [showAllDesign, setShowAllDesign] = useState(false);
   const [showAllEducation, setShowAllEducation] = useState(false);
+  
+  // Add new state for highlighted product
+  const [highlightedProduct, setHighlightedProduct] = useState(null);
 
   const festiveRef = useRef(null);
   const corporateRef = useRef(null);
@@ -40,6 +48,118 @@ const Products = () => {
   const mechanicalRef = useRef(null);
   const designRef = useRef(null);
   const educationRef = useRef(null);
+
+  // Add function to find product in sections
+  const findProductInSections = (productName) => {
+    const sections = [
+      { name: 'festive', products: FestiveSeason },
+      { name: 'corporate', products: corporateGiftingProducts },
+      { name: 'customisation', products: customisationProducts },
+      { name: 'homeDecor', products: homeDecorProducts },
+      { name: 'mechanical', products: mechanicalProducts },
+      { name: 'design', products: designConsultancyProducts },
+      { name: 'education', products: educationWorkshopsProducts }
+    ];
+
+    for (const section of sections) {
+      const found = section.products.find(product => 
+        product.name.toLowerCase().includes(productName.toLowerCase()) ||
+        productName.toLowerCase().includes(product.name.toLowerCase())
+      );
+      if (found) {
+        return { section: section.name, product: found };
+      }
+    }
+    return null;
+  };
+
+  // Add function to expand relevant section
+  const expandRelevantSection = (sectionName) => {
+    switch(sectionName) {
+      case 'festive':
+        setShowAllFestive(true);
+        break;
+      case 'corporate':
+        setShowAllCorporate(true);
+        break;
+      case 'customisation':
+        setShowAllCustomisation(true);
+        break;
+      case 'homeDecor':
+        setShowAllHomeDecor(true);
+        break;
+      case 'mechanical':
+        setShowAllMechanical(true);
+        break;
+      case 'design':
+        setShowAllDesign(true);
+        break;
+      case 'education':
+        setShowAllEducation(true);
+        break;
+    }
+  };
+
+  // Add function to get section ref
+  const getSectionRef = (sectionName) => {
+    switch(sectionName) {
+      case 'festive': return festiveRef;
+      case 'corporate': return corporateRef;
+      case 'customisation': return customisationRef;
+      case 'homeDecor': return homeDecorRef;
+      case 'mechanical': return mechanicalRef;
+      case 'design': return designRef;
+      case 'education': return educationRef;
+      default: return null;
+    }
+  };
+
+  // Add function to scroll to product
+  const scrollToProduct = (productName) => {
+    // Find the product in all sections and scroll to appropriate section
+    const productFound = findProductInSections(productName);
+    if (productFound) {
+      // Show all products in the relevant section first
+      expandRelevantSection(productFound.section);
+      
+      // Scroll to the section
+      setTimeout(() => {
+        const sectionRef = getSectionRef(productFound.section);
+        if (sectionRef) {
+          scrollToRef(sectionRef);
+        }
+      }, 200);
+    }
+  };
+
+  // Add useEffect to handle highlighting
+  useEffect(() => {
+    const query = useQuery();
+    const highlightParam = query.get('highlight');
+    if (highlightParam) {
+      setHighlightedProduct(highlightParam);
+      
+      // Scroll to the product after a short delay to ensure page is loaded
+      setTimeout(() => {
+        scrollToProduct(highlightParam);
+      }, 500);
+      
+      // Remove highlight after 5 seconds
+      setTimeout(() => {
+        setHighlightedProduct(null);
+        // Remove the query parameter from URL without refreshing
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      }, 5000);
+    }
+  }, []);
+
+  // Helper function to check if product should be highlighted
+  const shouldHighlight = (product) => {
+    return highlightedProduct && 
+           (product.name.toLowerCase().includes(highlightedProduct.toLowerCase()) ||
+            highlightedProduct.toLowerCase().includes(product.name.toLowerCase()));
+  };
 
   const displayedFestiveProducts = showAllFestive ? FestiveSeason : FestiveSeason.slice(0, 8);
   const displayedCorporateProducts = showAllCorporate ? corporateGiftingProducts : corporateGiftingProducts.slice(0, 8);
@@ -102,12 +222,19 @@ const Products = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
           {displayedFestiveProducts.map((product) => (
-            <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col h-full">
+            <div 
+              key={product.id} 
+              className="rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+            >
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                  className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    shouldHighlight(product)
+                      ? 'brightness-110 contrast-105 shadow-lg' 
+                      : ''
+                  }`}
                 />
                 {product.savePercent && (
                   <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -189,12 +316,19 @@ const Products = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
           {displayedCorporateProducts.map((product) => (
-            <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col h-full">
+            <div 
+              key={product.id} 
+              className="rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+            >
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                  className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    shouldHighlight(product)
+                      ? 'brightness-110 contrast-105 shadow-lg' 
+                      : ''
+                  }`}
                 />
                 {product.savePercent && (
                   <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -276,12 +410,19 @@ const Products = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
           {displayedCustomisationProducts.map((product) => (
-            <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col h-full">
+            <div 
+              key={product.id} 
+              className="rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+            >
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                  className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    shouldHighlight(product)
+                      ? 'brightness-110 contrast-105 shadow-lg' 
+                      : ''
+                  }`}
                 />
                 {product.savePercent && (
                   <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -363,12 +504,19 @@ const Products = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
           {displayedHomeDecorProducts.map((product) => (
-            <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col h-full">
+            <div 
+              key={product.id} 
+              className="rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+            >
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                  className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    shouldHighlight(product)
+                      ? 'brightness-110 contrast-105 shadow-lg' 
+                      : ''
+                  }`}
                 />
                 {product.savePercent && (
                   <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -450,12 +598,19 @@ const Products = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
           {displayedMechanicalProducts.map((product) => (
-            <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col h-full">
+            <div 
+              key={product.id} 
+              className="rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+            >
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                  className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    shouldHighlight(product)
+                      ? 'brightness-110 contrast-105 shadow-lg' 
+                      : ''
+                  }`}
                 />
                 {product.savePercent && (
                   <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -537,12 +692,19 @@ const Products = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
           {displayedDesignProducts.map((product) => (
-            <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col h-full">
+            <div 
+              key={product.id} 
+              className="rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+            >
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                  className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    shouldHighlight(product)
+                      ? 'brightness-110 contrast-105 shadow-lg' 
+                      : ''
+                  }`}
                 />
                 {product.savePercent && (
                   <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -624,12 +786,19 @@ const Products = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
           {displayedEducationProducts.map((product) => (
-            <div key={product.id} className="rounded-2xl overflow-hidden bg-white flex flex-col h-full">
+            <div 
+              key={product.id} 
+              className="rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+            >
               <div className="relative">
                 <img 
                   src={product.image} 
                   alt={product.name} 
-                  className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                  className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    shouldHighlight(product)
+                      ? 'brightness-110 contrast-105 shadow-lg' 
+                      : ''
+                  }`}
                 />
                 {product.savePercent && (
                   <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">

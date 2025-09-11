@@ -28,7 +28,7 @@ const Service = () => {
               className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-300"
               alt="Service 1"
             />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0  flex items-center justify-center ">
               <p className="text-white text-center text-2xl font-semibold px-2">
                 Design Consultancy
               </p>
@@ -45,7 +45,7 @@ const Service = () => {
               className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-300"
               alt="Service 2"
             />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0 flex items-center justify-center">
               <p className="text-white text-center text-2xl font-semibold px-2">
                 Learning Zone
               </p>
@@ -62,7 +62,7 @@ const Service = () => {
               className="w-full h-120 object-cover group-hover:scale-105 transition-transform duration-300"
               alt="Service 3"
             />
-            <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="absolute inset-0 flex items-center justify-center ">
               <p className="text-white text-center text-2xl font-semibold px-2">
                 Learn and Make
               </p>
@@ -74,7 +74,7 @@ const Service = () => {
       
       {/* Design Consultancy Section */}
       <main id="design-consultancy" className="container mx-auto px-4 md:px-8 xl:px-8 mt-20 lg:mt-25 xl:mt-25 min-h-auto flex items-center justify-center scroll-mt-20">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 mb-30 items-center mt-70">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 mb-30 items-center ">
                 
                 {/* Right Column: Text Description */}
                 <div className='text-center lg:text-left xl:text-left order-2 lg:order-1 xl:order-1'>
