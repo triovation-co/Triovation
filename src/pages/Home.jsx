@@ -124,10 +124,10 @@ const Home = () => {
                 <div
                   className="rounded-t-full overflow-hidden 
                             w-28 h-28 
-                            sm:w-36 sm:h-36 
-                            md:w-44 md:h-44 
-                            lg:w-48 lg:h-48 
-                            xl:w-56 xl:h-56 
+                            sm:w-50 sm:h-60 
+                            md:w-50 md:h-55 
+                            lg:w-60 lg:h-60 
+                            xl:w-74 xl:h-80 
                             mb-6"
                 >
                   <img

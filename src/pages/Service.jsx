@@ -73,7 +73,7 @@ const Service = () => {
       </div>
       
       {/* Design Consultancy Section */}
-      <main id="design-consultancy" className="container mx-auto px-4 md:px-8 xl:px-8 mt-20 lg:mt-25 xl:mt-25 min-h-auto flex items-center justify-center scroll-mt-20">
+      <main id="design-consultancy" className="container mx-auto px-4 md:px-8 xl:px-8 mt-20 lg:mt-25 xl:mt-25 min-h-auto flex items-center justify-center scroll-mt-50">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 mb-30 items-center ">
                 
                 {/* Right Column: Text Description */}
@@ -103,7 +103,7 @@ const Service = () => {
             </main>
 
        {/* Learning Zone Section */}
-       <main id="learning-zone" className="mx-auto max-w-[1440px] min-h-auto md:px-8 xl:px-8 flex items-center justify-center mt-10 scroll-mt-20">
+       <main id="learning-zone" className="mx-auto max-w-[1440px] min-h-auto md:px-8 xl:px-8 flex items-center justify-center mt-10 scroll-mt-50">
       
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 mb-30">
                 
@@ -132,7 +132,7 @@ const Service = () => {
             </main>
       
             {/* Learn And Make Section */}
-            <main id="learn-and-make" className="container mx-auto px-4 md:px-8 xl:px-8 mt-10 min-h-auto flex items-center justify-center scroll-mt-20">
+            <main id="learn-and-make" className="container mx-auto px-4 md:px-8 xl:px-8 mt-10 min-h-auto flex items-center justify-center scroll-mt-50">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 xl:gap-20 items-center">
                 
                 {/* Right Column: Text Description */}
