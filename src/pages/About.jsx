@@ -106,10 +106,10 @@ const About = () => {
 
             {/* Right Column - Text */}
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 text-gray-800 leading-snug">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-4xl font-bold mb-4 sm:mb-6 text-gray-800 leading-snug">
                 Our Vision
               </h2>
-              <p className="text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed max-w-xl mx-auto md:mx-0">
+              <p className="text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl xl:text-xl leading-relaxed max-w-xl mx-auto md:mx-0">
                 Based in Bangalore, we're known for our unique and fun aesthetic that celebrates 
                 Indian design, created for a modern global lifestyle. Everything we create is a 
                 tribute in some way to our brand pillars of Wit, Warmth, Honesty, Creativity, 
