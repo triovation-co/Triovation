@@ -873,7 +873,7 @@ const Products = () => {
 
       </div>
 
-      <h1 className="text-center text-4xl font-medium text-gray-900 mb-8">
+      {/* <h1 className="text-center text-4xl font-medium text-gray-900 mb-8">
         All Product Categories
       </h1>
 
@@ -911,7 +911,7 @@ const Products = () => {
             ))}
           </div>
         </div>
-      ))}
+      ))} */}
     </main>
   );
 };
