@@ -8,7 +8,7 @@ const About = () => {
     <>
       <div className="overflow-x-hidden">
         {/* First Section - Our Story */}
-        <main className="container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10">
+        <main className="container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
             {/* Left Column - Image */}
             <div className="relative flex justify-center md:justify-start">
@@ -110,7 +110,7 @@ const About = () => {
                 Our Vision
               </h2>
               <p className="text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl xl:text-xl leading-relaxed max-w-xl mx-auto md:mx-0">
-                Based in Bangalore, we're known for our unique and fun aesthetic that celebrates 
+                We're known for our unique and fun aesthetic that celebrates 
                 Indian design, created for a modern global lifestyle. Everything we create is a 
                 tribute in some way to our brand pillars of Wit, Warmth, Honesty, Creativity, 
                 Spontaneity & Community.

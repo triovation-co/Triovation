@@ -16,7 +16,7 @@ const Service = () => {
   return (
     <>
       <div className="mx-auto flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 mt-20 mx-5 sm:mx-10 lg:mx-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 xl:gap-20 mt-20 mx-5 sm:mx-10 lg:mx-20">
 
           {/* Card 1 - Design Consultancy */}
           <div 

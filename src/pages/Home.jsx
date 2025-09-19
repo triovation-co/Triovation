@@ -16,7 +16,7 @@ const Home = () => {
     <>
       <div className="overflow-x-hidden">
         {/* Main Content Section */}
-        <main className="container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10">
+        <main className="container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
             {/* Left Column - Image */}
             <div className="relative flex justify-center md:justify-start">
@@ -46,14 +46,14 @@ const Home = () => {
               <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
                 Brand Description
               </h1>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-[19px] mb-4 leading-relaxed">
                 It all began (like all good things do) over a (good) bottle of
                 wine. Vivek and Shubhra were tired of all the random souvenirs
                 that India had to offer. They set out to start a company that
                 would go on to sell souvenirs that depicted India, the way you
                 and I saw it. Mad, Crazy, Colourful.
               </p>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed">
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-[19px] leading-relaxed">
                 Over the years, we grew from a company selling just souvenirs to
                 some of the nicest homeware and accessories you'll find
                 anywhere.
@@ -108,7 +108,7 @@ const Home = () => {
           <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 text-gray-800">
             Our Services
           </h1>
-          <p className="max-w-2xl mx-auto text-gray-600 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed mb-8 lg:mb-12">
+          <p className="max-w-2xl mx-auto text-gray-600 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed mb-8 lg:mb-12  xl:mt-10">
             We blend creativity with technology to deliver exceptional
             solutions. With a team of skilled professionals, we've been
             transforming ideas into reality since 2024. Our commitment to
@@ -116,7 +116,7 @@ const Home = () => {
           </p>
 
           {/* Services Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20">
             {services.map((service, index) => (
               <div key={index} className="flex flex-col items-center">
                 {/* Service Thumbnails */}
