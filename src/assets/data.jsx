@@ -1,12 +1,15 @@
 import image1 from "./image1.jpg";
 import image2 from "./image2.jpg";
+import Product_1 from "./Product_1.png";
+import Product_2 from "./Product_2.png";
+
 
 // All Product Categories Data
 export const sections = [
   {
     title: "All Product Categories",
     items: [
-      { title: "Corporate Gifts Online", image: image1 },
+      { title: "Corporate Gifts Online", image: Product_1 },
       { title: "Unique Rakhi Gifts for Raksha Bandhan", image: image1 },
       { title: "Bigsmall Originals", image: image1 },
       { title: "Best Sellers", image: image1 },
@@ -237,7 +240,7 @@ export const corporateGiftingProducts = [
     discount: null,
     rating: 4.8,
     reviews: 12,
-    image: image2,
+    image: Product_1,
     buyNowText: "BUY NOW",
     savePercent: "31%"
   },
@@ -250,7 +253,7 @@ export const corporateGiftingProducts = [
     discount: null,
     rating: 4.9,
     reviews: 8,
-    image: image2,
+    image: Product_2,
     buyNowText: "BUY NOW"
   },
   {
@@ -1127,3 +1130,4 @@ export const getProductById = (id) => {
           ...designConsultancyProductsArray, ...educationWorkshopsProductsArray]
     .find(product => product.id === parseInt(id));
 };
+

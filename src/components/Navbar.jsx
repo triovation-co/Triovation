@@ -110,7 +110,7 @@ const Navbar = () => {
       className={`w-full sticky top-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
     >
       {/* Top Bar */}
-      <div className="w-full bg-[#8C91D1] text-white text-xs sm:text-sm md:text-base text-center py-2 md:py-4"></div>
+      <div className="w-full bg-[#f47e82] text-white text-xs sm:text-sm md:text-base text-center py-2 md:py-4"></div>
 
       {/* Main Navbar */}
       <nav className="w-full bg-white shadow-sm relative">

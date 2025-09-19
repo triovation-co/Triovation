@@ -8,6 +8,7 @@ import Work_Education from "./pages/Work_Education";
 import ContactUs from "./pages/ContactUs";
 import Footer from "./components/Footer";
 import Category_page from "./pages/Category_page";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="/Work_Education" element={<Work_Education />} />
             <Route path="/ContactUs" element={<ContactUs />} />
             <Route path="/Category_page/:categoryName" element={<Category_page />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
           </Routes>
         </main>
 
