@@ -75,7 +75,7 @@ const Footer = () => {
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <p className="text-sm 2xl:text-base">011-66763875</p>
             <p className="text-sm 2xl:text-base">support@Triovation.in</p>
-            <p className="text-sm 2xl:text-base">D-89, 100-Ft Road, Chhatarpur, Delhi, India - 110074</p>
+            <p className="text-sm 2xl:text-base">India </p>
             <div className="flex gap-3 mt-4">
               <a href="#" className="text-pink-600 text-2xl"><i className="fab fa-instagram"></i></a>
               <a href="#" className="text-blue-700 text-2xl"><i className="fab fa-linkedin"></i></a>

@@ -79,7 +79,7 @@ const Work_Education = () => {
               It all began (like all good things do) over a (good) bottle of wine. 
               Vivek and Shubhra were tired of all the random souvenirs that India had to offer. 
               They set out to start a company that would go on to sell souvenirs that depicted India, 
-              the way you and I saw it. Mad, Crazy, Colourful. In 2010, they founded Chumbak.
+              the way you and I saw it. Mad, Crazy, Colourful.
             </p>
             <button className="border rounded-lg p-2 px-8 text-amber-50 bg-blue-400">
               CONTACT US
