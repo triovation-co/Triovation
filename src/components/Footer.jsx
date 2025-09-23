@@ -65,7 +65,7 @@ const Footer = () => {
       {/* Footer Section */}
       <footer className="bg-gray-50 text-gray-700 mt-20">
         <div className="container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 py-10 
-                grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-20 lg:gap-30 2xl:gap-40">
+                grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-20 lg:gap-30 2xl:gap-40">
           {/* Column 1 - Logo & Contact */}
           <div>
             <img src={Logo} alt="Logo" className="h-12 w-auto mb-4 -ml-1" />

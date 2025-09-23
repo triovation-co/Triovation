@@ -2,6 +2,7 @@ import React from "react";
 import img from "../assets/image1.jpg";
 import flower from "../assets/flower.png";
 import design from "../assets/design.jpg";
+import WhatsAppButton from "../components/whatsapp";
 
 const About = () => {
   return (
@@ -118,6 +119,7 @@ const About = () => {
             </div>
           </div>
         </section>
+        <WhatsAppButton />
       </div>
     </>
   );

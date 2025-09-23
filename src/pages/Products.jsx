@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import ProductSection from "../components/ProductSection.jsx";
+import WhatsAppButton from "../components/whatsapp.jsx";
 
 import { 
   sections, 
@@ -314,7 +315,9 @@ const Products = () => {
         />
 
       </div>
+      <WhatsAppButton />
     </main>
+    
   );
 };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import img from "../assets/image1.jpg"; // Main image
 import flower from "../assets/flower.png"; // Decorative graphic
+import WhatsAppButton from "../components/whatsapp";
 
 const Home = () => {
   const services = [
@@ -105,10 +106,10 @@ const Home = () => {
 
         {/* Services Section */}
         <section className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center">
-          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-4 sm:mb-6 text-gray-800">
+          <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold font-bold mb-4 sm:mb-6 text-gray-800">
             Our Services
           </h1>
-          <p className="max-w-2xl mx-auto text-gray-600 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl leading-relaxed mb-8 lg:mb-12  xl:mt-10">
+          <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed mb-10 sm:mb-12 md:mb-16 lg:mb-20">
             We blend creativity with technology to deliver exceptional
             solutions. With a team of skilled professionals, we've been
             transforming ideas into reality since 2024. Our commitment to
@@ -122,7 +123,7 @@ const Home = () => {
                 {/* Service Thumbnails */}
                 <div
                   className="rounded-t-full overflow-hidden 
-                            w-28 h-28 
+                            w-40 h-40 
                             sm:w-50 sm:h-60 
                             md:w-50 md:h-55 
                             lg:w-60 lg:h-60 
@@ -135,13 +136,14 @@ const Home = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800">
+                <p className="text-lg sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800">
                   {service}
                 </p>
               </div>
             ))}
           </div>
         </section>
+        <WhatsAppButton />
       </div>
     </>
   );
