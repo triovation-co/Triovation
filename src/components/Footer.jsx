@@ -83,7 +83,7 @@ const Footer = () => {
           </div>
 
           {/* Column 2 - Helpful Links */}
-          <div>
+          <div className="mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">HELPFUL LINKS</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
               <li><a href="#" className="hover:text-blue-600">Contact us</a></li>
