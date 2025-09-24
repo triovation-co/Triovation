@@ -117,7 +117,7 @@ const Home = () => {
           </p>
 
           {/* Services Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20">
             {services.map((service, index) => (
               <div key={index} className="flex flex-col items-center">
                 {/* Service Thumbnails */}
@@ -128,7 +128,7 @@ const Home = () => {
                             md:w-50 md:h-55 
                             lg:w-60 lg:h-60 
                             xl:w-74 xl:h-80 
-                            mb-6"
+                            mb-2"
                 >
                   <img
                     src={img}
@@ -136,7 +136,7 @@ const Home = () => {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <p className="text-lg sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800">
+                <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800">
                   {service}
                 </p>
               </div>

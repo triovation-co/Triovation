@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Menu, X } from "lucide-react";
-import Logo from "../assets/Logo.png";
+import Logo from "../assets/logo_bg.png";
 
 const menuData = {
   Products: {

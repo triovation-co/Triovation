@@ -258,21 +258,21 @@ const Products = () => {
               <div className="flex-grow border-t-2 border-gray-300"></div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 justify-items-center">
+            <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 justify-items-center">
               {whatsNewItems.map((item, index) => (
                 <Link
                   key={index}
                   to={`/category/${encodeURIComponent(item.title)}`}
                   className="w-full max-w-xs rounded-2xl overflow-hidden bg-white flex flex-col h-full"
                 >
-                  <div className="relative">
+                  <div className="relative aspect-square">
                     <img
                       src={item.image}
                       alt={item.title}
-                      className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                      className="rounded-2xl w-full h-full object-cover"
                     />
                   </div>
-                  <div className="p-4 flex flex-col flex-grow text-center">
+                  <div className="p-2 flex flex-col flex-grow text-center">
                     <h3 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">
                       {item.title}
                     </h3>
@@ -280,6 +280,7 @@ const Products = () => {
                 </Link>
               ))}
             </div>
+
           </div>
         </div>
 
@@ -398,39 +399,18 @@ const Products = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
                 
                 {/* Left Column: Images */}
-                <div className="relative flex items-center justify-center w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] 2xl:min-h-[600px]">
+                <div className="relative flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
                   {/* Right image (behind) */}
-                  <div
-                    className="absolute 
-                    left-1/3 sm:left-[35%] md:left-[40%] lg:left-[45%] 
-                    top-1/2 -translate-y-1/2 
-                    w-[200px] h-[260px] 
-                    sm:w-[250px] sm:h-[350px]  
-                    md:w-[250px] md:h-[350px]
-                    lg:w-[310px] lg:h-[370px] 
-                    xl:w-[400px] xl:h-[500px]
-                    overflow-hidden shadow-lg rounded-t-full"
-                  >
-                    <img src={img} alt="Gift Background Right" className="w-full h-full object-cover" />
+                  <div className="relative w-[200px] sm:w-[250px] lg:w-[310px] xl:w-[400px] aspect-[3/4] rounded-t-full overflow-hidden shadow-lg">
+                    <img src={img} alt="Gift Background" className="w-full h-full object-cover" />
                   </div>
-    
-                  {/* Left image (in front) */}
-                  <div
-                    className="absolute
-                              left-[8%] md:left-[10%] lg:left-[12%]
-                              top-[55%] sm:top-[15%] md:top-[62.7%] lg:top-[57%] xl:top-[60.2%]
-                              top-1/2 -translate-y-1/2
-                              rounded-t-full overflow-hidden
-                              w-[180px] h-[230px] 
-                              sm:w-[200px] sm:h-[250px]  
-                              md:w-[200px] md:h-[250px]
-                              lg:w-[250px] lg:h-[300px] 
-                              xl:w-[350px] xl:h-[400px]
-                              mx-auto"
-                  >
-                    <img src={img} alt="Gift Foreground Left" className="w-full h-full object-cover" />
+
+                  {/* Left image (in front, on top in mobile) */}
+                  <div className="relative w-[180px] sm:w-[200px] lg:w-[250px] xl:w-[350px] aspect-[3/4] rounded-t-full overflow-hidden shadow-lg -mt-6 sm:mt-0">
+                    <img src={img} alt="Gift Foreground" className="w-full h-full object-cover" />
                   </div>
                 </div>
+
     
                 {/* Right Column: Text */}
                 <div className="mt-10 lg:mt-20 text-center lg:text-left px-2">
