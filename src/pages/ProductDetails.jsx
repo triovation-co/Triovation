@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useProductManager } from '../hooks/useProductManager.jsx';
 import { 
   FestiveSeason,
   corporateGiftingProducts,
@@ -10,23 +11,29 @@ import {
   educationWorkshopsProducts,
 } from '../assets/data.jsx';
 
+
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  
-  // Simple hover state for all product info
-  const [showAllProductInfo, setShowAllProductInfo] = useState(false);
+
+  // Get Google Sheets products
+  const { products: sheetProducts, loading: sheetLoading } = useProductManager();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  // Find product from all sections
+  // Find product from all sections INCLUDING Google Sheets products
   useEffect(() => {
-    const allProducts = [
+    // WAIT for sheet products to load before searching
+    if (sheetLoading) {
+      return; // Don't search yet, sheets are still loading
+    }
+
+    const allStaticProducts = [
       ...FestiveSeason,
       ...corporateGiftingProducts,
       ...customisationProducts,
@@ -36,12 +43,57 @@ const ProductDetails = () => {
       ...educationWorkshopsProducts,
     ];
 
-    const foundProduct = allProducts.find(p => p.id.toString() === id);
+    // Combine static products with Google Sheets products
+    const allProducts = [...allStaticProducts, ...(sheetProducts || [])];
+
+    console.log('Searching for product ID:', id);
+    console.log('Total products available:', allProducts.length);
+    console.log('Sheet products:', sheetProducts?.length || 0);
+
+    const foundProduct = allProducts.find(p => p.id.toString() === id.toString());
+    console.log('Found product:', foundProduct);
+    
     setProduct(foundProduct);
     setLoading(false);
-  }, [id]);
+  }, [id, sheetProducts, sheetLoading]); // Add sheetLoading dependency
 
-  if (loading) {
+  // Helper function for image fallback
+  const getImageSrc = (imageUrl) => {
+    if (!imageUrl || imageUrl.trim() === '') {
+      return '/api/placeholder/300/300';
+    }
+    return imageUrl;
+  };
+
+  // NEW: Get all available images (primary + additional from Google Sheets)
+  const getAllProductImages = () => {
+    if (!product) return [];
+    
+    const images = [];
+    
+    // Add primary image if exists
+    if (product.image && product.image.trim() !== '') {
+      images.push(product.image);
+    }
+    
+    // Add additional images from Google Sheets if they exist
+    if (product.images && Array.isArray(product.images)) {
+      const validAdditionalImages = product.images.filter(img => 
+        img && img.trim() !== '' && img !== product.image
+      );
+      images.push(...validAdditionalImages);
+    }
+    
+    // If no images found, return array with placeholder for thumbnail generation
+    if (images.length === 0) {
+      return ['/api/placeholder/300/300'];
+    }
+    
+    return images;
+  };
+
+  // Show loading while sheets are loading OR while searching for product
+  if (loading || sheetLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="text-xl">Loading...</div>
@@ -53,6 +105,7 @@ const ProductDetails = () => {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen">
         <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
+        <p className="text-gray-600 mb-4">Product ID: {id}</p>
         <button 
           onClick={() => navigate('/products')}
           className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
@@ -63,8 +116,11 @@ const ProductDetails = () => {
     );
   }
 
-  // Create thumbnail images array
-  const productImages = product.images || [product.image, product.image, product.image, product.image];
+  // UPDATED: Use actual product images from Google Sheets or fallback to duplicates
+  const allAvailableImages = getAllProductImages();
+  const productImages = allAvailableImages.length > 0 
+    ? allAvailableImages 
+    : [getImageSrc(product.image), getImageSrc(product.image), getImageSrc(product.image), getImageSrc(product.image)];
 
   return (
     <div className="w-full max-w-screen-2xl mx-auto px-8 py-12">
@@ -90,9 +146,10 @@ const ProductDetails = () => {
               }`}
             >
               <img
-                src={image}
+                src={getImageSrc(image)}
                 alt={`${product.name} thumbnail ${index + 1}`}
                 className="w-full h-24 object-cover"
+                onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}
               />
             </button>
           ))}
@@ -102,9 +159,10 @@ const ProductDetails = () => {
         <div className="flex-1 min-w-[45%] max-w-2xl">
           <div className="relative">
             <img 
-              src={productImages[selectedImage]}
+              src={getImageSrc(productImages[selectedImage] || productImages[0])}
               alt={product.name} 
               className="w-full h-[600px] object-cover"
+              onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}
             />
             {product.savePercent && (
               <div className="absolute top-6 right-6 bg-orange-500 text-white px-4 py-3 rounded-lg font-medium text-lg">
@@ -153,62 +211,61 @@ const ProductDetails = () => {
           <button className="w-full bg-gray-800 text-white py-4 px-8 text-base font-medium hover:bg-gray-900 transition-colors rounded-lg">
             CONTACT US
           </button>
-          
-          {/* Product Information & Care - OVERLAY HOVER */}
-          <div className="pt-6 relative">
-            <div
-              className="flex items-center gap-3 cursor-pointer hover:text-orange-600 transition-colors"
-              onMouseEnter={() => setShowAllProductInfo(true)}
-              onMouseLeave={() => setShowAllProductInfo(false)}
-            >
-              <span className="w-3 h-3 bg-orange-500 rounded-full"></span>
-              <h4 className="font-semibold text-gray-900 text-base">Product Information & Care</h4>
+        </div>
+      </div>
+
+      {/* Product Information & Care - HORIZONTAL LAYOUT BELOW IMAGE */}
+      <div className="mt-12 w-full">
+        <div className="flex items-center gap-3 mb-8">
+          <span className="w-3 h-3 bg-orange-500 rounded-full"></span>
+          <h4 className="font-semibold text-gray-900 text-xl">Product Information & Care</h4>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* General Specifications */}
+          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
+              General Specifications
+            </p>
+            <div className="text-sm text-gray-700 space-y-2">
+              <p><span className="font-medium">SKU:</span> {product.sku || '8907605130960'}</p>
+              <p><span className="font-medium">Weight (gms):</span> {product.weight || '82'}</p>
+              <p><span className="font-medium">Primary Color:</span> {product.primaryColor || 'Multi color'}</p>
             </div>
+          </div>
 
-            {/* OVERLAY - Absolute positioned hover content */}
-            {showAllProductInfo && (
-              <div className="absolute z-30 top-full left-0 mt-3 w-[450px] bg-white/95 backdrop-blur-sm rounded-xl p-6 border border-gray-200 shadow-2xl">
-                
-                {/* General Specifications */}
-                <div className="mb-5">
-                  <p className="font-bold text-gray-900 mb-3 text-base">GENERAL SPECIFICATIONS</p>
-                  <div className="text-sm text-gray-700 space-y-2">
-                    <p>SKU: {product.sku || '8907605130960'}</p>
-                    <p>Weight (gms.): {product.weight || '82'}</p>
-                    <p>Primary Color: {product.primaryColor || 'Multi color'}</p>
-                  </div>
-                </div>
+          {/* Composition and Usage */}
+          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
+              Composition and Usage
+            </p>
+            <div className="text-sm text-gray-700 space-y-2">
+              <p><span className="font-medium">Material:</span> Crafted with durable ceramic for longevity and quality</p>
+              <p><span className="font-medium">Care Instructions:</span> Do not wash. Clean with a dry cloth</p>
+              <p><span className="font-medium">Box Contents:</span> 1 planter</p>
+            </div>
+          </div>
 
-                {/* Composition and Usage */}
-                <div className="mb-5">
-                  <p className="font-bold text-gray-900 mb-3 text-base">COMPOSITION AND USAGE</p>
-                  <div className="text-sm text-gray-700 space-y-2">
-                    <p>Material: Crafted with durable ceramic for longevity and quality</p>
-                    <p>Care Instructions: Do not wash. Clean with a dry cloth</p>
-                    <p>Box Contents: 1 planter</p>
-                  </div>
-                </div>
+          {/* Dimensions */}
+          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
+              Dimensions
+            </p>
+            <div className="text-sm text-gray-700 space-y-2">
+              <p><span className="font-medium">Length (cms):</span> {product.length || '12'}</p>
+              <p><span className="font-medium">Height (cms):</span> {product.height || '10.2'}</p>
+              <p><span className="font-medium">Width (cms):</span> {product.width || '10.2'}</p>
+            </div>
+          </div>
 
-                {/* Dimensions */}
-                <div className="mb-5">
-                  <p className="font-bold text-gray-900 mb-3 text-base">DIMENSIONS</p>
-                  <div className="text-sm text-gray-700 space-y-2">
-                    <p>Length(cms.): {product.length || '12'}</p>
-                    <p>Height(cms): {product.height || '10.2'}</p>
-                    <p>Width(cms): {product.width || '10.2'}</p>
-                  </div>
-                </div>
-
-                {/* Supplier Information */}
-                <div>
-                  <p className="font-bold text-gray-900 mb-3 text-base">SUPPLIER INFORMATION</p>
-                  <div className="text-sm text-gray-700">
-                    <p>Country of Origin: {product.origin || 'India'}</p>
-                  </div>
-                </div>
-
-              </div>
-            )}
+          {/* Supplier Information */}
+          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
+              Supplier Information
+            </p>
+            <div className="text-sm text-gray-700">
+              <p><span className="font-medium">Country of Origin:</span> {product.origin || 'India'}</p>
+            </div>
           </div>
         </div>
       </div>
