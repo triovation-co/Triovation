@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Add this import
+import { Link } from 'react-router-dom';
 import ViewToggleButton from './Buttons.jsx';
 
 const ProductSection = ({
@@ -11,10 +11,10 @@ const ProductSection = ({
   sectionRef,
   scrollToRef,
   shouldHighlight,
-  buttonColor = "bg-blue-500"
+  buttonColor = "bg-orange-500"
 }) => {
   return (
-    <>
+    <div className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Section Header */}
       <div ref={sectionRef} className="flex items-center my-10">
         <div className="flex-grow border-t-2 border-gray-300"></div>
@@ -23,12 +23,12 @@ const ProductSection = ({
       </div>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20 mb-20">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-25 mb-20">
         {displayedProducts.map((product) => (
           <Link 
             key={product.id} 
             to={`/product/${product.id}`}
-            className="rounded-2xl overflow-hidden bg-white flex flex-col h-full transition-shadow duration-300 cursor-pointer"
+            className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full"
           >
             <div className="relative">
               <img 
@@ -76,10 +76,10 @@ const ProductSection = ({
 
               <div className="w-full flex justify-center mt-auto">
                 <button 
-                  className={`${buttonColor} text-white px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-md rounded-md hover:opacity-90 w-auto transition-opacity`}
-                  onClick={(e) => e.preventDefault()} // Prevent link navigation when clicking button
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-md rounded-md transition-colors w-auto"
+                  onClick={(e) => e.preventDefault()}
                 >
-                  {product.buyNowText}
+                  {product.buyNowText || "BUY NOW"}
                 </button>
               </div>
             </div>
@@ -95,7 +95,7 @@ const ProductSection = ({
         refElement={sectionRef}
         productsLength={products.length}
       />
-    </>
+    </div>
   );
 };
 
