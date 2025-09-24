@@ -9,9 +9,15 @@ import ContactUs from "./pages/ContactUs";
 import Footer from "./components/Footer";
 import Category_page from "./pages/Category_page";
 import ProductDetails from "./pages/ProductDetails";
+import Cart from "./pages/Cart";
+import Checkout from "./components/Checkout";
+import { CartProvider } from './context/CartContext';
+
 
 function App() {
   return (
+    <CartProvider>
+
   
       <div className="flex flex-col min-h-screen w-auto">
         {/* Navbar */}
@@ -29,12 +35,16 @@ function App() {
             <Route path="/ContactUs" element={<ContactUs />} />
             <Route path="/Category_page/:categoryName" element={<Category_page />} />
             <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/checkout" element={<Checkout />} />
           </Routes>
         </main>
 
         {/* Footer */}
         <Footer />
       </div>
+      </CartProvider>
+
   
   );
 }

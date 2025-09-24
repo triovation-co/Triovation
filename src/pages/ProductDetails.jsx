@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 import { useProductManager } from '../hooks/useProductManager.jsx';
-import { 
+import {
   FestiveSeason,
   corporateGiftingProducts,
   customisationProducts,
@@ -11,26 +12,24 @@ import {
   educationWorkshopsProducts,
 } from '../assets/data.jsx';
 
-
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
+  const [quantity, setQuantity] = useState(1);
 
-  // Get Google Sheets products
+  const { addToCart } = useCart();
   const { products: sheetProducts, loading: sheetLoading } = useProductManager();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  // Find product from all sections INCLUDING Google Sheets products
   useEffect(() => {
-    // WAIT for sheet products to load before searching
     if (sheetLoading) {
-      return; // Don't search yet, sheets are still loading
+      return;
     }
 
     const allStaticProducts = [
@@ -43,21 +42,14 @@ const ProductDetails = () => {
       ...educationWorkshopsProducts,
     ];
 
-    // Combine static products with Google Sheets products
     const allProducts = [...allStaticProducts, ...(sheetProducts || [])];
-
-    console.log('Searching for product ID:', id);
-    console.log('Total products available:', allProducts.length);
-    console.log('Sheet products:', sheetProducts?.length || 0);
-
     const foundProduct = allProducts.find(p => p.id.toString() === id.toString());
-    console.log('Found product:', foundProduct);
     
+    console.log('Found product:', foundProduct);
     setProduct(foundProduct);
     setLoading(false);
-  }, [id, sheetProducts, sheetLoading]); // Add sheetLoading dependency
+  }, [id, sheetProducts, sheetLoading]);
 
-  // Helper function for image fallback
   const getImageSrc = (imageUrl) => {
     if (!imageUrl || imageUrl.trim() === '') {
       return '/api/placeholder/300/300';
@@ -65,210 +57,354 @@ const ProductDetails = () => {
     return imageUrl;
   };
 
-  // NEW: Get all available images (primary + additional from Google Sheets)
   const getAllProductImages = () => {
     if (!product) return [];
-    
+
     const images = [];
-    
-    // Add primary image if exists
+
     if (product.image && product.image.trim() !== '') {
       images.push(product.image);
     }
-    
-    // Add additional images from Google Sheets if they exist
+
     if (product.images && Array.isArray(product.images)) {
-      const validAdditionalImages = product.images.filter(img => 
-        img && img.trim() !== '' && img !== product.image
+      const validAdditionalImages = product.images.filter(
+        img => img && img.trim() !== '' && img !== product.image
       );
       images.push(...validAdditionalImages);
     }
-    
-    // If no images found, return array with placeholder for thumbnail generation
+
     if (images.length === 0) {
       return ['/api/placeholder/300/300'];
     }
-    
+
     return images;
   };
 
-  // Show loading while sheets are loading OR while searching for product
+  const handleAddToCart = () => {
+    if (!product) return;
+
+    const cartProduct = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category || 'Product'
+    };
+
+    for (let i = 0; i < quantity; i++) {
+      addToCart(cartProduct);
+    }
+
+    alert(`Added ${quantity} ${product.name}(s) to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    handleAddToCart();
+    navigate('/cart');
+  };
+
   if (loading || sheetLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-xl">Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading product details...</p>
+          <p className="text-sm text-gray-400 mt-2">Product ID: {id}</p>
+        </div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="flex flex-col justify-center items-center min-h-screen">
-        <h1 className="text-2xl font-bold mb-4">Product Not Found</h1>
-        <p className="text-gray-600 mb-4">Product ID: {id}</p>
-        <button 
-          onClick={() => navigate('/products')}
-          className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600"
-        >
-          Back to Products
-        </button>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Product Not Found</h1>
+          <p className="text-gray-600 mb-6">The product you're looking for doesn't exist.</p>
+          <p className="text-sm text-gray-400 mb-6">Product ID: {id}</p>
+          <button
+            onClick={() => navigate('/products')}
+            className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+          >
+            Browse All Products
+          </button>
+        </div>
       </div>
     );
   }
 
-  // UPDATED: Use actual product images from Google Sheets or fallback to duplicates
-  const allAvailableImages = getAllProductImages();
-  const productImages = allAvailableImages.length > 0 
-    ? allAvailableImages 
-    : [getImageSrc(product.image), getImageSrc(product.image), getImageSrc(product.image), getImageSrc(product.image)];
+  const allImages = getAllProductImages();
 
   return (
-    <div className="w-full max-w-screen-2xl mx-auto px-8 py-12">
-      {/* Back Button */}
-      <button 
-        onClick={() => navigate(-1)}
-        className="mb-8 flex items-center gap-2 text-blue-600 hover:text-blue-800"
-      >
-        ← Back
-      </button>
-
-      <div className="flex gap-8">
-        {/* Thumbnail Images Column */}
-        <div className="flex flex-col gap-4 w-24">
-          {productImages.slice(0, 4).map((image, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedImage(index)}
-              className={`relative overflow-hidden rounded-lg border-2 transition-all ${
-                selectedImage === index 
-                  ? 'border-orange-500' 
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
-            >
-              <img
-                src={getImageSrc(image)}
-                alt={`${product.name} thumbnail ${index + 1}`}
-                className="w-full h-24 object-cover"
-                onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}
-              />
-            </button>
-          ))}
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Breadcrumb */}
+        <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
+          <button onClick={() => navigate('/')} className="hover:text-orange-500">
+            Home
+          </button>
+          <span>/</span>
+          <button onClick={() => navigate('/products')} className="hover:text-orange-500">
+            Products
+          </button>
+          <span>/</span>
+          <span className="text-gray-700">{product.name}</span>
         </div>
 
-        {/* Main Product Image - Now takes more space */}
-        <div className="flex-1 min-w-[45%] max-w-2xl">
-          <div className="relative">
-            <img 
-              src={getImageSrc(productImages[selectedImage] || productImages[0])}
-              alt={product.name} 
-              className="w-full h-[600px] object-cover"
-              onError={(e) => { e.target.src = '/api/placeholder/300/300'; }}
-            />
-            {product.savePercent && (
-              <div className="absolute top-6 right-6 bg-orange-500 text-white px-4 py-3 rounded-lg font-medium text-lg">
-                Save {product.savePercent}
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
+            {/* Image Gallery Section */}
+            <div className="space-y-4">
+              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                <img
+                  src={getImageSrc(allImages[selectedImage])}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = '/api/placeholder/300/300';
+                  }}
+                />
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* Product Details - More spacious */}
-        <div className="flex-1 min-w-[35%] space-y-8 pl-12">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-6">
-              {product.name}
-            </h1>
-          </div>
+              {allImages.length > 1 && (
+                <div className="grid grid-cols-4 gap-2">
+                  {allImages.map((image, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setSelectedImage(index)}
+                      className={`aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 transition-colors ${
+                        selectedImage === index ? 'border-orange-500' : 'border-transparent hover:border-gray-300'
+                      }`}
+                    >
+                      <img
+                        src={getImageSrc(image)}
+                        alt={`${product.name} ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = '/api/placeholder/300/300';
+                        }}
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
 
-          {/* Price Section */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-4">
-              <span className="text-base font-medium text-gray-700">MRP :</span>
-              {product.originalPrice ? (
-                <>
-                  <span className="text-red-600 font-bold text-2xl">₹{product.price}</span>
-                  <span className="line-through text-gray-500 text-lg">₹{product.originalPrice}</span>
-                  <span className="text-red-600 font-medium text-base">
-                    {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
-                  </span>
-                </>
-              ) : (
-                <span className="text-red-600 font-bold text-2xl">₹{product.price}</span>
+              {allImages.length > 1 && (
+                <div className="text-center text-sm text-gray-500">
+                  {selectedImage + 1} of {allImages.length} images
+                </div>
               )}
             </div>
-            <p className="text-gray-600 text-base">Inclusive of all taxes</p>
+
+            {/* Product Info Section */}
+            <div className="space-y-6">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+                <p className="text-sm text-gray-500">Product ID: {id}</p>
+              </div>
+
+              {/* Price Section */}
+              <div className="space-y-2">
+                <div className="flex items-center space-x-4">
+                  <span className="text-3xl font-bold text-gray-900">₹{product.price}</span>
+                  {product.originalPrice && (
+                    <span className="text-lg text-gray-500 line-through">₹{product.originalPrice}</span>
+                  )}
+                  {product.savePercent && (
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium">
+                      Save {product.savePercent}%
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm text-gray-600">Inclusive of all taxes</p>
+              </div>
+
+              {/* Product Description */}
+              <div className="mt-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-3">Product Description</h3>
+                <div 
+                  className="text-gray-600 leading-relaxed prose prose-sm max-w-none product-description"
+                  dangerouslySetInnerHTML={{
+                    __html: product.description || product.descriptionPlain || 
+                      "Premium quality product crafted with attention to detail."
+                  }}
+                />
+              </div>
+
+              {/* Additional Details - Only show if exists */}
+              {(product.details || product.detailsPlain) && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">Additional Details</h3>
+                  <div 
+                    className="text-gray-600 leading-relaxed prose prose-sm max-w-none product-details"
+                    dangerouslySetInnerHTML={{
+                      __html: product.details || product.detailsPlain || ''
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Quantity Selector */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <label htmlFor="quantity" className="text-sm font-medium text-gray-700">
+                    Quantity:
+                  </label>
+                  <div className="flex items-center border border-gray-300 rounded-md">
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="px-3 py-2 text-gray-500 hover:text-gray-700"
+                    >
+                      -
+                    </button>
+                    <input
+                      type="number"
+                      id="quantity"
+                      min="1"
+                      value={quantity}
+                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-16 px-3 py-2 text-center border-0 focus:ring-0"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="px-3 py-2 text-gray-500 hover:text-gray-700"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-4">
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex-1 bg-orange-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-orange-600 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    onClick={handleBuyNow}
+                    className="flex-1 bg-gray-900 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Product Description */}
-          <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Product Description</h3>
-            <p className="text-gray-700 text-base leading-relaxed">
-              {product.description || "We blend creativity with technology to deliver exceptional solutions. With a team of skilled professionals, we've been transforming ideas into reality since 2024. Our commitment to quality, innovation, and client satisfaction sets us apart as."}
-            </p>
-          </div>
+          {/* Specifications Section */}
+          <div className="border-t border-gray-200 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* General Specifications */}
+              <div>
+                <h4 className="text-lg font-medium text-gray-900 mb-4">General Specifications</h4>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">SKU:</span>
+                    <span className="text-gray-900">{product.sku || '8907605130960'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Weight (gms):</span>
+                    <span className="text-gray-900">{product.weight || '82'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Primary Color:</span>
+                    <span className="text-gray-900">{product.primaryColor || 'Multi color'}</span>
+                  </div>
+                </div>
+              </div>
 
-          {/* Contact Us Button */}
-          <button className="w-full bg-gray-800 text-white py-4 px-8 text-base font-medium hover:bg-gray-900 transition-colors rounded-lg">
-            CONTACT US
-          </button>
+              {/* Composition and Usage */}
+              <div>
+                <h4 className="text-lg font-medium text-gray-900 mb-4">Composition and Usage</h4>
+                <div className="space-y-3 text-sm">
+                  <div>
+                    <span className="text-gray-600">Material:</span>
+                    <span className="text-gray-900 ml-2">
+                      Crafted with durable ceramic for longevity and quality
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Care Instructions:</span>
+                    <span className="text-gray-900 ml-2">Do not wash. Clean with a dry cloth</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-600">Box Contents:</span>
+                    <span className="text-gray-900 ml-2">1 planter</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Product Information & Care - HORIZONTAL LAYOUT BELOW IMAGE */}
-      <div className="mt-12 w-full">
-        <div className="flex items-center gap-3 mb-8">
-          <span className="w-3 h-3 bg-orange-500 rounded-full"></span>
-          <h4 className="font-semibold text-gray-900 text-xl">Product Information & Care</h4>
-        </div>
+      {/* CSS Styles for Rich Text */}
+      <style jsx>{`
+        .product-description strong,
+        .product-details strong {
+          font-weight: 600;
+          color: #1f2937;
+        }
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* General Specifications */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
-              General Specifications
-            </p>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p><span className="font-medium">SKU:</span> {product.sku || '8907605130960'}</p>
-              <p><span className="font-medium">Weight (gms):</span> {product.weight || '82'}</p>
-              <p><span className="font-medium">Primary Color:</span> {product.primaryColor || 'Multi color'}</p>
-            </div>
-          </div>
+        .product-description em,
+        .product-details em {
+          font-style: italic;
+        }
 
-          {/* Composition and Usage */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
-              Composition and Usage
-            </p>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p><span className="font-medium">Material:</span> Crafted with durable ceramic for longevity and quality</p>
-              <p><span className="font-medium">Care Instructions:</span> Do not wash. Clean with a dry cloth</p>
-              <p><span className="font-medium">Box Contents:</span> 1 planter</p>
-            </div>
-          </div>
+        .product-description u,
+        .product-details u {
+          text-decoration: underline;
+        }
 
-          {/* Dimensions */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
-              Dimensions
-            </p>
-            <div className="text-sm text-gray-700 space-y-2">
-              <p><span className="font-medium">Length (cms):</span> {product.length || '12'}</p>
-              <p><span className="font-medium">Height (cms):</span> {product.height || '10.2'}</p>
-              <p><span className="font-medium">Width (cms):</span> {product.width || '10.2'}</p>
-            </div>
-          </div>
+        .product-description s,
+        .product-details s {
+          text-decoration: line-through;
+        }
 
-          {/* Supplier Information */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
-            <p className="font-bold text-gray-900 mb-4 text-base uppercase tracking-wide">
-              Supplier Information
-            </p>
-            <div className="text-sm text-gray-700">
-              <p><span className="font-medium">Country of Origin:</span> {product.origin || 'India'}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+        .product-description br,
+        .product-details br {
+          line-height: 1.5;
+        }
+
+        .product-description p,
+        .product-details p {
+          margin-bottom: 1rem;
+        }
+
+        .product-description a,
+        .product-details a {
+          color: #ff6b35;
+          text-decoration: underline;
+        }
+
+        .product-description a:hover,
+        .product-details a:hover {
+          color: #e55a2b;
+        }
+
+        .product-description ul,
+        .product-details ul {
+          list-style-type: disc;
+          margin-left: 1.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .product-description ol,
+        .product-details ol {
+          list-style-type: decimal;
+          margin-left: 1.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .product-description li,
+        .product-details li {
+          margin-bottom: 0.5rem;
+        }
+      `}</style>
     </div>
   );
 };

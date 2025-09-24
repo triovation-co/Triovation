@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Menu, X } from "lucide-react";
+import { Search, Menu, X ,ShoppingCart} from "lucide-react";
 import Logo from "../assets/logo_bg.png";
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+
 
 const menuData = {
   Products: {
@@ -105,6 +108,10 @@ const Navbar = () => {
     return () => timeoutRef.current && clearTimeout(timeoutRef.current);
   }, []);
 
+const { getCartCount } = useCart();
+const cartCount = getCartCount();
+
+
   return (
     <header
       className={`w-full sticky top-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
@@ -190,7 +197,7 @@ const Navbar = () => {
                                       onClick={() => toggleCategoryExpansion(category.title)}
                                       className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
                                     >
-                                      {isExpanded ? "View Less ↑" : "View All →"}
+                                      {isExpanded ? "View Less â†‘" : "View All â†’"}
                                     </button>
                                   )}
                                 </div>
@@ -213,6 +220,15 @@ const Navbar = () => {
               />
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
             </div>
+            <Link to="/cart" className="relative text-gray-600 hover:text-orange-500 transition-colors duration-200">
+  <ShoppingCart className="h-5 w-5" />
+  {cartCount > 0 && (
+    <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+      {cartCount}
+    </span>
+  )}
+</Link>
+
           </div>
 
           {/* Mobile Menu Button */}

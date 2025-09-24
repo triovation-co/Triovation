@@ -10,20 +10,20 @@ export const useProductManager = () => {
 
   const googleAPI = new GoogleSheetsAPI();
 
-  // Fetch products from Google Sheets
+  // Fetch products from Google Sheets with rich text formatting
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
+      console.log('🔄 Fetching products from Google Sheets with description and details...');
 
-      console.log('🔄 Fetching products from Google Sheets...');
-      const result = await googleAPI.getAllProducts();
+      const result = await googleAPI.getAllProducts(); // This now includes description and details
 
       if (result.error) {
         throw new Error(result.error);
       }
 
-      console.log('✅ Products fetched successfully:', result);
+      console.log('✅ Products fetched successfully with formatting:', result);
       setProducts(Array.isArray(result) ? result : []);
       setLastUpdated(new Date().toISOString());
 
@@ -122,12 +122,12 @@ export const useProductManager = () => {
       if (!searchTerm || searchTerm.trim() === '') {
         return products;
       }
-      
+
       const result = await googleAPI.searchProducts(searchTerm);
       if (result.error) {
         throw new Error(result.error);
       }
-      
+
       return Array.isArray(result) ? result : [];
     } catch (err) {
       console.error('Error searching products:', err);
@@ -142,7 +142,7 @@ export const useProductManager = () => {
       if (result.error) {
         throw new Error(result.error);
       }
-      
+
       return Array.isArray(result) ? result : [];
     } catch (err) {
       console.error('Error getting products by category:', err);
@@ -176,7 +176,7 @@ export const useProductManager = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!loading && document.visibilityState === 'visible') {
-        console.log('🔄 Auto-refreshing products...');
+        console.log('🔄 Auto-refreshing products with description and details...');
         fetchProducts();
       }
     }, 5 * 60 * 1000); // 5 minutes
@@ -191,7 +191,7 @@ export const useProductManager = () => {
     loading,
     error,
     lastUpdated,
-    
+
     // Actions
     refreshProducts,
     addProduct,
@@ -201,7 +201,7 @@ export const useProductManager = () => {
     searchProducts,
     getProductsByCategory,
     testConnection,
-    
+
     // Utilities
     isConnected: !error && !loading,
     productCount: products.length,

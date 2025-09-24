@@ -1,9 +1,8 @@
 // src/services/googleSheetsAPI.js
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyfu5pXnPFniMR9Jemk-NSNkO3f0TFoAerfz8IbBRarHZYo0Vt8b32AwygzmhCImHhKcg/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSAb87fIamKmQtS5b49sOUbRR5PyiQjcXmxIgMLWa2RQ6s-NNTIKBF-rQ3VNqrBorBvA/exec';
 
 class GoogleSheetsAPI {
-
   constructor() {
     this.baseURL = APPS_SCRIPT_URL;
   }
@@ -43,11 +42,17 @@ class GoogleSheetsAPI {
       const result = await response.json();
       console.log(`✅ ${action} result:`, result);
 
-      // Enhanced logging for products
+      // Enhanced logging for products with rich text and details
       if (action === 'getAllProducts' && Array.isArray(result)) {
         result.forEach(product => {
+          if (product.description && product.description.includes('<')) {
+            console.log(`Product ${product.id} has HTML-formatted description`);
+          }
+          if (product.details && product.details.includes('<')) {
+            console.log(`Product ${product.id} has HTML-formatted details`);
+          }
           if (product.images && product.images.length > 0) {
-            console.log(`Product ${product.id} has ${product.images.length} additional images:`, product.images);
+            console.log(`Product ${product.id} has ${product.images.length} additional images`);
           }
         });
       }
@@ -56,7 +61,7 @@ class GoogleSheetsAPI {
 
     } catch (error) {
       console.error(`❌ Error in ${action}:`, error);
-      return { 
+      return {
         error: error.message,
         action: action,
         timestamp: new Date().toISOString()
@@ -94,7 +99,7 @@ class GoogleSheetsAPI {
 
     } catch (error) {
       console.error(`❌ Error in ${action}:`, error);
-      return { 
+      return {
         error: error.message,
         action: action,
         timestamp: new Date().toISOString()
@@ -102,12 +107,12 @@ class GoogleSheetsAPI {
     }
   }
 
-  // Get all products
+  // Get all products with rich text formatting
   async getAllProducts() {
     return await this.makeGetRequest('getAllProducts');
   }
 
-  // Get single product by ID
+  // Get single product by ID with rich text formatting
   async getProductById(productId) {
     return await this.makeGetRequest('getProductById', { productId });
   }
@@ -172,7 +177,7 @@ class GoogleSheetsAPI {
     return await this.makeGetRequest('testImages');
   }
 
-  // Test connection
+  // Test connection with rich text support info
   async testConnection() {
     return await this.makeGetRequest('test');
   }
