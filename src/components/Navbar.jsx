@@ -132,7 +132,7 @@ const cartCount = getCartCount();
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
-            {["Home", "About", "Products", "Service", "Work_Education", "Contact Us"].map(
+            {["Home", "About", "Products", "Consultancy", "Education", "Contact Us"].map(
               (item, i) => (
                 <div
                   key={i}

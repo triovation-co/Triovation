@@ -47,7 +47,7 @@ const Service = () => {
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-white text-center text-2xl font-semibold px-2">
-              Learning Zone
+              Manufacturing Support
             </p>
           </div>
         </div>
@@ -64,7 +64,7 @@ const Service = () => {
           />
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-white text-center text-2xl font-semibold px-2">
-              Learn and Make
+              Startup Venture Support
             </p>
           </div>
         </div>
@@ -120,7 +120,7 @@ const Service = () => {
       
           {/* Right Column: Text */}
           <div className="mt-8 lg:mt-0 lg:mr-12 xl:mr-20 text-center lg:text-left">
-            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 text-gray-800">Learning Zone</h1>
+            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 text-gray-800">Manufacturing Support</h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
               We blend creativity with technology to deliver exceptional solutions. With a team of skilled professionals,
               we've been transforming ideas into reality since 2024. Our commitment to quality, innovation, and client 
@@ -140,7 +140,7 @@ const Service = () => {
                 
           {/* Right Column: Text */}
           <div className="text-center lg:text-left order-2 lg:order-1">
-            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 text-gray-800">Learn and Make</h1>
+            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 text-gray-800">Startup Venture Support</h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
               We blend creativity with technology to deliver exceptional solutions.
               With a team of skilled professionals, we've been transforming ideas
