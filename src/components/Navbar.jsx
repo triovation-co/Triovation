@@ -127,7 +127,7 @@ const Navbar = () => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
-            {["Home", "About", "Products", "Consultancy", "Education", "Contact Us"].map(
+            {["Home", "About", "Products", "Consultancy", "Education", "ContactUs"].map(
               (item, i) => (
                 <div
                   key={i}
@@ -316,7 +316,7 @@ const Navbar = () => {
           }`}
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
-            {["Home", "About", "Products", "Consultancy", "Education", "Contact Us"].map(
+            {["Home", "About", "Products", "Consultancy", "Education", "ContactUs"].map(
               (item, i) => (
                 <a
                   key={i}

@@ -136,14 +136,9 @@ const About = () => {
                     color: "from-cyan-500 to-teal-500"
                   },
                   {
-                    title: "Creation & Fabrication:",
-                    description: "From design consultancy to manufacturing and gifting, we bring concepts to life using the right materials, tools, and processes.",
+                    title: "Creation. Customization. Perfection:",
+                    description: "From concept to creation, we bring ideas to life through design, manufacturing, and gifting. Every product is customized, refined to your needs, and delivered with precision and care.",
                     color: "from-teal-500 to-green-500"
-                  },
-                  {
-                    title: "Customization & Delivery:",
-                    description: "Every outcome is personalized refined to match your requirements and delivered with precision and care.",
-                    color: "from-green-500 to-emerald-500"
                   },
                   {
                     title: "Learning & Growth:",
