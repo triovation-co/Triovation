@@ -42,19 +42,19 @@ const About = () => {
               <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
                 In 2025, what began as a simple hangout between two friends quickly turned into something bigger.
 
-Himanshi, tired of the usual 9-to-6 job, dreamed of building something of her own. Samrudhi, full of energy and driven by passion, believed in starting young and creating something meaningful.
+                Himanshi, tired of the usual 9-to-6 job, dreamed of building something of her own. Samrudhi, full of energy and driven by passion, believed in starting young and creating something meaningful.
 
-As they talked, they realized something important: the journey of turning an idea into a real, successful business was all over the place. Product design was often disconnected, branding came as an afterthought, and startups lacked proper guidance and support.
+                As they talked, they realized something important: the journey of turning an idea into a real, successful business was all over the place. Product design was often disconnected, branding came as an afterthought, and startups lacked proper guidance and support.
 
-That’s when Akhilesh Sir came into the picture a mentor, advisor, and tech enthusiast. He saw their potential and helped them shape their raw ideas into a clear vision. With his experience and guidance, what was once just a spark turned into a focused mission.
+                That’s when Akhilesh Sir came into the picture a mentor, advisor, and tech enthusiast. He saw their potential and helped them shape their raw ideas into a clear vision. With his experience and guidance, what was once just a spark turned into a focused mission.
 
-And that's how TRIOVATION was born a space where ideas take form. A place where creativity meets strategy, and vision turns into reality.
+                And that's how TRIOVATION was born a space where ideas take form. A place where creativity meets strategy, and vision turns into reality.
 
-At TRIOVATION, we bring together four key domains under one roof:
-Design | Corporate Gifting | Startup Ventures | Education
+                At TRIOVATION, we bring together four key domains under one roof:
+                Design | Corporate Gifting | Startup Ventures | Education
 
-Together, these pillars support everything a growing idea needs from its first sketch to a thriving business.
-</p>
+                Together, these pillars support everything a growing idea needs from its first sketch to a thriving business.
+            </p>
             </div>
           </div>
         </main>
@@ -67,18 +67,33 @@ Together, these pillars support everything a growing idea needs from its first s
               <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
                 Our Approach
               </h1>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-                1. Ideation
- We start by listening to your ideas, needs, and vision — whether it’s for a product, a gift, or a learning experience.<br/>
-2. Design & Planning
- Our team sketches, prototypes, and strategizes to craft tailored solutions that balance creativity, functionality, and feasibility.<br/>
-3. Creation & Fabrication
- From design consultancy to manufacturing and gifting, we bring concepts to life using the right materials, tools, and processes.<br/>
-4. Customization & Delivery
- Every outcome is personalized — refined to match your requirements and delivered with precision and care.<br/>
-5. Learning & Growth
- Through workshops, kits, and hands-on sessions, we extend our approach to teaching and inspiring the next generation of creators.
-              </p>
+              <ol type="1" className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed list-decimal list-inside space-y-2 text-gray-600 text-lg lg:text-xl xl:text-xl mb-4">
+                  <li>Ideation: <br/>
+                      We start by listening to your ideas, needs, and vision — whether it’s for a product, a gift, or a learning experience.
+                  </li>
+                  <li>Design & Planning: <br/>
+                      Our team sketches, prototypes, and strategizes to craft tailored solutions that balance creativity, functionality, and feasibility.
+                  </li>
+                  <li>Creation & Fabrication: <br/>
+                      From design consultancy to manufacturing and gifting, we bring concepts to life using the right materials, tools, and processes.
+                  </li>
+                  <li>Customization & Delivery: <br/>
+                      Every outcome is personalized — refined to match your requirements and delivered with precision and care.
+                  </li>
+                  <li>Learning & Growth: <br/>
+                      Through workshops, kits, and hands-on sessions, we extend our approach to teaching and inspiring the next generation of creators.
+                  </li>
+                {/* 1. Ideation
+                    We start by listening to your ideas, needs, and vision — whether it’s for a product, a gift, or a learning experience.<br/>
+                    2. Design & Planning
+                    Our team sketches, prototypes, and strategizes to craft tailored solutions that balance creativity, functionality, and feasibility.<br/>
+                    3. Creation & Fabrication
+                    From design consultancy to manufacturing and gifting, we bring concepts to life using the right materials, tools, and processes.<br/>
+                    4. Customization & Delivery
+                    Every outcome is personalized — refined to match your requirements and delivered with precision and care.<br/>
+                    5. Learning & Growth
+                    Through workshops, kits, and hands-on sessions, we extend our approach to teaching and inspiring the next generation of creators. */}
+              </ol>
             </div>
 
             {/* Right Column - Image */}
@@ -133,10 +148,10 @@ Together, these pillars support everything a growing idea needs from its first s
             </div>
             {/* Right Column - Text */}
             <div>
-              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-4xl font-bold mb-4 sm:mb-6 text-gray-800 leading-snug">
+              <h2 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
                 Our Craftmanship
               </h2>
-              <p className="text-gray-600 text-sm sm:text-base md:text-lg lg:text-xl xl:text-xl leading-relaxed max-w-xl mx-auto md:mx-0">
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
                 At TRIOVATION, we are the makers. Every product, design, and workshop is crafted by our own team combining creativity, precision, and technical know-how. From 2D and 3D design to fabrication and finishing, we handle each step with care to ensure the outcome is truly unique.
 Our craftsmanship lies in the details tailored to need, shaped with passion, and built to inspire.
               </p>

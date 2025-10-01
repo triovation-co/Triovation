@@ -68,7 +68,7 @@ Our mission is to empower brands and individuals to turn their ideas into impact
                 Why Choose Us
               </h1>
               <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed">
-                TRIOVATION is a creative collective bringing together design, manufacturing, gifting, and hands-on education on a single platform. Our expertise lies in transforming abstract ideas into tangible products and experiences from custom corporate hampers to product design consultancy and machine-learning workshops.
+                <strong>TRIOVATION</strong> is a creative collective bringing together design, manufacturing, gifting, and hands-on education on a single platform. Our expertise lies in transforming abstract ideas into tangible products and experiences from custom corporate hampers to product design consultancy and machine-learning workshops.
 Partner with us to craft meaningful gifts, unlock innovative design solutions, and inspire learning through creativity and technology. We combine creativity, precision, and customization to bring ideas to life — whether it’s a unique corporate hamper, product design support, or an engaging workshop.
               </p>
             </div>
@@ -77,6 +77,37 @@ Partner with us to craft meaningful gifts, unlock innovative design solutions, a
 
           </div>
         </main>
+        <div className="w-full lg:w-1/2 order-1 lg:order-2">
+          <div className="space-y-6 md:space-y-8">
+            <div className="flex flex-row">
+              <div className= "mr-4 flex-shrink-0">
+                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-500 text-white font-bold text-sm sm:text-base">1</div>
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold mb-2">Diverse Expert Team</h3>
+                <p className="text-gray-300 text-sm sm:text-base">Our team brings together specialists in Graphic design, Packaging design, UI/UX design, Brand positioning, 3D design and fabrication, electronics, sourcing, and creative strategy. This diverse skill set allows us to deliver innovative, end-to-end solutions under one roof.</p>
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <div className= "mr-4 flex-shrink-0">
+                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-500 text-white font-bold text-sm sm:text-base">2</div>
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold mb-2">Tailored & Custom Solutions</h3>
+                <p className="text-gray-300 text-sm sm:text-base">From corporate gifting to product innovation and workshops, everything we create is customizable. Materials, designs, and experiences are shaped around your needs.</p>
+              </div>
+            </div>
+            <div className="flex flex-row">
+              <div className= "mr-4 flex-shrink-0">
+                <div className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-red-500 text-white font-bold text-sm sm:text-base">3</div>
+              </div>
+              <div>
+                <h3 className="text-lg md:text-xl font-bold mb-2">Innovation Meets Education</h3>
+                <p className="text-gray-300 text-sm sm:text-base">We teach and inspire adhering to the current trends. Through design consultancy to develop brand positioning, current technology machine workshops, and interactive learning kits, TRIOVATION blends creativity with education, empowering both professionals and kids.</p>
+              </div>
+            </div>
+          </div>
+        </div>
                     <div className="grid grid-cols-1 md:grid-cols-3">
               <p>
                 01 — Diverse Expert Team
