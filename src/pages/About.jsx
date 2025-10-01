@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import img from "../assets/image1.jpg";
 import Our_approach from "../assets/Our approach.jpg";
-import Our_story from "../assets/Our_story.jpg";
+import Our_story from "../assets/our_story.jpg";
 import Our_crasftsmenship from "../assets/Our_crasftsmenship.jpg";
 import flower from "../assets/flower.png";
 import design from "../assets/design.jpg";
