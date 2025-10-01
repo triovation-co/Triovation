@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Menu, X ,ShoppingCart} from "lucide-react";
+import { Search, Menu, X, ShoppingCart } from "lucide-react";
 import Logo from "../assets/logo_bg.png";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-
 
 const menuData = {
   Products: {
@@ -61,29 +60,24 @@ const Navbar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [expandedCategories, setExpandedCategories] = useState(new Set());
-  const [currentPage, setCurrentPage] = useState('');
+  const [currentPage, setCurrentPage] = useState("");
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const timeoutRef = useRef(null);
 
-  // Get current page from URL and Debug
   useEffect(() => {
     const pathname = window.location.pathname;
-    const page = pathname === '/' ? 'Home' : pathname.substring(1);
+    const page = pathname === "/" ? "Home" : pathname.substring(1);
     setCurrentPage(page);
-    console.log("Current page:", page);
   }, []);
 
-  // Hover handler with 600ms delay for Products dropdown on non-Products pages
   const handleMenuHover = (item) => {
-    console.log(`Hover on: ${item}, currentPage: ${currentPage}`);
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
     if (item === "Products" && currentPage !== "Products") {
-      // 600ms delay on non-Products pages
       timeoutRef.current = setTimeout(() => {
         setActiveDropdown(item);
       }, 600);
     } else {
-      // Immediate open on Products page
       setActiveDropdown(item);
     }
   };
@@ -97,7 +91,7 @@ const Navbar = () => {
   };
 
   const toggleCategoryExpansion = (categoryTitle) => {
-    setExpandedCategories(prev => {
+    setExpandedCategories((prev) => {
       const newSet = new Set(prev);
       newSet.has(categoryTitle) ? newSet.delete(categoryTitle) : newSet.add(categoryTitle);
       return newSet;
@@ -108,13 +102,14 @@ const Navbar = () => {
     return () => timeoutRef.current && clearTimeout(timeoutRef.current);
   }, []);
 
-const { getCartCount } = useCart();
-const cartCount = getCartCount();
-
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
 
   return (
     <header
-      className={`w-full sticky top-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"}`}
+      className={`w-full sticky top-0 z-50 transition-transform duration-300 ${
+        showNavbar ? "translate-y-0" : "-translate-y-full"
+      }`}
     >
       {/* Top Bar */}
       <div className="w-full bg-[#f47e82] text-white text-xs sm:text-sm md:text-base text-center py-2 md:py-4"></div>
@@ -152,16 +147,17 @@ const cartCount = getCartCount();
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                   </a>
 
-                  {/* Dropdown with updated links to redirect to Products page with highlight parameter */}
+                  {/* Dropdown */}
                   {item === "Products" && activeDropdown === item && (
                     <div
                       className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
                       style={{ animation: "fadeIn 0.3s ease-out forwards" }}
-                      onMouseEnter={() => timeoutRef.current && clearTimeout(timeoutRef.current)}
+                      onMouseEnter={() =>
+                        timeoutRef.current && clearTimeout(timeoutRef.current)
+                      }
                       onMouseLeave={handleMenuLeave}
                     >
                       <div className="p-8 sm:p-10 flex justify-center">
-                        {/* Container with increased padding for more uniform spacing */}
                         <div className="w-full max-w-7xl px-4">
                           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-10">
                             {menuData.Products.categories.map((category, idx) => {
@@ -180,7 +176,9 @@ const cartCount = getCartCount();
                                     {itemsToShow.map((subItem, subIdx) => (
                                       <li key={subIdx}>
                                         <a
-                                          href={`/Products?highlight=${encodeURIComponent(subItem)}`}
+                                          href={`/Products?highlight=${encodeURIComponent(
+                                            subItem
+                                          )}`}
                                           className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
                                           onClick={() => {
                                             setActiveDropdown(null);
@@ -192,12 +190,15 @@ const cartCount = getCartCount();
                                       </li>
                                     ))}
                                   </ul>
-                                  {category.allItems.length > category.defaultItems.length && (
+                                  {category.allItems.length >
+                                    category.defaultItems.length && (
                                     <button
-                                      onClick={() => toggleCategoryExpansion(category.title)}
+                                      onClick={() =>
+                                        toggleCategoryExpansion(category.title)
+                                      }
                                       className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
                                     >
-                                      {isExpanded ? "View Less â†‘" : "View All â†’"}
+                                      {isExpanded ? "View Less ↑" : "View All →"}
                                     </button>
                                   )}
                                 </div>
@@ -212,6 +213,7 @@ const cartCount = getCartCount();
               )
             )}
 
+            {/* Desktop Search */}
             <div className="relative flex mr-6 lg:mr-10">
               <input
                 type="text"
@@ -220,41 +222,101 @@ const cartCount = getCartCount();
               />
               <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
             </div>
-            <Link to="/cart" className="relative text-gray-600 hover:text-orange-500 transition-colors duration-200">
-  <ShoppingCart className="h-5 w-5" />
-  {cartCount > 0 && (
-    <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
-      {cartCount}
-    </span>
-  )}
-</Link>
 
+            {/* Desktop Cart */}
+            <Link
+              to="/cart"
+              className="relative text-gray-600 hover:text-orange-500 transition-colors duration-200"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-gray-700 transition-all duration-500 hover:text-red-500 hover:scale-110"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <div className="relative">
-              <Menu
-                size={28}
-                className={`transition-all duration-300 ${isOpen ? "opacity-0 rotate-180 scale-0" : "opacity-100 rotate-0 scale-100"}`}
-              />
-              <X
-                size={28}
-                className={`absolute top-0 left-0 transition-all duration-500 ${isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-180 scale-0"}`}
-              />
-            </div>
-          </button>
+          {/* Mobile Actions */}
+          <div className="flex items-center space-x-4 md:hidden">
+            {/* Mobile Search Icon */}
+            {!mobileSearchOpen && (
+              <button
+                onClick={() => setMobileSearchOpen(true)}
+                className="text-gray-700 hover:text-red-500 transition-colors"
+              >
+                <Search className="h-5 w-5" />
+              </button>
+            )}
+
+            {/* Mobile Cart */}
+            <Link
+              to="/cart"
+              className="relative text-gray-700 hover:text-orange-500 transition-colors"
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="text-gray-700 transition-all duration-500 hover:text-red-500 hover:scale-110"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <div className="relative">
+                <Menu
+                  size={28}
+                  className={`transition-all duration-300 ${
+                    isOpen
+                      ? "opacity-0 rotate-180 scale-0"
+                      : "opacity-100 rotate-0 scale-100"
+                  }`}
+                />
+                <X
+                  size={28}
+                  className={`absolute top-0 left-0 transition-all duration-500 ${
+                    isOpen
+                      ? "opacity-100 rotate-0 scale-100"
+                      : "opacity-0 rotate-180 scale-0"
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
         </div>
 
+        {/* Mobile Search Bar */}
+          {mobileSearchOpen && (
+            <div className="md:hidden px-4 py-2 bg-white border-t flex items-center space-x-2 animate-fadeIn">
+              <Search className="h-5 w-5 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Search For Decor"
+                autoFocus
+                className="flex-1 border rounded-md px-3 py-1 text-sm 
+                          focus:outline-none focus:ring-1 focus:ring-gray-400 
+                          focus:border-red-300 w-full max-w-[90%] transition-all"
+              />
+              <button
+                onClick={() => setMobileSearchOpen(false)}
+                className="text-gray-500 hover:text-red-500"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+          )}
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
+            isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          }`}
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
-            {["Home", "About", "Products", "Service", "Work_Education", "Contact Us"].map(
+            {["Home", "About", "Products", "Consultancy", "Education", "Contact Us"].map(
               (item, i) => (
                 <a
                   key={i}
@@ -269,15 +331,6 @@ const cartCount = getCartCount();
                 </a>
               )
             )}
-
-            <div className="relative flex">
-              <input
-                type="text"
-                placeholder="Search For Decor"
-                className="pl-10 pr-4 py-1.5 border rounded-md text-sm w-full focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-300 focus:shadow-md focus:border-red-300"
-              />
-              <Search className="absolute left-3 top-2 h-4 w-4 text-gray-500" />
-            </div>
           </div>
         </div>
       </nav>
@@ -286,14 +339,17 @@ const cartCount = getCartCount();
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: translateY(-10px);
+            transform: translateY(-5px);
           }
           to {
             opacity: 1;
             transform: translateY(0);
           }
         }
-      `}</style>
+        .animate-fadeIn {
+          animation: fadeIn 0.25s ease-out forwards;
+        }`
+      }</style>
     </header>
   );
 };

@@ -38,7 +38,7 @@ const Footer = () => {
           </div>
 
           {/* Column 3 - Our Company */}
-          <div>
+          <div className="mt-1 lg:mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">Our Company</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
               <li><a href="#" className="hover:text-blue-600">Home</a></li>
@@ -48,7 +48,7 @@ const Footer = () => {
           </div>
 
           {/* Column 4 - Help */}
-          <div>
+          <div className="mt-1 lg:mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">Help</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
               <li><a href="#" className="hover:text-blue-600">Cancellation & Refund</a></li>
