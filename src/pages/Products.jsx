@@ -6,16 +6,9 @@ import { useProductManager } from "../hooks/useProductManager.jsx";
 import img from "../assets/image1.jpg";
 import WhatsAppButton from "../components/whatsapp.jsx";
 import {
-  sections,
-  whatsNewItems,
-  bestSellerItems,
-  FestiveSeason,
-  corporateGiftingProducts,
-  customisationProducts,
-  homeDecorProducts,
-  mechanicalProducts,
-  designConsultancyProducts,
-  educationWorkshopsProducts,
+  sections, whatsNewItems, bestSellerItems, FestiveSeason,
+  corporateGiftingProducts, customisationProducts, homeDecorProducts,
+  mechanicalProducts, designConsultancyProducts, educationWorkshopsProducts,
 } from "../assets/data.jsx";
 
 // ⭐ Helper function to scroll to a ref with offset
@@ -41,9 +34,42 @@ const Products = () => {
   const [showAllDesign, setShowAllDesign] = useState(false);
   const [showAllEducation, setShowAllEducation] = useState(false);
   const [highlightedProduct, setHighlightedProduct] = useState(null);
+  
+  // NEW: Sorting state
+  const [sortBy, setSortBy] = useState('featured');
 
-  // ADD: Google Sheets Integration
-  const { products: sheetProducts, loading: productsLoading } = useProductManager();
+  // ADD: Google Sheets Integration with sorting support
+  const { products: sheetProducts, loading: productsLoading, refreshProducts } = useProductManager();
+
+  // Function to sort products locally (for static data)
+  const sortProductsLocally = (products, sortOption) => {
+    const productsCopy = [...products];
+    
+    switch (sortOption) {
+      case 'price-low-high':
+        return productsCopy.sort((a, b) => {
+          const priceA = parseFloat(a.price?.toString().replace(/[₹$€£¥,\s]/g, '') || '0');
+          const priceB = parseFloat(b.price?.toString().replace(/[₹$€£¥,\s]/g, '') || '0');
+          return priceA - priceB;
+        });
+      case 'price-high-low':
+        return productsCopy.sort((a, b) => {
+          const priceA = parseFloat(a.price?.toString().replace(/[₹$€£¥,\s]/g, '') || '0');
+          const priceB = parseFloat(b.price?.toString().replace(/[₹$€£¥,\s]/g, '') || '0');
+          return priceB - priceA;
+        });
+      case 'name':
+        return productsCopy.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      case 'newest':
+        return productsCopy.sort((a, b) => {
+          const idA = parseInt(a.id) || 0;
+          const idB = parseInt(b.id) || 0;
+          return idB - idA;
+        });
+      default:
+        return productsCopy;
+    }
+  };
 
   // ADD: Enhanced product arrays that combine static + sheet data
   const [enhancedProducts, setEnhancedProducts] = useState({
@@ -56,15 +82,13 @@ const Products = () => {
     education: educationWorkshopsProducts
   });
 
-  // ADD: Update enhanced products when sheet data loads
+  // ADD: Update enhanced products when sheet data loads or sorting changes
   useEffect(() => {
     if (sheetProducts && sheetProducts.length > 0) {
       console.log(`Received ${sheetProducts.length} products from sheets`);
-
       // Group sheet products by category
       const sheetProductsByCategory = sheetProducts.reduce((acc, product) => {
         const category = product.category?.toLowerCase() || '';
-
         if (category.includes('festive') || category.includes('festival')) {
           acc.festive = acc.festive || [];
           acc.festive.push(product);
@@ -90,20 +114,41 @@ const Products = () => {
         return acc;
       }, {});
 
-      // Merge with existing static products
+      // Merge and sort with existing static products
       setEnhancedProducts({
-        festive: [...FestiveSeason, ...(sheetProductsByCategory.festive || [])],
-        corporate: [...corporateGiftingProducts, ...(sheetProductsByCategory.corporate || [])],
-        customisation: [...customisationProducts, ...(sheetProductsByCategory.customisation || [])],
-        homeDecor: [...homeDecorProducts, ...(sheetProductsByCategory.homeDecor || [])],
-        mechanical: [...mechanicalProducts, ...(sheetProductsByCategory.mechanical || [])],
-        design: [...designConsultancyProducts, ...(sheetProductsByCategory.design || [])],
-        education: [...educationWorkshopsProducts, ...(sheetProductsByCategory.education || [])]
+        festive: sortProductsLocally([...FestiveSeason, ...(sheetProductsByCategory.festive || [])], sortBy),
+        corporate: sortProductsLocally([...corporateGiftingProducts, ...(sheetProductsByCategory.corporate || [])], sortBy),
+        customisation: sortProductsLocally([...customisationProducts, ...(sheetProductsByCategory.customisation || [])], sortBy),
+        homeDecor: sortProductsLocally([...homeDecorProducts, ...(sheetProductsByCategory.homeDecor || [])], sortBy),
+        mechanical: sortProductsLocally([...mechanicalProducts, ...(sheetProductsByCategory.mechanical || [])], sortBy),
+        design: sortProductsLocally([...designConsultancyProducts, ...(sheetProductsByCategory.design || [])], sortBy),
+        education: sortProductsLocally([...educationWorkshopsProducts, ...(sheetProductsByCategory.education || [])], sortBy)
+      });
+    } else {
+      // If no sheet products, just sort static products
+      setEnhancedProducts({
+        festive: sortProductsLocally(FestiveSeason, sortBy),
+        corporate: sortProductsLocally(corporateGiftingProducts, sortBy),
+        customisation: sortProductsLocally(customisationProducts, sortBy),
+        homeDecor: sortProductsLocally(homeDecorProducts, sortBy),
+        mechanical: sortProductsLocally(mechanicalProducts, sortBy),
+        design: sortProductsLocally(designConsultancyProducts, sortBy),
+        education: sortProductsLocally(educationWorkshopsProducts, sortBy)
       });
     }
-  }, [sheetProducts]);
+  }, [sheetProducts, sortBy]);
 
-  // Refs
+  // Handle sorting change
+  const handleSortChange = async (newSortBy) => {
+    setSortBy(newSortBy);
+    
+    // If we have sheet products, refresh them with new sorting
+    if (refreshProducts) {
+      await refreshProducts(newSortBy);
+    }
+  };
+
+  // All your existing refs and functions remain the same...
   const festiveRef = useRef(null);
   const corporateRef = useRef(null);
   const customisationRef = useRef(null);
@@ -125,7 +170,7 @@ const Products = () => {
     ];
 
     for (const section of sections) {
-      const found = section.products.find(product =>
+      const found = section.products.find(product => 
         product.name.toLowerCase().includes(productName.toLowerCase()) ||
         productName.toLowerCase().includes(product.name.toLowerCase())
       );
@@ -138,27 +183,13 @@ const Products = () => {
 
   const expandRelevantSection = (sectionName) => {
     switch(sectionName) {
-      case 'festive':
-        setShowAllFestive(true);
-        break;
-      case 'corporate':
-        setShowAllCorporate(true);
-        break;
-      case 'customisation':
-        setShowAllCustomisation(true);
-        break;
-      case 'homeDecor':
-        setShowAllHomeDecor(true);
-        break;
-      case 'mechanical':
-        setShowAllMechanical(true);
-        break;
-      case 'design':
-        setShowAllDesign(true);
-        break;
-      case 'education':
-        setShowAllEducation(true);
-        break;
+      case 'festive': setShowAllFestive(true); break;
+      case 'corporate': setShowAllCorporate(true); break;
+      case 'customisation': setShowAllCustomisation(true); break;
+      case 'homeDecor': setShowAllHomeDecor(true); break;
+      case 'mechanical': setShowAllMechanical(true); break;
+      case 'design': setShowAllDesign(true); break;
+      case 'education': setShowAllEducation(true); break;
     }
   };
 
@@ -206,9 +237,10 @@ const Products = () => {
 
   // Helper function to check if product should be highlighted
   const shouldHighlight = (product) => {
-    return highlightedProduct &&
-      (product.name.toLowerCase().includes(highlightedProduct.toLowerCase()) ||
-       highlightedProduct.toLowerCase().includes(product.name.toLowerCase()));
+    return highlightedProduct && (
+      product.name.toLowerCase().includes(highlightedProduct.toLowerCase()) ||
+      highlightedProduct.toLowerCase().includes(product.name.toLowerCase())
+    );
   };
 
   // Display logic using enhanced products
@@ -223,28 +255,28 @@ const Products = () => {
   return (
     <div className="min-h-screen pt-20">
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8">
-
-        {/* Sort Controls */}
+        {/* Sort Controls - ENHANCED */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 mx-15 -mt-15">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Sort by</span>
+            <span className="text-sm font-medium text-gray-700">Sort by:</span>
             <div className="relative">
-              <select className="appearance-none bg-white border border-gray-300 rounded-md px-3 py-1 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                <option>Featured</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
-                <option>Newest</option>
-                <option>Best Selling</option>
+              <select 
+                className="appearance-none bg-white border border-gray-300 rounded-md px-3 py-1 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                value={sortBy}
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
+                <option value="featured">Featured</option>
+                <option value="price-low-high">Price: Low to High</option>
+                <option value="price-high-low">Price: High to Low</option>
+                <option value="name">Alphabetical</option>
+                <option value="newest">Newest</option>
               </select>
               <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
-
-          {/* ADD: Loading indicator */}
           {productsLoading && (
-            <div className="text-xs text-blue-600 flex items-center gap-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              Syncing products...
+            <div className="text-sm text-gray-600">
+              Loading products...
             </div>
           )}
         </div>
@@ -257,30 +289,26 @@ const Products = () => {
               <span className="mx-4 text-gray-800 font-semibold text-xl">WHAT'S NEW</span>
               <div className="flex-grow border-t-2 border-gray-300"></div>
             </div>
-
             <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 justify-items-center">
               {whatsNewItems.map((item, index) => (
-                <Link
-                  key={index}
+                <Link 
+                  key={index} 
                   to={`/category/${encodeURIComponent(item.title)}`}
                   className="w-full max-w-xs rounded-2xl overflow-hidden bg-white flex flex-col h-full"
                 >
                   <div className="relative aspect-square">
-                    <img
-                      src={item.image}
+                    <img 
+                      src={item.image} 
                       alt={item.title}
                       className="rounded-2xl w-full h-full object-cover"
                     />
                   </div>
                   <div className="p-2 flex flex-col flex-grow text-center">
-                    <h3 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">
-                      {item.title}
-                    </h3>
+                    <h3 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">{item.title}</h3>
                   </div>
                 </Link>
               ))}
             </div>
-
           </div>
         </div>
 
@@ -292,12 +320,19 @@ const Products = () => {
               <span className="mx-4 text-gray-800 font-semibold text-xl">BEST SELLER</span>
               <div className="flex-grow border-t-2 border-gray-300"></div>
             </div>
-
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 2xl:gap-8">
               {bestSellerItems.map((item, index) => (
-                <Link key={index} to={`/category/${encodeURIComponent(item.title)}`} className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full mx-auto">
+                <Link 
+                  key={index} 
+                  to={`/category/${encodeURIComponent(item.title)}`}
+                  className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full mx-auto"
+                >
                   <div className="relative">
-                    <img src={item.image} alt={item.title} className="rounded-2xl w-full h-48 sm:h-56 md:h-64 2xl:h-100 object-cover" />
+                    <img 
+                      src={item.image} 
+                      alt={item.title}
+                      className="rounded-2xl w-full h-48 sm:h-56 md:h-64 2xl:h-100 object-cover"
+                    />
                   </div>
                   <div className="p-4 flex flex-col flex-grow text-center">
                     <h3 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">{item.title}</h3>
@@ -392,47 +427,46 @@ const Products = () => {
           shouldHighlight={shouldHighlight}
           buttonColor="bg-orange-400"
         />
-
       </div>
-         <div className="mt-20">
-            <main className="container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 bg-white">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
-                
-                {/* Left Column: Images */}
-                <div className="relative flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
-                  {/* Right image (behind) */}
-                  <div className="relative w-[200px] sm:w-[250px] lg:w-[310px] xl:w-[400px] aspect-[3/4] rounded-t-full overflow-hidden shadow-lg">
-                    <img src={img} alt="Gift Background" className="w-full h-full object-cover" />
-                  </div>
 
-                  {/* Left image (in front, on top in mobile) */}
-                  <div className="relative w-[180px] sm:w-[200px] lg:w-[250px] xl:w-[350px] aspect-[3/4] rounded-t-full overflow-hidden shadow-lg -mt-6 sm:mt-0">
-                    <img src={img} alt="Gift Foreground" className="w-full h-full object-cover" />
-                  </div>
-                </div>
-
-    
-                {/* Right Column: Text */}
-                <div className="mt-10 lg:mt-20 text-center lg:text-left px-2">
-                  <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-4">
-                    Joining Kits, Event Giveaways & More
-                  </p>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-700 mb-4">
-                    Corporate Bulk Gifting
-                  </h1>
-                  <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
-                    Email at <span className="font-semibold">Triovation@gmail.in</span> for any B2B gifting requirement!
-                  </p>
-                  <button className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base">
-                    Contact Us
-                  </button>
-                </div>
+      {/* Rest of your existing content... */}
+      <div className="mt-20">
+        <main className="container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 bg-white">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
+            {/* Left Column - Images */}
+            <div className="relative flex flex-col sm:flex-row items-center justify-center gap-6 w-full">
+              {/* Right image (behind) */}
+              <div className="relative w-[200px] sm:w-[250px] lg:w-[310px] xl:w-[400px] aspect-[3/4] rounded-t-full overflow-hidden shadow-lg">
+                <img src={img} alt="Gift Background" className="w-full h-full object-cover" />
               </div>
-            </main>
+              
+              {/* Left image (in front, on top in mobile) */}
+              <div className="relative w-[180px] sm:w-[200px] lg:w-[250px] xl:w-[350px] aspect-[3/4] rounded-t-full overflow-hidden shadow-lg -mt-6 sm:mt-0">
+                <img src={img} alt="Gift Foreground" className="w-full h-full object-cover" />
+              </div>
+            </div>
+
+            {/* Right Column - Text */}
+            <div className="mt-10 lg:mt-20 text-center lg:text-left px-2">
+              <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-4">
+                Joining Kits, Event Giveaways & More
+              </p>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-700 mb-4">
+                Corporate Bulk Gifting
+              </h1>
+              <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
+                Email at <span className="font-semibold">Triovation@gmail.in</span> for any B2B gifting requirement!
+              </p>
+              <button className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base">
+                Contact Us
+              </button>
+            </div>
           </div>
-          <WhatsAppButton/>
+        </main>
+      </div>
+      
+      <WhatsAppButton />
     </div>
-    
   );
 };
 

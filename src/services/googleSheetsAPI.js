@@ -2,10 +2,92 @@
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUJS-VNU057UWFWAykP-LMGBV1q-GJw8Ns7Pq-HMe8STV7sfPx-VJsnf_6EPTjsS0frQ/exec';
 
+// Enhanced getAllProducts function with sorting
+export const getAllProducts = async (sortBy = 'featured') => {
+  try {
+    const response = await fetch(`${API_URL}?action=getAllProducts&sortBy=${encodeURIComponent(sortBy)}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    throw error;
+  }
+};
+
+// Enhanced search function with sorting
+export const searchProducts = async (searchTerm, sortBy = 'featured') => {
+  try {
+    const response = await fetch(`${API_URL}?action=searchProducts&searchTerm=${encodeURIComponent(searchTerm)}&sortBy=${encodeURIComponent(sortBy)}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error searching products:', error);
+    throw error;
+  }
+};
+
+// Enhanced category function with sorting
+export const getProductsByCategory = async (category, sortBy = 'featured') => {
+  try {
+    const response = await fetch(`${API_URL}?action=getProductsByCategory&category=${encodeURIComponent(category)}&sortBy=${encodeURIComponent(sortBy)}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.error) {
+      throw new Error(data.error);
+    }
+    
+    return Array.isArray(data) ? data : [];
+  } catch (error) {
+    console.error('Error fetching products by category:', error);
+    throw error;
+  }
+};
 class GoogleSheetsAPI {
   constructor() {
     this.baseURL = APPS_SCRIPT_URL;
   }
+
+  
 
   // Helper method to build URL with parameters
   buildURL(action, params = {}) {

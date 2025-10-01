@@ -1,5 +1,9 @@
 import React from 'react'
 import image1 from '../assets/image1.jpg'
+import Manufacturing_support from '../assets/Manufacturing_support.jpg'
+import Design_Consultancy from '../assets/Design_Consultancy.jpg'
+import Startup_Venture_Support from '../assets/Startup_Venture_Support.jpg'
+
 
 const Service = () => {
   // Smooth scroll function
@@ -24,7 +28,7 @@ const Service = () => {
             onClick={() => scrollToSection('design-consultancy')}
           >
             <img
-              src={image1}
+              src={Design_Consultancy}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               alt="Service 1"
             />
@@ -41,7 +45,7 @@ const Service = () => {
             onClick={() => scrollToSection('learning-zone')}
         >
           <img
-            src={image1}
+            src={Manufacturing_support}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             alt="Service 2"
           />
@@ -58,7 +62,7 @@ const Service = () => {
           onClick={() => scrollToSection('learn-and-make')}
         >
           <img
-            src={image1}
+            src={Startup_Venture_Support}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             alt="Service 3"
           />
@@ -93,7 +97,7 @@ const Service = () => {
                 <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg order-1 lg:order-2"> 
                   <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-2 lg:mb-0">
                     <img 
-                      src={image1}
+                      src={Design_Consultancy}
                       alt="Vivek and Shubhra" 
                       className="w-full h-full object-cover" 
                     />
@@ -111,7 +115,7 @@ const Service = () => {
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src={image1}
+                src={Manufacturing_support}
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />
@@ -156,7 +160,7 @@ const Service = () => {
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg order-1 lg:order-2"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src={image1}
+                src={Startup_Venture_Support}
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />

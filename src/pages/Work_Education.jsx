@@ -1,5 +1,7 @@
 import React from 'react'
 import image1 from '../assets/image1.jpg'
+import workshop from '../assets/workshop.jpg'
+import Education from '../assets/Education.jpg'
 
 const Work_Education = () => {
   // Smooth scroll function
@@ -25,7 +27,7 @@ const Work_Education = () => {
       onClick={() => scrollToSection('workshop')}
     >
       <img
-        src={image1}
+        src={workshop}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         alt="Service 1"
       />
@@ -42,7 +44,7 @@ const Work_Education = () => {
       onClick={() => scrollToSection('education')}
     >
       <img
-        src={image1}
+        src={Education}
         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         alt="Service 2"
       />
@@ -65,7 +67,7 @@ const Work_Education = () => {
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src={image1}
+                src={workshop}
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />
@@ -110,7 +112,7 @@ const Work_Education = () => {
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg order-1 lg:order-2"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src={image1}
+                src={Education}
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />

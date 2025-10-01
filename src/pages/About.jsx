@@ -1,165 +1,312 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import img from "../assets/image1.jpg";
+import Our_approach from "../assets/Our approach.jpg";
+import Our_story from "../assets/Our_story.jpg";
+import Our_crasftsmenship from "../assets/Our_crasftsmenship.jpg";
 import flower from "../assets/flower.png";
 import design from "../assets/design.jpg";
 import WhatsAppButton from "../components/whatsapp";
 
 const About = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [scrollY, setScrollY] = useState(0);
+  const [visibleSections, setVisibleSections] = useState({
+    story: false,
+    approach: false,
+    craftsmanship: false
+  });
+
+  useEffect(() => {
+    setIsVisible(true);
+    
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+
+    // Intersection Observer for section animations
+    const observerOptions = {
+      threshold: 0.3,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const sectionId = entry.target.getAttribute('data-section');
+          setVisibleSections(prev => ({
+            ...prev,
+            [sectionId]: true
+          }));
+        }
+      });
+    }, observerOptions);
+
+    // Observe sections
+    const sections = document.querySelectorAll('[data-section]');
+    sections.forEach(section => observer.observe(section));
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <>
-      <div className="overflow-x-hidden">
+      <div className="overflow-x-hidden relative">
+        {/* Animated Background Elements */}
+        <div className="fixed inset-0 pointer-events-none z-0">
+          <div 
+            className="absolute top-40 right-10 w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full opacity-20 animate-pulse"
+            style={{ transform: `translateY(${scrollY * 0.1}px) rotate(${scrollY * 0.05}deg)` }}
+          ></div>
+          <div 
+            className="absolute top-96 left-16 w-16 h-16 bg-gradient-to-br from-blue-100 to-teal-100 rounded-full opacity-30"
+            style={{ transform: `translateY(${scrollY * -0.08}px)` }}
+          ></div>
+          <div 
+            className="absolute bottom-60 right-1/4 w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full opacity-25 animate-bounce"
+            style={{ transform: `translateY(${scrollY * 0.12}px)` }}
+          ></div>
+        </div>
+
         {/* First Section - Our Story */}
-        <main className="container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10">
+        <main 
+          className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${visibleSections.story ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          data-section="story"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
             {/* Left Column - Image */}
-            <div className="relative flex justify-center md:justify-start">
+            <div className="relative flex justify-center md:justify-start group">
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
-                            mx-auto">
-              <img
-                src={img}
-                alt="Vivek and Shubhra"
-                className="w-full h-full object-cover"
+                            mx-auto relative transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-indigo-200/50">
+                <img
+                  src={Our_story}
+                  alt="Vivek and Shubhra"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Animated border effect */}
+                <div className="absolute inset-0 rounded-t-full border-2 border-indigo-300/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-              <img
-              src={flower}
-              alt="Decorative graphic"
-              className="absolute -top-3 -left-3 w-25 h-30
-                         sm:-top-5 sm:-left-5 sm:w-28 sm:h-34
-                         md:-top-6 md:-left-2 md:w-38 md:h-42
-                         lg:-top-8 lg:-left-4 lg:w-42 lg:h-46
-                         xl:-top-10 xl:-left-8 xl:w-56 xl:h-60"
-                />
             </div>
 
             {/* Right Column - Text */}
-            <div className="text-center md:text-left">
-              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
-                Our Story
-              </h1>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-                In 2025, what began as a simple hangout between two friends quickly turned into something bigger.
+{/* Right Column - Text */}
+<div className="text-center md:text-left space-y-6">
+  <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-slide-in-right">
+    <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">Our Story</span>
+    <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transform origin-left scale-x-0 animate-expand-width"></div>
+  </h1>
+  <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-300 hover:text-gray-700 transition-colors duration-300">
+    In 2025, a simple hangout between <span className="text-rose-600 font-semibold">Himanshi</span>, who craved building her own venture, and <span className="text-pink-600 font-semibold">Samrudhi</span>, driven by passion, sparked a realization: the journey from idea to successful business was fragmented. Product design, branding, and startup guidance were disconnected.
+  </p>
+  <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-500 hover:text-gray-700 transition-colors duration-300">
+    Then, <span className="text-violet-600 font-semibold">Akhilesh Sir</span>, a mentor and tech enthusiast, helped shape their raw ideas into a focused mission. Born from this synergy, <span className="bg-gradient-to-r from-rose-600 to-violet-600 bg-clip-text text-transparent font-bold">TRIOVATION</span> is the space where creativity meets strategy and vision turns into reality, uniting Design, Gifting, Startup Ventures, and Education under one roof.
+  </p>
+</div>
 
-                Himanshi, tired of the usual 9-to-6 job, dreamed of building something of her own. Samrudhi, full of energy and driven by passion, believed in starting young and creating something meaningful.
-
-                As they talked, they realized something important: the journey of turning an idea into a real, successful business was all over the place. Product design was often disconnected, branding came as an afterthought, and startups lacked proper guidance and support.
-
-                That’s when Akhilesh Sir came into the picture a mentor, advisor, and tech enthusiast. He saw their potential and helped them shape their raw ideas into a clear vision. With his experience and guidance, what was once just a spark turned into a focused mission.
-
-                And that's how TRIOVATION was born a space where ideas take form. A place where creativity meets strategy, and vision turns into reality.
-
-                At TRIOVATION, we bring together four key domains under one roof:
-                Design | Corporate Gifting | Startup Ventures | Education
-
-                Together, these pillars support everything a growing idea needs from its first sketch to a thriving business.
-            </p>
-            </div>
           </div>
         </main>
 
         {/* Second Section - Our Approach */}
-        <main className="container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10">
+        <main 
+          className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${visibleSections.approach ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          data-section="approach"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
             {/* Left Column - Text */}
-            <div className="text-center md:text-left order-2 md:order-1 mt-10">
-              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
+            <div className="text-center md:text-left order-2 md:order-1 mt-10 space-y-6">
+              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-fade-in-right">
                 Our Approach
+                <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full transform origin-left scale-x-0 animate-scale-x delay-300"></div>
               </h1>
-              <ol type="1" className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed list-decimal list-inside space-y-2 text-gray-600 text-lg lg:text-xl xl:text-xl mb-4">
-                  <li>Ideation: <br/>
-                      We start by listening to your ideas, needs, and vision — whether it’s for a product, a gift, or a learning experience.
+              <ol className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed list-decimal list-inside space-y-4">
+                {[
+                  {
+                    title: "Ideation:",
+                    description: "We start by listening to your ideas, needs, and vision whether it's for a product, a gift, or a learning experience.",
+                    color: "from-blue-500 to-cyan-500"
+                  },
+                  {
+                    title: "Design & Planning:",
+                    description: "Our team sketches, prototypes, and strategizes to craft tailored solutions that balance creativity, functionality, and feasibility.",
+                    color: "from-cyan-500 to-teal-500"
+                  },
+                  {
+                    title: "Creation & Fabrication:",
+                    description: "From design consultancy to manufacturing and gifting, we bring concepts to life using the right materials, tools, and processes.",
+                    color: "from-teal-500 to-green-500"
+                  },
+                  {
+                    title: "Customization & Delivery:",
+                    description: "Every outcome is personalized refined to match your requirements and delivered with precision and care.",
+                    color: "from-green-500 to-emerald-500"
+                  },
+                  {
+                    title: "Learning & Growth:",
+                    description: "Through workshops, kits, and hands-on sessions, we extend our approach to teaching and inspiring the next generation of creators.",
+                    color: "from-emerald-500 to-blue-500"
+                  }
+                ].map((step, index) => (
+                  <li 
+                    key={index} 
+                    className={`animate-fade-in-right group hover:scale-105 transition-all duration-300 p-4 rounded-xl hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-teal-50`}
+                    style={{ animationDelay: `${(index + 1) * 200}ms` }}
+                  >
+                    <span className={`font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
+                      {step.title}
+                    </span>
+                    <br />
+                    <span className="group-hover:text-gray-700 transition-colors duration-300">
+                      {step.description}
+                    </span>
                   </li>
-                  <li>Design & Planning: <br/>
-                      Our team sketches, prototypes, and strategizes to craft tailored solutions that balance creativity, functionality, and feasibility.
-                  </li>
-                  <li>Creation & Fabrication: <br/>
-                      From design consultancy to manufacturing and gifting, we bring concepts to life using the right materials, tools, and processes.
-                  </li>
-                  <li>Customization & Delivery: <br/>
-                      Every outcome is personalized — refined to match your requirements and delivered with precision and care.
-                  </li>
-                  <li>Learning & Growth: <br/>
-                      Through workshops, kits, and hands-on sessions, we extend our approach to teaching and inspiring the next generation of creators.
-                  </li>
-                {/* 1. Ideation
-                    We start by listening to your ideas, needs, and vision — whether it’s for a product, a gift, or a learning experience.<br/>
-                    2. Design & Planning
-                    Our team sketches, prototypes, and strategizes to craft tailored solutions that balance creativity, functionality, and feasibility.<br/>
-                    3. Creation & Fabrication
-                    From design consultancy to manufacturing and gifting, we bring concepts to life using the right materials, tools, and processes.<br/>
-                    4. Customization & Delivery
-                    Every outcome is personalized — refined to match your requirements and delivered with precision and care.<br/>
-                    5. Learning & Growth
-                    Through workshops, kits, and hands-on sessions, we extend our approach to teaching and inspiring the next generation of creators. */}
+                ))}
               </ol>
             </div>
 
             {/* Right Column - Image */}
-            <div className="relative flex justify-center md:justify-end order-1 md:order-2">
+            <div className="relative flex justify-center md:justify-end order-1 md:order-2 group">
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
-                            mx-auto">
-              <img
-                src={img}
-                alt="Vivek and Shubhra"
-                className="w-full h-full object-cover"
+                            mx-auto relative transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-blue-200/50">
+                <img
+                  src={Our_approach}
+                  alt="Vivek and Shubhra"
+                  className="w-full h-full object-cover scale-100 transition-transform duration-700 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Animated border effect */}
+                <div className="absolute inset-0 rounded-t-full border-2 border-blue-300/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-              <img
-              src={flower}
-              alt="Decorative graphic"
-              className="absolute -top-3 -left-3 w-25 h-30
-                         sm:-top-5 sm:-left-5 sm:w-28 sm:h-34
-                         md:-top-6 md:-left-2 md:w-38 md:h-42
-                         lg:-top-8 lg:-left-4 lg:w-42 lg:h-46
-                         xl:-top-10 xl:-left-8 xl:w-56 xl:h-60"
-                />
             </div>
           </div>
         </main>
 
         {/* Third Section - Our Vision */}
-        <section className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center md:text-left">
+        <section 
+          className={`container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center md:text-left relative z-10 transition-all duration-1000 ${visibleSections.craftsmanship ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          data-section="craftsmanship"
+        >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
             {/* Left Column - Image Grid */}
-            <div className="relative flex justify-center md:justify-start">
+            <div className="relative flex justify-center md:justify-start group">
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
-                            mx-auto">
-              <img
-                src={img}
-                alt="Vivek and Shubhra"
-                className="w-full h-full object-cover"
+                            mx-auto relative transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-amber-200/50">
+                <img
+                  src={Our_crasftsmenship}
+                  alt="Vivek and Shubhra"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-amber-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Animated border effect */}
+                <div className="absolute inset-0 rounded-t-full border-2 border-amber-300/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-              <img
-              src={flower}
-              alt="Decorative graphic"
-              className="absolute -top-3 -left-3 w-25 h-30
-                         sm:-top-5 sm:-left-5 sm:w-28 sm:h-34
-                         md:-top-6 md:-left-2 md:w-38 md:h-42
-                         lg:-top-8 lg:-left-4 lg:w-42 lg:h-46
-                         xl:-top-10 xl:-left-8 xl:w-56 xl:h-60"
-                />
             </div>
+
             {/* Right Column - Text */}
-            <div>
-              <h2 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800">
-                Our Craftmanship
+            <div className="space-y-6">
+              <h2 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-fade-in-left">
+                Our Craftsmanship
+                <div className="absolute -bottom-3 left-0 md:left-0 w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transform origin-left scale-x-0 animate-scale-x delay-300"></div>
               </h2>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-                At TRIOVATION, we are the makers. Every product, design, and workshop is crafted by our own team combining creativity, precision, and technical know-how. From 2D and 3D design to fabrication and finishing, we handle each step with care to ensure the outcome is truly unique.
-Our craftsmanship lies in the details tailored to need, shaped with passion, and built to inspire.
-              </p>
+              <div className="space-y-4">
+                <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-left delay-200 hover:text-gray-700 transition-colors duration-300">
+                  At <span className="bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent font-bold">TRIOVATION</span>, we are the makers. Every product, design, and workshop is crafted by our own team combining creativity, precision, and technical know-how. From 2D and 3D design to fabrication and finishing, we handle each step with care to ensure the outcome is truly unique.
+                </p>
+                <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-left delay-400 italic">
+                  Our craftsmanship lies in the details <span className="text-amber-600 font-semibold">tailored to need</span>, <span className="text-orange-600 font-semibold">shaped with passion</span>, and <span className="text-red-600 font-semibold">built to inspire</span>.
+                </p>
+              </div>
             </div>
           </div>
         </section>
+        
         <WhatsAppButton />
       </div>
+
+      {/* Custom CSS Animations */}
+      <style jsx>{`
+        @keyframes fade-in-left {
+          from {
+            opacity: 0;
+            transform: translateX(-40px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes fade-in-right {
+          from {
+            opacity: 0;
+            transform: translateX(40px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes scale-x {
+          from {
+            transform: scaleX(0);
+          }
+          to {
+            transform: scaleX(1);
+          }
+        }
+
+        .animate-fade-in-left {
+          animation: fade-in-left 0.8s ease-out forwards;
+          opacity: 0;
+        }
+
+        .animate-fade-in-right {
+          animation: fade-in-right 0.8s ease-out forwards;
+          opacity: 0;
+        }
+
+        .animate-scale-x {
+          animation: scale-x 0.6s ease-out forwards;
+          animation-delay: 0.3s;
+        }
+
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .delay-600 { animation-delay: 600ms; }
+        .delay-800 { animation-delay: 800ms; }
+        .delay-1000 { animation-delay: 1000ms; }
+        .delay-1200 { animation-delay: 1200ms; }
+        .delay-1400 { animation-delay: 1400ms; }
+
+        /* Smooth scrolling */
+        html {
+          scroll-behavior: smooth;
+        }
+
+        /* Custom gradient text animation */
+        .bg-clip-text {
+          background-clip: text;
+          -webkit-background-clip: text;
+        }
+
+        /* Custom list styling */
+        ol li::marker {
+          font-weight: bold;
+          color: #4f46e5;
+        }
+      `}</style>
     </>
   );
 };
