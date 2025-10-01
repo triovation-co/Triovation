@@ -96,11 +96,13 @@ const ProductDetails = () => {
     }
   };
 
-  const formatPrice = (price) => {
-    if (!price || price === '') return 'Price not set';
-    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
-    return `₹${numPrice.toLocaleString('en-IN')}`;
-  };
+const formatPrice = (price) => {
+  if (!price || price === '') return 'Price not set';
+  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+  return `₹${numPrice.toLocaleString('en-IN')}`; // Direct Unicode
+  // Or for JSX: { '\u20B9' } or &#8377;
+};
+
 
   const parseHtmlContent = (htmlContent) => {
     if (!htmlContent) return '';

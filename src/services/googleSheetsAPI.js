@@ -5,23 +5,21 @@ const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUJS-VNU057UWF
 // Enhanced getAllProducts function with sorting
 export const getAllProducts = async (sortBy = 'featured') => {
   try {
-    const response = await fetch(`${API_URL}?action=getAllProducts&sortBy=${encodeURIComponent(sortBy)}`, {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getAllProducts&sortBy=${encodeURIComponent(sortBy)}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
       },
     });
-    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
     if (data.error) {
       throw new Error(data.error);
     }
-    
+
     return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Error fetching products:', error);
@@ -32,23 +30,21 @@ export const getAllProducts = async (sortBy = 'featured') => {
 // Enhanced search function with sorting
 export const searchProducts = async (searchTerm, sortBy = 'featured') => {
   try {
-    const response = await fetch(`${API_URL}?action=searchProducts&searchTerm=${encodeURIComponent(searchTerm)}&sortBy=${encodeURIComponent(sortBy)}`, {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=searchProducts&searchTerm=${encodeURIComponent(searchTerm)}&sortBy=${encodeURIComponent(sortBy)}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
       },
     });
-    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
     if (data.error) {
       throw new Error(data.error);
     }
-    
+
     return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Error searching products:', error);
@@ -59,35 +55,68 @@ export const searchProducts = async (searchTerm, sortBy = 'featured') => {
 // Enhanced category function with sorting
 export const getProductsByCategory = async (category, sortBy = 'featured') => {
   try {
-    const response = await fetch(`${API_URL}?action=getProductsByCategory&category=${encodeURIComponent(category)}&sortBy=${encodeURIComponent(sortBy)}`, {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getProductsByCategory&category=${encodeURIComponent(category)}&sortBy=${encodeURIComponent(sortBy)}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
       },
     });
-    
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const data = await response.json();
-    
     if (data.error) {
       throw new Error(data.error);
     }
-    
+
     return Array.isArray(data) ? data : [];
   } catch (error) {
     console.error('Error fetching products by category:', error);
     throw error;
   }
 };
+
 class GoogleSheetsAPI {
   constructor() {
     this.baseURL = APPS_SCRIPT_URL;
+    this.requestQueue = [];
+    this.isProcessingQueue = false;
+    this.maxRetries = 3;
+    this.retryDelay = 1000;
   }
 
-  
+  // Request queuing to prevent API rate limiting
+  async queueRequest(requestFn) {
+    return new Promise((resolve, reject) => {
+      this.requestQueue.push({ requestFn, resolve, reject });
+      this.processQueue();
+    });
+  }
+
+  async processQueue() {
+    if (this.isProcessingQueue || this.requestQueue.length === 0) {
+      return;
+    }
+
+    this.isProcessingQueue = true;
+
+    while (this.requestQueue.length > 0) {
+      const { requestFn, resolve, reject } = this.requestQueue.shift();
+      
+      try {
+        const result = await requestFn();
+        resolve(result);
+      } catch (error) {
+        reject(error);
+      }
+
+      // Small delay between requests to prevent rate limiting
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    this.isProcessingQueue = false;
+  }
 
   // Helper method to build URL with parameters
   buildURL(action, params = {}) {
@@ -101,97 +130,108 @@ class GoogleSheetsAPI {
     return url.toString();
   }
 
-  // Enhanced GET request with better error handling
+  // Enhanced GET request with retry logic
   async makeGetRequest(action, params = {}) {
-    try {
-      const url = this.buildURL(action, params);
-      console.log(`🌐 Making GET request: ${action}`, { url, params });
+    return this.queueRequest(async () => {
+      let lastError;
+      
+      for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+        try {
+          const url = this.buildURL(action, params);
+          console.log(`🌐 Making GET request (attempt ${attempt}): ${action}`, { url, params });
 
-      const response = await fetch(url, {
-        method: 'GET',
-        cache: 'no-cache',
-        headers: {
-          'Accept': 'application/json,text/plain,*/*'
+          const response = await fetch(url, {
+            method: 'GET',
+            cache: 'no-cache',
+            headers: {
+              'Accept': 'application/json,text/plain,*/*'
+            }
+          });
+
+          console.log(`📡 Response status: ${response.status}`);
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log(`✅ ${action} result:`, result);
+
+          return result;
+
+        } catch (error) {
+          lastError = error;
+          console.warn(`❌ Attempt ${attempt} failed for ${action}:`, error.message);
+          
+          if (attempt < this.maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, this.retryDelay * attempt));
+          }
         }
-      });
-
-      console.log(`📡 Response status: ${response.status}`);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result = await response.json();
-      console.log(`✅ ${action} result:`, result);
-
-      // Enhanced logging for products with rich text and details
-      if (action === 'getAllProducts' && Array.isArray(result)) {
-        result.forEach(product => {
-          if (product.description && product.description.includes('<')) {
-            console.log(`Product ${product.id} has HTML-formatted description`);
-          }
-          if (product.details && product.details.includes('<')) {
-            console.log(`Product ${product.id} has HTML-formatted details`);
-          }
-          if (product.images && product.images.length > 0) {
-            console.log(`Product ${product.id} has ${product.images.length} additional images`);
-          }
-        });
-      }
-
-      return result;
-
-    } catch (error) {
-      console.error(`❌ Error in ${action}:`, error);
+      console.error(`❌ All attempts failed for ${action}:`, lastError);
       return {
-        error: error.message,
+        error: lastError.message,
         action: action,
         timestamp: new Date().toISOString()
       };
-    }
+    });
   }
 
-  // Enhanced POST request
+  // Enhanced POST request with retry logic
   async makePostRequest(action, data = {}) {
-    try {
-      console.log(`🌐 Making POST request: ${action}`, data);
+    return this.queueRequest(async () => {
+      let lastError;
+      
+      for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
+        try {
+          console.log(`🌐 Making POST request (attempt ${attempt}): ${action}`, data);
 
-      const response = await fetch(this.baseURL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          action: action,
-          ...data
-        })
-      });
+          const response = await fetch(this.baseURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+              action: action,
+              ...data
+            })
+          });
 
-      console.log(`📡 Response status: ${response.status}`);
+          console.log(`📡 Response status: ${response.status}`);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const result = await response.json();
+          console.log(`✅ ${action} result:`, result);
+
+          return result;
+
+        } catch (error) {
+          lastError = error;
+          console.warn(`❌ Attempt ${attempt} failed for ${action}:`, error.message);
+          
+          if (attempt < this.maxRetries) {
+            await new Promise(resolve => setTimeout(resolve, this.retryDelay * attempt));
+          }
+        }
       }
 
-      const result = await response.json();
-      console.log(`✅ ${action} result:`, result);
-
-      return result;
-
-    } catch (error) {
-      console.error(`❌ Error in ${action}:`, error);
+      console.error(`❌ All attempts failed for ${action}:`, lastError);
       return {
-        error: error.message,
+        error: lastError.message,
         action: action,
         timestamp: new Date().toISOString()
       };
-    }
+    });
   }
 
-  // Get all products with rich text formatting
-  async getAllProducts() {
-    return await this.makeGetRequest('getAllProducts');
+  // Get all products with rich text formatting and sorting
+  async getAllProducts(sortBy = 'featured') {
+    return await this.makeGetRequest('getAllProducts', { sortBy });
   }
 
   // Get single product by ID with rich text formatting
@@ -214,14 +254,14 @@ class GoogleSheetsAPI {
     return await this.makePostRequest('deleteProduct', { productId });
   }
 
-  // Get products by category
-  async getProductsByCategory(category) {
-    return await this.makeGetRequest('getProductsByCategory', { category });
+  // Get products by category with sorting
+  async getProductsByCategory(category, sortBy = 'featured') {
+    return await this.makeGetRequest('getProductsByCategory', { category, sortBy });
   }
 
-  // Search products
-  async searchProducts(searchTerm) {
-    return await this.makeGetRequest('searchProducts', { searchTerm });
+  // Search products with sorting
+  async searchProducts(searchTerm, sortBy = 'featured') {
+    return await this.makeGetRequest('searchProducts', { searchTerm, sortBy });
   }
 
   // Get all categories
@@ -229,34 +269,9 @@ class GoogleSheetsAPI {
     return await this.makeGetRequest('getCategories');
   }
 
-  // Bulk update products
-  async bulkUpdateProducts(updates) {
-    return await this.makePostRequest('bulkUpdate', { updates });
-  }
-
-  // Get product statistics
-  async getProductStats() {
-    return await this.makeGetRequest('getStats');
-  }
-
-  // Validate image URLs
-  async validateImageURLs() {
-    return await this.makeGetRequest('validateURLs');
-  }
-
-  // Debug sheet structure
-  async debugSheet() {
-    return await this.makeGetRequest('debugSheet');
-  }
-
   // Fix sheet structure
   async fixSheet() {
     return await this.makeGetRequest('fixSheet');
-  }
-
-  // Test images column specifically
-  async testImagesColumn() {
-    return await this.makeGetRequest('testImages');
   }
 
   // Test connection with rich text support info

@@ -71,7 +71,8 @@ const ProductSection = ({
                 <h2 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">
                   {product.name}
                 </h2>
-                <p className="text-gray-600 text-xs sm:text-sm mb-3 leading-relaxed flex-grow">
+                <p className="text-gray-600 text-xs sm:text-sm mb-3 leading-relaxed flex-grow line-clamp-2
+">
                   {product.description || `${product.name} - Perfect for your needs.`}
                 </p>
 

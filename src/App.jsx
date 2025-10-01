@@ -11,21 +11,18 @@ import Category_page from "./pages/Category_page";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./components/Checkout";
+import CustomizableProductGrid from "./components/CustomizableProductGrid"; // ADD THIS IMPORT
 import { CartProvider } from './context/CartContext';
-
 
 function App() {
   return (
     <CartProvider>
-
-  
       <div className="flex flex-col min-h-screen w-auto">
         {/* Navbar */}
         <Navbar />
 
         {/* Main content */}
         <main className="flex-grow">
-          
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/About" element={<About />} />
@@ -37,15 +34,17 @@ function App() {
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            {/* ADD THESE NEW ROUTES */}
+            <Route path="/product-grid" element={<CustomizableProductGrid />} />
+            <Route path="/grid" element={<CustomizableProductGrid />} />
+            <Route path="/admin" element={<CustomizableProductGrid />} />
           </Routes>
         </main>
 
         {/* Footer */}
         <Footer />
       </div>
-      </CartProvider>
-
-  
+    </CartProvider>
   );
 }
 
