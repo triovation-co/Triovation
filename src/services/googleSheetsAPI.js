@@ -1,6 +1,6 @@
 // src/services/googleSheetsAPI.js
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwSAb87fIamKmQtS5b49sOUbRR5PyiQjcXmxIgMLWa2RQ6s-NNTIKBF-rQ3VNqrBorBvA/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUJS-VNU057UWFWAykP-LMGBV1q-GJw8Ns7Pq-HMe8STV7sfPx-VJsnf_6EPTjsS0frQ/exec';
 
 class GoogleSheetsAPI {
   constructor() {
