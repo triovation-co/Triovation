@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import image1 from '../assets/image1.jpg'
 import workshop from '../assets/workshop.jpg'
 import Education from '../assets/Education.jpg'
 
+
 const Work_Education = () => {
+  const sectionRefs = useRef([]);
+
   // Smooth scroll function
   const scrollToSection = (sectionId) => {
     const element = document.getElementById(sectionId);
@@ -15,52 +18,77 @@ const Work_Education = () => {
     }
   };
 
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    sectionRefs.current.forEach((ref) => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+
   return (
     <>
       {/* Card Section */}
-      <div className="mx-auto flex justify-center">
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20 mt-20 px-6 sm:px-12 lg:px-20">
-    
-    {/* Card 1 - Workshop */}
-    <div 
-      className="relative w-60 md:w-[250px] lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
-      onClick={() => scrollToSection('workshop')}
-    >
-      <img
-        src={workshop}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        alt="Service 1"
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <p className="text-white text-center text-lg sm:text-xl md:text-2xl font-semibold px-2">
-          Workshop
-        </p>
-      </div>
-    </div>
+      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20 mt-20 px-6 sm:px-12 lg:px-20">
+          
+          {/* Card 1 - Workshop */}
+          <div 
+            className="relative w-60 md:w-[250px] lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+            onClick={() => scrollToSection('workshop')}
+          >
+            <img
+              src={workshop}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              alt="Service 1"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className="text-white text-center text-lg sm:text-xl md:text-2xl font-semibold px-2">
+                Workshop
+              </p>
+            </div>
+          </div>
 
-    {/* Card 2 - Education */}
-    <div 
-      className="relative w-60 md:w-[250px] lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
-      onClick={() => scrollToSection('education')}
-    >
-      <img
-        src={Education}
-        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-        alt="Service 2"
-      />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <p className="text-white text-center text-lg sm:text-xl md:text-2xl font-semibold px-2">
-          Education
-        </p>
-      </div>
-    </div>
 
-  </div>
-</div>
+          {/* Card 2 - Education */}
+          <div 
+            className="relative w-60 md:w-[250px] lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+            onClick={() => scrollToSection('education')}
+          >
+            <img
+              src={Education}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              alt="Service 2"
+            />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <p className="text-white text-center text-lg sm:text-xl md:text-2xl font-semibold px-2">
+                Education
+              </p>
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+
 
 
       {/* Workshop Section */}
-      <main id="workshop" className="mx-auto max-w-[1440px] px-6 md:px-8 xl:px-12 flex items-center justify-center mt-40 scroll-mt-20">
+      <main id="workshop" className="mx-auto max-w-[1440px] px-6 md:px-8 xl:px-12 flex items-center justify-center mt-40 scroll-mt-20 relative">
+        <div className="absolute -top-10 -left-10 w-40 h-40 bg-pink-100 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           
           {/* Left Column: Image */}
@@ -74,39 +102,53 @@ const Work_Education = () => {
             </div>
           </div>
 
+
           {/* Right Column: Text */}
-          <div className="mt-8 lg:mt-0 lg:mr-12 xl:mr-20 text-center lg:text-left">
-            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 text-gray-800">Workshop</h1>
+          <div 
+            ref={(el) => (sectionRefs.current[0] = el)}
+            className="mt-8 lg:mt-0 lg:mr-12 xl:mr-20 text-center lg:text-left fade-in-section"
+          >
+            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 bg-gradient-to-r from-pink-500 via-red-400 to-pink-500 bg-clip-text text-transparent animate-gradient bg-300%">
+              Workshop
+            </h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
               It all began (like all good things do) over a (good) bottle of wine. 
               Vivek and Shubhra were tired of all the random souvenirs that India had to offer. 
               They set out to start a company that would go on to sell souvenirs that depicted India, 
               the way you and I saw it. Mad, Crazy, Colourful.
             </p>
-            <button className="border rounded-lg p-2 px-8 text-amber-50 bg-blue-400">
-              CONTACT US
+            <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+              <span className="relative z-10">CONTACT US</span>
             </button>
           </div>
         </div>
       </main>
 
+
       {/* Education Section */}
-      <main id="education" className="container mx-auto px-6 md:px-8 xl:px-12 mt-20 scroll-mt-20">
+      <main id="education" className="container mx-auto px-6 md:px-8 xl:px-12 mt-20 scroll-mt-20 mb-20 relative">
+        <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-red-100 rounded-full filter blur-3xl opacity-30 animate-pulse animation-delay-1000"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
           
           {/* Right Column: Text */}
-          <div className="text-center lg:text-left order-2 lg:order-1">
-            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 text-gray-800">Education</h1>
+          <div 
+            ref={(el) => (sectionRefs.current[1] = el)}
+            className="text-center lg:text-left order-2 lg:order-1 fade-in-section"
+          >
+            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 bg-gradient-to-r from-red-500 via-pink-400 to-red-500 bg-clip-text text-transparent animate-gradient bg-300%">
+              Education
+            </h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
               We blend creativity with technology to deliver exceptional solutions.
               With a team of skilled professionals, we've been transforming ideas
               into reality since 2024. Our commitment to quality, innovation, and 
               client satisfaction sets us apart as.
             </p>
-            <button className="border rounded-lg p-2 px-8 text-amber-50 bg-blue-400">
-              CONTACT US
+            <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+              <span className="relative z-10">CONTACT US</span>
             </button>
           </div>
+
 
           {/* Left Column: Image */}
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg order-1 lg:order-2"> 
@@ -120,8 +162,46 @@ const Work_Education = () => {
           </div>
         </div>
       </main>
+
+      <style jsx>{`
+        @keyframes gradient {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+
+        .animate-gradient {
+          animation: gradient 3s ease infinite;
+        }
+
+        .bg-300\% {
+          background-size: 300%;
+        }
+
+        .animation-delay-1000 {
+          animation-delay: 1s;
+        }
+
+        .fade-in-section {
+          opacity: 0;
+          transform: translateY(50px);
+          transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .fade-in-section.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      `}</style>
     </>
   )
 }
+
 
 export default Work_Education;
