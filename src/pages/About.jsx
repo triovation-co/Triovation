@@ -94,19 +94,18 @@ const About = () => {
             </div>
 
             {/* Right Column - Text */}
-{/* Right Column - Text */}
-<div className="text-center md:text-left space-y-6">
-  <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-slide-in-right">
-    <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">Our Story</span>
-    <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transform origin-left scale-x-0 animate-expand-width"></div>
-  </h1>
-  <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-300 hover:text-gray-700 transition-colors duration-300">
-    In 2025, a simple hangout between <span className="text-rose-600 font-semibold">Himanshi</span>, who craved building her own venture, and <span className="text-pink-600 font-semibold">Samrudhi</span>, driven by passion, sparked a realization: the journey from idea to successful business was fragmented. Product design, branding, and startup guidance were disconnected.
-  </p>
-  <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-500 hover:text-gray-700 transition-colors duration-300">
-    Then, <span className="text-violet-600 font-semibold">Akhilesh Sir</span>, a mentor and tech enthusiast, helped shape their raw ideas into a focused mission. Born from this synergy, <span className="bg-gradient-to-r from-rose-600 to-violet-600 bg-clip-text text-transparent font-bold">TRIOVATION</span> is the space where creativity meets strategy and vision turns into reality, uniting Design, Gifting, Startup Ventures, and Education under one roof.
-  </p>
-</div>
+            <div className="text-center md:text-left space-y-6">
+              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-slide-in-right">
+                <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">Our Story</span>
+                <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transform origin-left scale-x-0 animate-expand-width"></div>
+              </h1>
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-300 hover:text-gray-700 transition-colors duration-300">
+                In 2025, a simple hangout between <span className="text-rose-600 font-semibold">Himanshi</span>, who craved building her own venture, and <span className="text-pink-600 font-semibold">Samrudhi</span>, driven by passion, sparked a realization: the journey from idea to successful business was fragmented. Product design, branding, and startup guidance were disconnected.
+              </p>
+              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-500 hover:text-gray-700 transition-colors duration-300">
+                Then, <span className="text-violet-600 font-semibold">Akhilesh Sir</span>, a mentor and tech enthusiast, helped shape their raw ideas into a focused mission. Born from this synergy, <span className="bg-gradient-to-r from-rose-600 to-violet-600 bg-clip-text text-transparent font-bold">TRIOVATION</span> is the space where creativity meets strategy and vision turns into reality, uniting Design, Gifting, Startup Ventures, and Education under one roof.
+              </p>
+            </div>
 
           </div>
         </main>
@@ -118,46 +117,46 @@ const About = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
             {/* Left Column - Text */}
-            <div className="text-center md:text-left order-2 md:order-1 mt-10 space-y-6">
-              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-fade-in-right">
-                Our Approach
-                <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-blue-500 to-teal-500 rounded-full transform origin-left scale-x-0 animate-scale-x delay-300"></div>
+            <div className="order-2 md:order-1 space-y-6">
+              <h1 className="text-4xl font-bold text-gray-900 text-center md:text-left">
+                <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
+                  Our Approach
+                </span>
               </h1>
-              <ol className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed list-decimal list-inside space-y-4">
+              <ol className="space-y-6">
                 {[
                   {
-                    title: "Ideation:",
-                    description: "We start by listening to your ideas, needs, and vision whether it's for a product, a gift, or a learning experience.",
-                    color: "from-blue-500 to-cyan-500"
+                    title: "Ideation",
+                    description:
+                      "We start by listening to your ideas, needs, and vision whether it's for a product, a gift, or a learning experience."
                   },
                   {
-                    title: "Design & Planning:",
-                    description: "Our team sketches, prototypes, and strategizes to craft tailored solutions that balance creativity, functionality, and feasibility.",
-                    color: "from-cyan-500 to-teal-500"
+                    title: "Design & Planning",
+                    description:
+                      "Our team sketches, prototypes, and strategizes to craft tailored solutions balancing creativity and feasibility."
                   },
                   {
-                    title: "Creation. Customization. Perfection:",
-                    description: "From concept to creation, we bring ideas to life through design, manufacturing, and gifting. Every product is customized, refined to your needs, and delivered with precision and care.",
-                    color: "from-teal-500 to-green-500"
+                    title: "Creation. Customization. Perfection.",
+                    description:
+                      "From concept to creation, we bring ideas to life through design, manufacturing, and gifting. Every product is customized, refined to your needs, and delivered with precision and care."
                   },
                   {
-                    title: "Learning & Growth:",
-                    description: "Through workshops, kits, and hands-on sessions, we extend our approach to teaching and inspiring the next generation of creators.",
-                    color: "from-emerald-500 to-blue-500"
+                    title: "Learning & Growth",
+                    description:
+                      "Through workshops and kits, we inspire the next generation of creators."
                   }
                 ].map((step, index) => (
-                  <li 
-                    key={index} 
-                    className={`animate-fade-in-right group hover:scale-105 transition-all duration-300 p-4 rounded-xl hover:shadow-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-teal-50`}
-                    style={{ animationDelay: `${(index + 1) * 200}ms` }}
+                  <li
+                    key={index}
+                    className="flex items-start space-x-4"
                   >
-                    <span className={`font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent`}>
-                      {step.title}
-                    </span>
-                    <br />
-                    <span className="group-hover:text-gray-700 transition-colors duration-300">
-                      {step.description}
-                    </span>
+                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#f47e82] text-white flex items-center justify-center font-bold">
+                      {index + 1}
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800">{step.title}</h3>
+                      <p className="text-gray-600">{step.description}</p>
+                    </div>
                   </li>
                 ))}
               </ol>
