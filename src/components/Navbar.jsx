@@ -3,6 +3,7 @@ import { Search, Menu, X, ShoppingCart } from "lucide-react";
 import Logo from "../assets/logo_bg.png";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useProductManager } from "../hooks/useProductManager";
 
 const menuData = {
   Products: {
@@ -62,12 +63,58 @@ const Navbar = () => {
   const [expandedCategories, setExpandedCategories] = useState(new Set());
   const [currentPage, setCurrentPage] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const searchRef = useRef(null);
   const timeoutRef = useRef(null);
+
+  // Get products from Google Sheets
+  const { products: sheetProducts, loading: productsLoading } = useProductManager();
+
+  // Extract all product items for search suggestions - NOW INCLUDING SHEET PRODUCTS
+  useEffect(() => {
+    const staticItems = [];
+    
+    // Get static items from menuData
+    menuData.Products.categories.forEach(category => {
+      category.allItems.forEach(item => {
+        if (!staticItems.includes(item)) {
+          staticItems.push(item);
+        }
+      });
+    });
+
+    // Add products from Google Sheets
+    if (sheetProducts && sheetProducts.length > 0) {
+      const dynamicItems = sheetProducts.map(product => product.name);
+      // Combine and remove duplicates
+      const allItems = [...staticItems, ...dynamicItems];
+      const uniqueItems = [...new Set(allItems)];
+      setSuggestions(uniqueItems);
+    } else {
+      setSuggestions(staticItems);
+    }
+  }, [sheetProducts]);
 
   useEffect(() => {
     const pathname = window.location.pathname;
     const page = pathname === "/" ? "Home" : pathname.substring(1);
     setCurrentPage(page);
+  }, []);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, []);
 
   const handleMenuHover = (item) => {
@@ -104,6 +151,39 @@ const Navbar = () => {
 
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    setShowSuggestions(value.length > 0);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion);
+    setShowSuggestions(false);
+    setMobileSearchOpen(false);
+    window.location.href = `/Products?search=${encodeURIComponent(suggestion)}`;
+  };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      setShowSuggestions(false);
+      setMobileSearchOpen(false);
+      window.location.href = `/Products?search=${encodeURIComponent(searchTerm)}`;
+    }
+  };
+
+  const filteredSuggestions = searchTerm 
+    ? suggestions.filter(item => 
+        item.toLowerCase().includes(searchTerm.toLowerCase())
+      ).slice(0, 8)
+    : [];
+
+  const clearSearch = () => {
+    setSearchTerm('');
+    setShowSuggestions(false);
+  };
 
   return (
     <header
@@ -214,13 +294,71 @@ const Navbar = () => {
             )}
 
             {/* Desktop Search */}
-            <div className="relative flex mr-6 lg:mr-10">
-              <input
-                type="text"
-                placeholder="Search For Decor"
-                className="pl-10 pr-4 py-1.5 border rounded-md text-sm lg:text-[17px] w-full max-w-xs focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-300 focus:shadow-md focus:border-red-300"
-              />
-              <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+            <div className="relative flex mr-6 lg:mr-10" ref={searchRef}>
+              <form onSubmit={handleSearchSubmit} className="relative w-full">
+                <input
+                  type="text"
+                  placeholder="Search For Decor"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => searchTerm && setShowSuggestions(true)}
+                  className="pl-10 pr-10 py-1.5 border rounded-md text-sm lg:text-[17px] w-full max-w-xs focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-300 focus:shadow-md focus:border-red-300"
+                />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="absolute right-3 top-2.5 h-4 w-4 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </form>
+
+              {/* Suggestions Dropdown */}
+              {showSuggestions && filteredSuggestions.length > 0 && (
+                <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                  {productsLoading && (
+                    <div className="px-4 py-2 text-xs text-gray-500 bg-gray-50 border-b">
+                      Loading more products...
+                    </div>
+                  )}
+                  <ul className="py-2">
+                    {filteredSuggestions.map((suggestion, index) => (
+                      <li key={index}>
+                        <button
+                          type="button"
+                          onClick={() => handleSuggestionClick(suggestion)}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500 transition-colors flex items-center"
+                        >
+                          <Search size={14} className="mr-3 text-gray-400" />
+                          {suggestion}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* No results message */}
+              {showSuggestions && filteredSuggestions.length === 0 && searchTerm && !productsLoading && (
+                <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <div className="px-4 py-3 text-sm text-gray-500">
+                    No results found for "{searchTerm}"
+                  </div>
+                </div>
+              )}
+
+              {/* Loading state */}
+              {showSuggestions && searchTerm && productsLoading && filteredSuggestions.length === 0 && (
+                <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <div className="px-4 py-3 text-sm text-gray-500 flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
+                    Searching products...
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Desktop Cart */}
@@ -290,25 +428,88 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Search Bar */}
-          {mobileSearchOpen && (
-            <div className="md:hidden px-4 py-2 bg-white border-t flex items-center space-x-2 animate-fadeIn">
-              <Search className="h-5 w-5 text-gray-500" />
-              <input
-                type="text"
-                placeholder="Search For Decor"
-                autoFocus
-                className="flex-1 border rounded-md px-3 py-1 text-sm 
-                          focus:outline-none focus:ring-1 focus:ring-gray-400 
-                          focus:border-red-300 w-full max-w-[90%] transition-all"
-              />
+        {mobileSearchOpen && (
+          <div className="md:hidden px-4 py-2 bg-white border-t animate-fadeIn relative">
+            <div className="flex items-center space-x-2">
+              <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center relative">
+                <Search className="h-5 w-5 text-gray-500 absolute left-2" />
+                <input
+                  type="text"
+                  placeholder="Search For Decor"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  onFocus={() => searchTerm && setShowSuggestions(true)}
+                  autoFocus
+                  className="flex-1 border rounded-md pl-9 pr-8 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-red-300 w-full transition-all"
+                />
+                {searchTerm && (
+                  <button
+                    type="button"
+                    onClick={clearSearch}
+                    className="text-gray-400 hover:text-gray-600 absolute right-2"
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </form>
               <button
-                onClick={() => setMobileSearchOpen(false)}
+                onClick={() => {
+                  setMobileSearchOpen(false);
+                  setSearchTerm('');
+                  setShowSuggestions(false);
+                }}
                 className="text-gray-500 hover:text-red-500"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
-          )}
+
+            {/* Mobile Suggestions Dropdown */}
+            {showSuggestions && filteredSuggestions.length > 0 && (
+              <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+                {productsLoading && (
+                  <div className="px-4 py-2 text-xs text-gray-500 bg-gray-50 border-b">
+                    Loading more products...
+                  </div>
+                )}
+                <ul className="py-2">
+                  {filteredSuggestions.map((suggestion, index) => (
+                    <li key={index}>
+                      <button
+                        type="button"
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500 transition-colors flex items-center"
+                      >
+                        <Search size={14} className="mr-3 text-gray-400" />
+                        {suggestion}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Mobile No results message */}
+            {showSuggestions && filteredSuggestions.length === 0 && searchTerm && !productsLoading && (
+              <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <div className="px-4 py-3 text-sm text-gray-500">
+                  No results found for "{searchTerm}"
+                </div>
+              </div>
+            )}
+
+            {/* Mobile Loading state */}
+            {showSuggestions && searchTerm && productsLoading && filteredSuggestions.length === 0 && (
+              <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <div className="px-4 py-3 text-sm text-gray-500 flex items-center">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
+                  Searching products...
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
         {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
@@ -348,8 +549,8 @@ const Navbar = () => {
         }
         .animate-fadeIn {
           animation: fadeIn 0.25s ease-out forwards;
-        }`
-      }</style>
+        }
+      `}</style>
     </header>
   );
 };

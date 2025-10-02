@@ -19,20 +19,27 @@ const CustomSpecificationDisplay = ({ customSpecifications }) => {
   }
 
   return (
-    <div className="mt-8 border-t pt-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="mt-6 sm:mt-8 border-t pt-6 sm:pt-8">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-gray-800">Specifications</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8">
         {Object.entries(customSpecifications).map(([sectionName, specs]) => (
-          <div key={sectionName}>
-            <h3 className="text-lg font-semibold mb-4 text-gray-800">{sectionName}</h3>
-            <div className="space-y-3">
+          <div key={sectionName} className="bg-gray-50 rounded-lg p-4 sm:p-5">
+            <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4 text-gray-800 border-b pb-2">
+              {sectionName}
+            </h3>
+            <div className="space-y-2 sm:space-y-3">
               {typeof specs === 'object' && specs !== null ? 
                 Object.entries(specs).map(([specName, specValue]) => (
-                  <div key={specName} className="flex justify-between items-start">
-                    <span className="text-gray-600 text-sm font-medium">{specName}:</span>
-                    <span className="font-medium text-gray-800 text-sm text-right ml-4">{specValue}</span>
+                  <div key={specName} className="flex justify-between items-start gap-2">
+                    <span className="text-gray-600 text-xs sm:text-sm font-medium flex-shrink-0">
+                      {specName}:
+                    </span>
+                    <span className="font-medium text-gray-800 text-xs sm:text-sm text-right">
+                      {specValue}
+                    </span>
                   </div>
                 )) :
-                <div className="text-gray-600 text-sm">{specs}</div>
+                <div className="text-gray-600 text-xs sm:text-sm">{specs}</div>
               }
             </div>
           </div>
@@ -96,13 +103,11 @@ const ProductDetails = () => {
     }
   };
 
-const formatPrice = (price) => {
-  if (!price || price === '') return 'Price not set';
-  const numPrice = typeof price === 'string' ? parseFloat(price) : price;
-  return `₹${numPrice.toLocaleString('en-IN')}`; // Direct Unicode
-  // Or for JSX: { '\u20B9' } or &#8377;
-};
-
+  const formatPrice = (price) => {
+    if (!price || price === '') return 'Price not set';
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    return `₹${numPrice.toLocaleString('en-IN')}`;
+  };
 
   const parseHtmlContent = (htmlContent) => {
     if (!htmlContent) return '';
@@ -120,20 +125,23 @@ const formatPrice = (price) => {
 
   if (loading || sheetLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center">
-        <div className="text-orange-600 text-xl">Loading product...</div>
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
+          <div className="text-orange-600 text-lg sm:text-xl">Loading product...</div>
+        </div>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="text-gray-600 text-xl mb-4">Product not found</div>
+          <div className="text-gray-600 text-lg sm:text-xl mb-4">Product not found</div>
           <button
             onClick={() => navigate('/products')}
-            className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors"
+            className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition-colors text-sm sm:text-base"
           >
             Back to Products
           </button>
@@ -145,23 +153,23 @@ const formatPrice = (price) => {
   const availableImages = getAvailableImages();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white pt-16 sm:pt-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className="mb-6 flex items-center text-orange-600 hover:text-orange-700 transition-colors"
+          className="mb-4 sm:mb-6 flex items-center text-orange-600 hover:text-orange-700 transition-colors touch-manipulation"
         >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back
+          <span className="text-sm sm:text-base">Back</span>
         </button>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-3 sm:p-4 lg:p-6">
             {/* Product Images */}
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {/* Main Image */}
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                 <img
@@ -176,13 +184,15 @@ const formatPrice = (price) => {
 
               {/* Thumbnail Images */}
               {availableImages.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto">
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
                   {availableImages.map((img, index) => (
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                        selectedImage === index ? 'border-orange-500' : 'border-gray-200 hover:border-gray-300'
+                      className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all touch-manipulation ${
+                        selectedImage === index 
+                          ? 'border-orange-500 scale-105' 
+                          : 'border-gray-200 hover:border-gray-300'
                       }`}
                     >
                       <img
@@ -199,34 +209,42 @@ const formatPrice = (price) => {
               )}
 
               {availableImages.length > 1 && (
-                <div className="text-center text-sm text-gray-500">
+                <div className="text-center text-xs sm:text-sm text-gray-500">
                   {selectedImage + 1} of {availableImages.length} images
                 </div>
               )}
             </div>
 
             {/* Product Info */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Product Name and ID */}
               <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                  {product.name}
+                </h1>
                 {product.id && (
-                  <p className="text-sm text-gray-500">Product ID: {product.id}</p>
+                  <p className="text-xs sm:text-sm text-gray-500">Product ID: {product.id}</p>
                 )}
               </div>
 
               {/* Price */}
-              <div className="text-3xl font-bold text-orange-600">
-                {formatPrice(product.price)}
-                <span className="text-sm font-normal text-gray-500 ml-2">Inclusive of all taxes</span>
+              <div className="p-3 sm:p-4 rounded-lg">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-orange-600">
+                  {formatPrice(product.price)}
+                </div>
+                <span className="text-xs sm:text-sm font-normal text-gray-500 mt-1 block">
+                  Inclusive of all taxes
+                </span>
               </div>
 
               {/* Description */}
               {product.description && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Product Description</h3>
+                <div className="border-t pt-4">
+                  <h3 className="text-base sm:text-lg font-semibold mb-2 text-gray-900">
+                    Product Description
+                  </h3>
                   <div 
-                    className="text-gray-700 prose prose-sm max-w-none"
+                    className="text-gray-700 text-sm sm:text-base leading-relaxed prose prose-sm sm:prose max-w-none"
                     dangerouslySetInnerHTML={{ __html: parseHtmlContent(product.description) }}
                   />
                 </div>
@@ -234,10 +252,12 @@ const formatPrice = (price) => {
 
               {/* Details */}
               {product.details && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-2">Additional Details</h3>
+                <div className="border-t pt-4">
+                  <h3 className="text-base sm:text-lg font-semibold mb-2 text-gray-900">
+                    Additional Details
+                  </h3>
                   <div 
-                    className="text-gray-700 prose prose-sm max-w-none"
+                    className="text-gray-700 text-sm sm:text-base leading-relaxed prose prose-sm sm:prose max-w-none"
                     dangerouslySetInnerHTML={{ __html: parseHtmlContent(product.details) }}
                   />
                 </div>
@@ -246,42 +266,45 @@ const formatPrice = (price) => {
               {/* Category */}
               {product.category && (
                 <div>
-                  <span className="inline-block bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium">
+                  <span className="inline-block bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
                     {product.category}
                   </span>
                 </div>
               )}
 
-              {/* Quantity and Add to Cart */}
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-700 font-medium">Quantity:</span>
-                  <div className="flex items-center border border-gray-300 rounded-md">
+              {/* Quantity and Add to Cart - Sticky on Mobile */}
+              <div className="space-y-3 sm:space-y-4 lg:static lg:space-y-4">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <span className="text-sm sm:text-base text-gray-700 font-medium">Quantity:</span>
+                  <div className="flex items-center border-2 border-gray-300 rounded-lg overflow-hidden">
                     <button
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                      className="px-3 py-2 text-gray-600 hover:text-gray-800"
                       disabled={quantity <= 1}
+                      className="px-3 sm:px-4 py-2 sm:py-3 text-gray-600 hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation transition-colors text-base sm:text-lg font-semibold"
                     >
-                      -
+                      −
                     </button>
-                    <span className="px-4 py-2 font-medium">{quantity}</span>
+                    <span className="px-4 sm:px-6 py-2 sm:py-3 font-semibold text-base sm:text-lg min-w-[50px] text-center">
+                      {quantity}
+                    </span>
                     <button
                       onClick={() => setQuantity(quantity + 1)}
-                      className="px-3 py-2 text-gray-600 hover:text-gray-800"
+                      className="px-3 sm:px-4 py-2 sm:py-3 text-gray-600 hover:bg-gray-100 active:bg-gray-200 touch-manipulation transition-colors text-base sm:text-lg font-semibold"
                     >
                       +
                     </button>
                   </div>
                 </div>
 
-                <div className="flex space-x-4">
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <button
                     onClick={handleAddToCart}
-                    className="flex-1 bg-orange-500 text-white py-3 px-6 rounded-md hover:bg-orange-600 transition-colors font-medium"
+                    className="flex-1 bg-orange-500 text-white py-3 sm:py-3.5 px-6 rounded-lg hover:bg-orange-600 active:bg-orange-700 transition-colors font-semibold text-sm sm:text-base touch-manipulation shadow-md hover:shadow-lg"
                   >
                     Add to Cart
                   </button>
-                  <button className="flex-1 bg-gray-900 text-white py-3 px-6 rounded-md hover:bg-gray-800 transition-colors font-medium">
+                  <button className="flex-1 bg-gray-900 text-white py-3 sm:py-3.5 px-6 rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors font-semibold text-sm sm:text-base touch-manipulation shadow-md hover:shadow-lg">
                     Buy Now
                   </button>
                 </div>
@@ -291,12 +314,50 @@ const formatPrice = (price) => {
 
           {/* Custom Specifications Section */}
           {product.customSpecifications && (
-            <div className="px-6 pb-6">
+            <div className="px-3 sm:px-4 lg:px-6 pb-4 sm:pb-6">
               <CustomSpecificationDisplay customSpecifications={product.customSpecifications} />
             </div>
           )}
         </div>
       </div>
+
+      {/* Sticky Bottom Bar for Mobile - Only on small screens */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-40 safe-area-bottom">
+        <div className="px-4 py-3 flex items-center gap-3">
+          <div className="flex-1">
+            <div className="text-lg font-bold text-orange-600">
+              {formatPrice(product.price)}
+            </div>
+            <div className="text-xs text-gray-500">Inclusive of all taxes</div>
+          </div>
+          <button
+            onClick={handleAddToCart}
+            className="bg-orange-500 text-white py-3 px-6 rounded-lg hover:bg-orange-600 active:bg-orange-700 transition-colors font-semibold text-sm touch-manipulation shadow-md flex-shrink-0"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+
+      <style jsx>{`
+        .scrollbar-thin::-webkit-scrollbar {
+          height: 4px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+          background: #888;
+          border-radius: 10px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+          background: #555;
+        }
+        .safe-area-bottom {
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+      `}</style>
     </div>
   );
 };

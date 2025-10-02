@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 
 const Checkout = () => {
   const { cart, getCartTotal, clearCart } = useCart();
   const navigate = useNavigate();
+
+  // 🔥 Scroll to top when page loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -39,10 +44,8 @@ const Checkout = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you would typically send the order data to your backend
     console.log('Order Data:', { formData, cart: cart.items, total });
 
-    // Clear cart and redirect to success page
     clearCart();
     alert('Order placed successfully! We will contact you on WhatsApp for payment.');
     navigate('/');
@@ -217,7 +220,6 @@ const Checkout = () => {
                     <option value="Delhi">Delhi</option>
                     <option value="Karnataka">Karnataka</option>
                     <option value="Tamil Nadu">Tamil Nadu</option>
-                    {/* Add more states as needed */}
                   </select>
                 </div>
 
