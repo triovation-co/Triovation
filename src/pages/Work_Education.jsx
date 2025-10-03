@@ -43,42 +43,51 @@ const Work_Education = () => {
     <>
       {/* Card Section */}
       <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20 mt-20 px-6 sm:px-12 lg:px-20">
+        <div className="grid grid-cols-2 sm:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20 mt-20 px-6 sm:px-12 lg:px-20">
           
-          {/* Card 1 - Workshop */}
-          <div 
-            className="relative w-60 md:w-[250px] lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
-            onClick={() => scrollToSection('workshop')}
-          >
-            <img
-              src={workshop}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              alt="Service 1"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-white text-center text-lg sm:text-xl md:text-2xl font-semibold px-2">
-                Workshop
-              </p>
-            </div>
-          </div>
+{/* Card 1 - Workshop */}
+<div className="flex flex-col items-center w-full lg:w-auto">
+  <div 
+    className="relative w-full lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[1rem] lg:rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+    onClick={() => scrollToSection('workshop')}
+  >
+    <img
+      src={workshop}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      alt="Service 1"
+    />
+    <div className="absolute inset-0 hidden lg:flex items-center justify-center">
+      <p className="text-white text-center text-2xl font-semibold px-2">
+        Workshop
+      </p>
+    </div>
+  </div>
+  <p className="block lg:hidden text-center text-sm font-semibold mt-2">
+    Workshop
+  </p>
+</div>
 
-
-          {/* Card 2 - Education */}
-          <div 
-            className="relative w-60 md:w-[250px] lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
-            onClick={() => scrollToSection('education')}
-          >
-            <img
-              src={Education}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              alt="Service 2"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-white text-center text-lg sm:text-xl md:text-2xl font-semibold px-2">
-                Education
-              </p>
-            </div>
-          </div>
+{/* Card 2 - Education */}
+<div className="flex flex-col items-center w-full lg:w-auto">
+  <div 
+    className="relative w-full lg:w-[400px] xl:w-[500px] 2xl:w-[550px] aspect-square rounded-[1rem] lg:rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+    onClick={() => scrollToSection('education')}
+  >
+    <img
+      src={Education}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      alt="Service 2"
+    />
+    <div className="absolute inset-0 hidden lg:flex items-center justify-center">
+      <p className="text-white text-center text-2xl font-semibold px-2">
+        Education
+      </p>
+    </div>
+  </div>
+  <p className="block lg:hidden text-center text-sm font-semibold mt-2">
+    Education
+  </p>
+</div>
 
 
         </div>

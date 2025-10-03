@@ -138,7 +138,7 @@ const About = () => {
                   {
                     title: "Creation. Customization. Perfection.",
                     description:
-                      "From concept to creation, we bring ideas to life through design, manufacturing, and gifting. Every product is customized, refined to your needs, and delivered with precision and care."
+                      "From concept to creation, we bring ideas to life through design, manufacturing, and gifting. Every product is customized, refined to your needs, and delivered with precision and care."
                   },
                   {
                     title: "Learning & Growth",

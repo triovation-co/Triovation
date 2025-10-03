@@ -11,6 +11,17 @@ import {
   mechanicalProducts, designConsultancyProducts, educationWorkshopsProducts,
 } from "../assets/data.jsx";
 
+// Loading Component
+const LoadingScreen = () => (
+  <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center">
+    <div className="text-center">
+      <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mb-6"></div>
+      <p className="text-gray-700 text-xl font-semibold">Loading products...</p>
+      <p className="text-gray-500 text-sm mt-2">Please wait while we fetch the latest items</p>
+    </div>
+  </div>
+);
+
 // Helper function to scroll to a ref with offset
 const scrollToRef = (ref) => {
   if (ref.current) {
@@ -37,6 +48,7 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchActive, setIsSearchActive] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   
   const [sortBy, setSortBy] = useState('featured');
   const { products: sheetProducts, loading: productsLoading, refreshProducts } = useProductManager();
@@ -131,11 +143,15 @@ const Products = () => {
         education: sortProductsLocally(educationWorkshopsProducts, sortBy)
       });
     }
-  }, [sheetProducts, sortBy]);
+    
+    // Mark initial load as complete once products are loaded
+    if (!productsLoading && isInitialLoad) {
+      setIsInitialLoad(false);
+    }
+  }, [sheetProducts, sortBy, productsLoading]);
 
-  // NEW: Search functionality - Wait for products to load
+  // Search functionality - Wait for products to load
   useEffect(() => {
-    // Don't perform search if products are still loading
     if (productsLoading) {
       return;
     }
@@ -146,7 +162,6 @@ const Products = () => {
     if (search) {
       setSearchQuery(search);
       setIsSearchActive(true);
-      // Add a small delay to ensure enhancedProducts state is fully updated
       setTimeout(() => {
         performSearch(search);
       }, 100);
@@ -182,8 +197,6 @@ const Products = () => {
     );
 
     setSearchResults(sortProductsLocally(results, sortBy));
-    
-    // Scroll to top when search results load
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -191,7 +204,6 @@ const Products = () => {
     setSearchQuery('');
     setIsSearchActive(false);
     setSearchResults([]);
-    // Remove search param from URL
     window.history.replaceState({}, document.title, window.location.pathname);
   };
 
@@ -202,7 +214,6 @@ const Products = () => {
       await refreshProducts(newSortBy);
     }
 
-    // Re-apply search with new sorting if active
     if (isSearchActive && searchQuery) {
       performSearch(searchQuery);
     }
@@ -301,6 +312,11 @@ const Products = () => {
     );
   };
 
+  // Show loading screen on initial load or when sorting/searching
+  if (isInitialLoad || productsLoading) {
+    return <LoadingScreen />;
+  }
+
   const displayedFestiveProducts = showAllFestive ? enhancedProducts.festive : enhancedProducts.festive.slice(0, 8);
   const displayedCorporateProducts = showAllCorporate ? enhancedProducts.corporate : enhancedProducts.corporate.slice(0, 8);
   const displayedCustomisationProducts = showAllCustomisation ? enhancedProducts.customisation : enhancedProducts.customisation.slice(0, 8);
@@ -310,17 +326,17 @@ const Products = () => {
   const displayedEducationProducts = showAllEducation ? enhancedProducts.education : enhancedProducts.education.slice(0, 8);
 
   return (
-    <div className="min-h-screen pt-20">
-      <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8">
+    <div className="min-h-screen">
+      <div className="w-full px-4 sm:px-6 lg:px-4 py-8">
         {/* Sort Controls */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 mx-15 -mt-15">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="w-full px-2 py-4 lg:ml-6 2xl:ml-10">
+          <div className="flex items-center gap-2 w-full">
             <span className="text-sm font-medium text-gray-700">Sort by:</span>
-            <div className="relative">
-              <select 
-                className="appearance-none bg-white border border-gray-300 rounded-md px-3 py-1 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            <div className="relative flex-1 max-w-[160px]">
+              <select
+                className="block w-full h-8 bg-white border border-gray-300 rounded px-2 pr-8 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 value={sortBy}
-                onChange={(e) => handleSortChange(e.target.value)}
+                onChange={e => handleSortChange(e.target.value)}
               >
                 <option value="featured">Featured</option>
                 <option value="price-low-high">Price: Low to High</option>
@@ -328,14 +344,8 @@ const Products = () => {
                 <option value="name">Alphabetical</option>
                 <option value="newest">Newest</option>
               </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
             </div>
           </div>
-          {productsLoading && (
-            <div className="text-sm text-gray-600">
-              Loading products...
-            </div>
-          )}
         </div>
 
         {/* Search Results Section */}
@@ -354,12 +364,7 @@ const Products = () => {
               </button>
             </div>
 
-            {productsLoading ? (
-              <div className="text-center py-12">
-                <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
-                <p className="text-gray-600 text-lg">Loading products...</p>
-              </div>
-            ) : searchResults.length > 0 ? (
+            {searchResults.length > 0 ? (
               <>
                 <p className="text-gray-600 mb-6">Found {searchResults.length} product{searchResults.length !== 1 ? 's' : ''}</p>
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
@@ -434,7 +439,7 @@ const Products = () => {
         {!isSearchActive && (
           <>
             {/* What's New Section */}
-            <div className="mb-12">
+            {/* <div className="mb-12">
               <div className="px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
                 <div className="flex items-center my-10">
                   <div className="flex-grow border-t-2 border-gray-300"></div>
@@ -446,7 +451,7 @@ const Products = () => {
                     <Link 
                       key={index} 
                       to={`/category/${encodeURIComponent(item.title)}`}
-                      className="w-full max-w-xs rounded-2xl overflow-hidden bg-white flex flex-col h-full"
+                      className="w-full max-w-xs 2xl:rounded-2xl overflow-hidden bg-white flex flex-col h-full"
                     >
                       <div className="relative aspect-square">
                         <img 
@@ -462,10 +467,10 @@ const Products = () => {
                   ))}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* Best Seller Section */}
-            <div className="mb-12">
+            {/* <div className="mb-12">
               <div className="px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
                 <div className="flex items-center my-10">
                   <div className="flex-grow border-t-2 border-gray-300"></div>
@@ -493,7 +498,7 @@ const Products = () => {
                   ))}
                 </div>
               </div>
-            </div>
+            </div> */}
 
             {/* All Product Sections */}
             <ProductSection

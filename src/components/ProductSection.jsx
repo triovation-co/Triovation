@@ -39,7 +39,7 @@ const ProductSection = ({
         <span className="mx-4 text-gray-800 font-semibold text-xl">{title}</span>
         <div className="flex-grow border-t-2 border-gray-300"></div>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-25 mb-20">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-20">
         {safeDisplayedProducts.length > 0 ? (
           safeDisplayedProducts.map((product) => (
             <div
@@ -51,7 +51,7 @@ const ProductSection = ({
                   <img
                     src={product.image}
                     alt={product.name}
-                    className={`rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover transition-all duration-500 ${
+                    className={`rounded-2xl w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover transition-all duration-500 ${
                       shouldHighlight && shouldHighlight(product)
                         ? 'brightness-110 contrast-105 shadow-lg'
                         : ''
@@ -69,7 +69,7 @@ const ProductSection = ({
                   <h2 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">
                     {product.name}
                   </h2>
-                  <p className="text-gray-600 text-xs sm:text-sm mb-3 leading-relaxed flex-grow line-clamp-2">
+                  <p className="text-gray-600 text-xs sm:text-sm lg:text-xs 2xl:text-sm mb-3 leading-relaxed flex-grow line-clamp-2">
                     {product.description || `${product.name} - Perfect for your needs.`}
                   </p>
                   <div className="flex justify-center items-center text-xs sm:text-sm mb-2">
@@ -92,7 +92,7 @@ const ProductSection = ({
                 </Link>
                 <div className="w-full flex justify-center mt-auto">
                   <button
-                    className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-md rounded-md transition-colors w-auto"
+                    className="bg-orange-500 hover:bg-orange-600 text-white px-3 lg:px-2 2xl:px-4 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-md lg:text-xs 2xl:text-lg rounded-md transition-colors w-auto"
                     onClick={(e) => handleAddToCart(product, e)}
                   >
                     Add to Cart

@@ -42,58 +42,76 @@ const Service = () => {
   return (
     <>
       <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 xl:gap-20 mt-20 mx-5 sm:mx-10 lg:mx-20">
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-10 xl:gap-20 mt-20 mx-5 sm:mx-10 lg:mx-20">
 
-          {/* Card 1 - Design Consultancy */}
-          <div 
-            className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer aspect-square"
-            onClick={() => scrollToSection('design-consultancy')}
-          >
-            <img
-              src={Design_Consultancy}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-              alt="Service 1"
-            />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-white text-center text-2xl font-semibold px-2">
-                Design Consultancy
-              </p>
-            </div>
-          </div>
+        {/* Card 1 - Design Consultancy */}
+<div className="flex flex-col items-center w-full">
+  <div 
+    className="relative w-full aspect-square rounded-[1rem] lg:rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+    onClick={() => scrollToSection('design-consultancy')}
+  >
+    <img
+      src={Design_Consultancy}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      alt="Service 1"
+    />
+    <div className="absolute inset-0 hidden lg:flex items-center justify-center">
+      <p className="text-white text-center text-2xl font-semibold px-2">
+        Design Consultancy
+      </p>
+    </div>
+  </div>
+  <p className="block lg:hidden text-center text-sm font-semibold mt-2">
+    Design Consultancy
+  </p>
+</div>
 
-        {/* Card 2 - Learning Zone */}
-        <div
-            className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer aspect-square"
-            onClick={() => scrollToSection('learning-zone')}
-        >
-          <img
-            src={Manufacturing_support}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            alt="Service 2"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-white text-center text-2xl font-semibold px-2">
-              Manufacturing Support
-            </p>
-          </div>
-        </div>
+{/* Card 2 - Manufacturing Support */}
+<div className="flex flex-col items-center w-full">
+  <div
+    className="relative w-full aspect-square rounded-[1rem] lg:rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+    onClick={() => scrollToSection('learning-zone')}
+  >
+    <img
+      src={Manufacturing_support}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      alt="Service 2"
+    />
+    <div className="absolute inset-0 hidden lg:flex items-center justify-center">
+      <p className="text-white text-center text-2xl font-semibold px-2">
+        Manufacturing Support
+      </p>
+    </div>
+  </div>
+  <p className="block lg:hidden text-center text-sm font-semibold mt-2">
+    Manufacturing Support
+  </p>
+</div>
 
-        {/* Card 3 - Learn and Make */}
-        <div 
-          className="relative rounded-[3rem] overflow-hidden shadow-md group cursor-pointer aspect-square"
-          onClick={() => scrollToSection('learn-and-make')}
-        >
-          <img
-            src={Startup_Venture_Support}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-            alt="Service 3"
-          />
-          <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-white text-center text-2xl font-semibold px-2">
-              Startup Venture Support
-            </p>
-          </div>
-        </div>
+{/* Card 3 - Startup Venture Support */}
+<div className="flex flex-col items-center w-full">
+  <div 
+    className="relative w-full aspect-square rounded-[1rem] lg:rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
+    onClick={() => scrollToSection('learn-and-make')}
+  >
+    <img
+      src={Startup_Venture_Support}
+      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      alt="Service 3"
+    />
+    <div className="absolute inset-0 hidden lg:flex items-center justify-center">
+      <p className="text-white text-center text-2xl font-semibold px-2">
+        Startup Venture Support
+      </p>
+    </div>
+  </div>
+  <p className="block lg:hidden text-center text-sm font-semibold mt-2">
+    Startup Venture Support
+  </p>
+</div>
+
+
+
         </div>
       </div>
       
