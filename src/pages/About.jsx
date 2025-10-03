@@ -53,19 +53,49 @@ const About = () => {
   return (
     <>
       <div className="overflow-x-hidden relative">
-        {/* Animated Background Elements */}
-        <div className="fixed inset-0 pointer-events-none z-0">
+        {/* Animated Background Elements - Gradient Waves */}
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+          {/* Soft gradient orbs */}
           <div 
-            className="absolute top-40 right-10 w-24 h-24 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full opacity-20 animate-pulse"
-            style={{ transform: `translateY(${scrollY * 0.1}px) rotate(${scrollY * 0.05}deg)` }}
+            className="absolute -top-1/3 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-indigo-100/30 via-purple-50/20 to-transparent rounded-full blur-3xl"
+            style={{ 
+              transform: `translate(${scrollY * -0.04}px, ${scrollY * 0.06}px)`,
+              transition: 'transform 0.1s ease-out'
+            }}
           ></div>
           <div 
-            className="absolute top-96 left-16 w-16 h-16 bg-gradient-to-br from-blue-100 to-teal-100 rounded-full opacity-30"
-            style={{ transform: `translateY(${scrollY * -0.08}px)` }}
+            className="absolute top-1/3 -right-1/4 w-[500px] h-[500px] bg-gradient-to-bl from-blue-50/25 via-teal-50/15 to-transparent rounded-full blur-3xl"
+            style={{ 
+              transform: `translate(${scrollY * 0.03}px, ${scrollY * -0.05}px)`,
+              transition: 'transform 0.1s ease-out'
+            }}
           ></div>
           <div 
-            className="absolute bottom-60 right-1/4 w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full opacity-25 animate-bounce"
-            style={{ transform: `translateY(${scrollY * 0.12}px)` }}
+            className="absolute bottom-1/4 left-1/3 w-[400px] h-[400px] bg-gradient-to-tr from-purple-50/20 via-pink-50/15 to-transparent rounded-full blur-3xl"
+            style={{ 
+              transform: `translate(${scrollY * 0.05}px, ${scrollY * 0.04}px)`,
+              transition: 'transform 0.1s ease-out'
+            }}
+          ></div>
+          
+          {/* Subtle grid pattern */}
+          <svg className="absolute inset-0 w-full h-full opacity-[0.03]" style={{ transform: `translateY(${scrollY * -0.03}px)` }}>
+            <defs>
+              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#6366f1" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+
+          {/* Floating accent lines */}
+          <div 
+            className="absolute top-1/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-indigo-200/30 to-transparent"
+            style={{ transform: `translateY(${scrollY * 0.08}px)` }}
+          ></div>
+          <div 
+            className="absolute top-2/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-200/30 to-transparent"
+            style={{ transform: `translateY(${scrollY * -0.06}px)` }}
           ></div>
         </div>
 
@@ -80,16 +110,13 @@ const About = () => {
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
-                            mx-auto relative transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-indigo-200/50">
+                            mx-auto relative transition-all duration-700 hover:scale-105 shadow-lg">
                 <img
                   src={Our_story}
                   alt="Vivek and Shubhra"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                {/* Animated border effect */}
-                <div className="absolute inset-0 rounded-t-full border-2 border-indigo-300/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </div>
 
@@ -167,42 +194,36 @@ const About = () => {
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
-                            mx-auto relative transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-blue-200/50">
+                            mx-auto relative transition-all duration-700 hover:scale-105 shadow-lg">
                 <img
                   src={Our_approach}
                   alt="Vivek and Shubhra"
                   className="w-full h-full object-cover scale-100 transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                {/* Animated border effect */}
-                <div className="absolute inset-0 rounded-t-full border-2 border-blue-300/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </div>
           </div>
         </main>
 
-        {/* Third Section - Our Vision */}
+        {/* Third Section - Our Craftsmanship */}
         <section 
           className={`container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center md:text-left relative z-10 transition-all duration-1000 ${visibleSections.craftsmanship ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           data-section="craftsmanship"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
-            {/* Left Column - Image Grid */}
+            {/* Left Column - Image */}
             <div className="relative flex justify-center md:justify-start group">
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
-                            mx-auto relative transition-all duration-700 hover:scale-105 hover:shadow-2xl hover:shadow-amber-200/50">
+                            mx-auto relative transition-all duration-700 hover:scale-105 shadow-lg">
                 <img
                   src={Our_crasftsmenship}
                   alt="Vivek and Shubhra"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-amber-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                
-                {/* Animated border effect */}
-                <div className="absolute inset-0 rounded-t-full border-2 border-amber-300/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
             </div>
 
@@ -251,7 +272,27 @@ const About = () => {
           }
         }
 
+        @keyframes fade-in-up {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
         @keyframes scale-x {
+          from {
+            transform: scaleX(0);
+          }
+          to {
+            transform: scaleX(1);
+          }
+        }
+
+        @keyframes expand-width {
           from {
             transform: scaleX(0);
           }
@@ -270,14 +311,30 @@ const About = () => {
           opacity: 0;
         }
 
+        .animate-fade-in-up {
+          animation: fade-in-up 0.8s ease-out forwards;
+          opacity: 0;
+        }
+
+        .animate-slide-in-right {
+          animation: fade-in-right 0.8s ease-out forwards;
+          opacity: 0;
+        }
+
         .animate-scale-x {
           animation: scale-x 0.6s ease-out forwards;
+          animation-delay: 0.3s;
+        }
+
+        .animate-expand-width {
+          animation: expand-width 0.6s ease-out forwards;
           animation-delay: 0.3s;
         }
 
         .delay-200 { animation-delay: 200ms; }
         .delay-300 { animation-delay: 300ms; }
         .delay-400 { animation-delay: 400ms; }
+        .delay-500 { animation-delay: 500ms; }
         .delay-600 { animation-delay: 600ms; }
         .delay-800 { animation-delay: 800ms; }
         .delay-1000 { animation-delay: 1000ms; }

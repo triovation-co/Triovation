@@ -28,22 +28,42 @@ const Home = () => {
 
   return (
     <div className="overflow-x-hidden relative">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div
-          className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-pink-100 to-orange-100 rounded-full opacity-30 animate-pulse"
-          style={{ transform: `translateY(${scrollY * 0.1}px)` }}
-        ></div>
-        <div
-          className="absolute top-60 right-20 w-20 h-20 bg-gradient-to-br from-orange-100 to-pink-100 rounded-full opacity-40 animate-bounce"
-          style={{ transform: `translateY(${scrollY * -0.15}px)` }}
-        ></div>
-        <div
-          className="absolute bottom-40 left-14 w-16 h-16 bg-gradient-to-br from-pink-200 to-orange-200 rounded-full opacity-25"
-          style={{
-            transform: `translateY(${scrollY * 0.08}px) rotate(${scrollY * 0.1}deg)`,
+      {/* Animated Background Elements - Gradient Mesh */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Animated gradient mesh */}
+        <div 
+          className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-pink-50/40 via-transparent to-transparent rounded-full blur-3xl"
+          style={{ 
+            transform: `translate(${scrollY * 0.05}px, ${scrollY * 0.08}px) scale(1.5)`,
+            transition: 'transform 0.1s ease-out'
           }}
         ></div>
+        <div 
+          className="absolute -top-1/4 -right-1/2 w-full h-full bg-gradient-to-bl from-orange-50/30 via-transparent to-transparent rounded-full blur-3xl"
+          style={{ 
+            transform: `translate(${scrollY * -0.03}px, ${scrollY * 0.1}px) scale(1.5)`,
+            transition: 'transform 0.1s ease-out'
+          }}
+        ></div>
+        <div 
+          className="absolute top-1/2 left-1/3 w-96 h-96 bg-gradient-to-tr from-pink-100/20 via-orange-50/20 to-transparent rounded-full blur-2xl"
+          style={{ 
+            transform: `translate(${scrollY * 0.04}px, ${scrollY * -0.06}px)`,
+            transition: 'transform 0.1s ease-out'
+          }}
+        ></div>
+        
+        {/* Subtle floating lines */}
+        <svg className="absolute inset-0 w-full h-full opacity-10" style={{ transform: `translateY(${scrollY * -0.02}px)` }}>
+          <line x1="10%" y1="20%" x2="90%" y2="25%" stroke="#f47e82" strokeWidth="1" strokeDasharray="5,5">
+            <animate attributeName="y1" values="20%;22%;20%" dur="8s" repeatCount="indefinite" />
+            <animate attributeName="y2" values="25%;23%;25%" dur="8s" repeatCount="indefinite" />
+          </line>
+          <line x1="15%" y1="60%" x2="85%" y2="65%" stroke="#fca5a5" strokeWidth="1" strokeDasharray="5,5">
+            <animate attributeName="y1" values="60%;58%;60%" dur="10s" repeatCount="indefinite" />
+            <animate attributeName="y2" values="65%;63%;65%" dur="10s" repeatCount="indefinite" />
+          </line>
+        </svg>
       </div>
 
       {/* Main Content Section */}
@@ -55,7 +75,7 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
           {/* Left Column - Image */}
           <div className="relative flex justify-center md:justify-start group">
-            <div className="rounded-t-full overflow-hidden w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] mx-auto bg-black relative transition-all duration-700 hover:scale-105 hover:shadow-2xl">
+            <div className="rounded-t-full overflow-hidden w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] mx-auto bg-black relative transition-all duration-700 hover:scale-105 shadow-lg">
               <img
                 src={Triovationmain}
                 alt="Vivek and Shubhra"
