@@ -36,11 +36,14 @@ function App() {
 
   useEffect(() => {
     if (!introComplete && videoRef.current) {
+      // Load the video source
+      videoRef.current.load();
+      // Try to play
       videoRef.current.play().catch(err => {
         console.log("Autoplay prevented:", err);
       });
     }
-  }, [introComplete]);
+  }, [introComplete, isMobile]);
 
   const handleVideoEnd = () => {
     setFadeOut(true);
@@ -65,17 +68,34 @@ function App() {
         <div 
           className={`fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden transition-opacity duration-500 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
         >
-          <video
-            ref={videoRef}
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            playsInline
-            webkit-playsinline="true"
-            onEnded={handleVideoEnd}
-          >
-            <source src={isMobile ? Mobile : Video} type="video/mp4" />
-          </video>
+          {/* Desktop Video */}
+          {!isMobile && (
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              playsInline
+              onEnded={handleVideoEnd}
+            >
+              <source src={Video} type="video/mp4" />
+            </video>
+          )}
+
+          {/* Mobile Video */}
+          {isMobile && (
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              playsInline
+              webkit-playsinline="true"
+              onEnded={handleVideoEnd}
+            >
+              <source src={Mobile} type="video/mp4" />
+            </video>
+          )}
         </div>
       )}
 
