@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState, useRef, useEffect } from 'react';
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -11,13 +12,64 @@ import Category_page from "./pages/Category_page";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Checkout from "./components/Checkout";
-import CustomizableProductGrid from "./components/CustomizableProductGrid"; // ADD THIS IMPORT
+import CustomizableProductGrid from "./components/CustomizableProductGrid";
 import { CartProvider } from './context/CartContext';
+import Video from "./assets/Triovation_video.mp4";
 
 function App() {
+  const [introComplete, setIntroComplete] = useState(
+    sessionStorage.getItem('introWatched') === 'true'
+  );
+  const [fadeOut, setFadeOut] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (!introComplete && videoRef.current) {
+      videoRef.current.play().catch(err => {
+        console.log("Autoplay prevented:", err);
+      });
+    }
+  }, [introComplete]);
+
+  const handleVideoEnd = () => {
+    setFadeOut(true);
+    setTimeout(() => {
+      setIntroComplete(true);
+      sessionStorage.setItem('introWatched', 'true');
+    }, 500);
+  };
+
+  const handleSkip = () => {
+    setFadeOut(true);
+    setTimeout(() => {
+      setIntroComplete(true);
+      sessionStorage.setItem('introWatched', 'true');
+    }, 500);
+  };
+
   return (
     <CartProvider>
-      <div className="flex flex-col min-h-screen w-auto">
+      {/* Video Intro */}
+      {!introComplete && (
+        <div 
+          className={`fixed inset-0 z-50 bg-black flex items-center justify-center transition-opacity duration-500 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
+        >
+          <video
+            ref={videoRef}
+            className="absolute top-0 left-0 w-full h-full object-cover"
+            autoPlay
+            muted
+            playsInline
+            webkit-playsinline="true"
+            onEnded={handleVideoEnd}
+          >
+            <source src={Video} type="video/mp4" />
+          </video>
+        </div>
+      )}
+
+      {/* Main App Content */}
+      <div className={`flex flex-col min-h-screen w-auto transition-opacity duration-500 ${introComplete ? 'opacity-100' : 'opacity-0'}`}>
         {/* Navbar */}
         <Navbar />
 
@@ -34,7 +86,6 @@ function App() {
             <Route path="/product/:id" element={<ProductDetails />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
-            {/* ADD THESE NEW ROUTES */}
             <Route path="/product-grid" element={<CustomizableProductGrid />} />
             <Route path="/grid" element={<CustomizableProductGrid />} />
             <Route path="/admin" element={<CustomizableProductGrid />} />
