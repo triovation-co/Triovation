@@ -74,16 +74,8 @@ function App() {
             webkit-playsinline="true"
             onEnded={handleVideoEnd}
           >
-            <source src={isMobile ? Mobile : Video} type="video/mp4" />
+            <source src={isMobile ? Mobile : Video} type={Mobile} />
           </video>
-          
-          {/* Skip Button */}
-          <button
-            onClick={handleSkip}
-            className="absolute top-2 right-2 sm:top-4 sm:right-4 md:top-8 md:right-8 z-10 bg-white/30 hover:bg-white/40 backdrop-blur-sm text-white px-3 py-1.5 sm:px-4 sm:py-2 md:px-6 md:py-3 rounded-full text-xs sm:text-sm md:text-base font-semibold transition-all duration-300 border border-white/40 shadow-lg"
-          >
-            Skip
-          </button>
         </div>
       )}
 
