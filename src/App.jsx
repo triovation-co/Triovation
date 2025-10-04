@@ -74,7 +74,7 @@ function App() {
             webkit-playsinline="true"
             onEnded={handleVideoEnd}
           >
-            <source src={isMobile ? Mobile : Video} type={Mobile} />
+            <source src={isMobile ? Mobile : Video} type="video/mp4" />
           </video>
         </div>
       )}
