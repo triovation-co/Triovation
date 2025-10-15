@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
-import img from "../assets/image1.jpg"; // Main image
-import flower from "../assets/flower.png"; // Decorative graphic
+import img from "../assets/image1.jpg";
+import flower from "../assets/flower.png";
+// Import different service images
+import corporateGifting from "../assets/corporate-gifting.jpg";
+import customizedGifting from "../assets/customized-gifting.jpg";
+import designConsultancy from "../assets/design-consultancy.jpg";
+import learningZone from "../assets/learning-zone.png";
+import Learn_fab from "../assets/Learn_fab.png";
+import education from "../assets/education.png";
 import WhatsAppButton from "../components/whatsapp";
 import Triovationmain from "../assets/Triovation_main.jpg";
 
@@ -18,12 +25,12 @@ const Home = () => {
   }, []);
 
   const services = [
-    "Corporate Gifting",
-    "Customized Gifting",
-    "Design Consultancy",
-    "Learn and Fabricate",
-    "Learning Zone",
-    "Education",
+    { name: "Corporate Gifting", image: corporateGifting },
+    { name: "Customized Gifting", image: customizedGifting },
+    { name: "Design Consultancy", image: designConsultancy },
+    { name: "Learn and Fabricate", image: Learn_fab },
+    { name: "Learning Zone", image: learningZone },
+    { name: "Education", image: education },
   ];
 
   return (
@@ -218,15 +225,15 @@ const Home = () => {
               {/* Service Thumbnails */}
               <div className="rounded-t-full overflow-hidden w-40 h-40 sm:w-50 sm:h-60 md:w-50 md:h-55 lg:w-60 lg:h-60 xl:w-74 xl:h-80 mb-4 relative transition-all duration-700 hover:scale-110">
                 <img
-                  src={img}
-                  alt={service}
+                  src={service.image}
+                  alt={service.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#f47e82]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
 
               <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800 group-hover:text-[#f47e82] transition-all duration-300 hover:scale-105">
-                {service}
+                {service.name}
               </p>
             </div>
           ))}

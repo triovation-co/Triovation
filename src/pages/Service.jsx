@@ -130,12 +130,14 @@ const Service = () => {
               Design Consultancy
             </h1>
               <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-                We blend creativity with technology to deliver exceptional solutions. With a team of 
-                skilled professionals, we've been transforming ideas into reality since 2024. 
-                Our commitment to quality, innovation, and client satisfaction sets us apart as.
+                Transform your vision into a remarkable reality with our design consultancy. We go beyond
+aesthetics to offer a full spectrum of services tailored to your needs, from custom product
+development and crafting a compelling brand identity to expert logo design and a complete
+aesthetic redesign of your existing products. Our goal is to create distinctive, market ready
+solutions that captivate your audience and establish a powerful, cohesive brand presence.
               </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">LEARN MORE</span>
+              <span className="relative z-10">STAY TUNE</span>
             </button>
           </div>
       
@@ -172,18 +174,23 @@ const Service = () => {
           {/* Right Column: Text */}
           <div 
             ref={(el) => (sectionRefs.current[1] = el)}
-            className="mt-8 lg:mt-0 lg:mr-12 xl:mr-20 text-center lg:text-left fade-in-section"
+            className="mt-8 lg:mt-0 text-center lg:text-left fade-in-section"
           >
             <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 bg-gradient-to-r from-pink-500 via-red-400 to-pink-500 bg-clip-text text-transparent animate-gradient bg-300%">
-              Manufacturing Support
+              Expert Manufacturing and Fabrication
             </h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-              We blend creativity with technology to deliver exceptional solutions. With a team of skilled professionals,
-              we've been transforming ideas into reality since 2024. Our commitment to quality, innovation, and client 
-              satisfaction sets us apart as.
+             Bring your cutting-edge designs to life with our comprehensive manufacturing and
+fabrication services. We are the dedicated prototyping partner for startups, offering rapid
+solutions to test and refine your product vision. Beyond initial prototypes, we provide expert
+consultancy to determine the most cost effective and scalable mass production technique
+for your specific needs. Our in house capabilities include precision services like 3D printing,
+laser cutting, PCB milling, and professional engraving for branding. Coupled with our
+specialized electronics fabrication consultancy, we ensure a seamless, end to end journey
+from concept to market-ready hardware.
             </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">LEARN MORE</span>
+              <span className="relative z-10">STAY TUNE</span>
             </button>
           </div>
         </div>
@@ -201,16 +208,20 @@ const Service = () => {
             className="text-center lg:text-left order-2 lg:order-1 fade-in-section"
           >
             <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 bg-gradient-to-r from-red-500 via-pink-400 to-red-500 bg-clip-text text-transparent animate-gradient bg-300%">
-              Startup Venture Support
+              Holistic Startup Venture Support
             </h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-              We blend creativity with technology to deliver exceptional solutions.
-              With a team of skilled professionals, we've been transforming ideas
-              into reality since 2024. Our commitment to quality, innovation, and 
-              client satisfaction sets us apart as.
+Launch your startup with confidence through our holistic venture support, a powerful blend
+of design and manufacturing expertise. We act as your end to end partner, beginning with
+custom product design and rapid prototyping services to validate your concept. Our team
+guides you in selecting the most scalable mass production techniques and assists with
+electronics fabrication to ensure a high quality product. Crucially, we work with you to
+establish your brand from crafting a cohesive brand identity and professional logo design
+to ensuring your final manufactured product reflects your core aesthetic. We provide the full
+framework to move seamlessly from an innovative idea to a market-ready, powerful brand.
             </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">LEARN MORE</span>
+              <span className="relative z-10">STAY TUNE</span>
             </button>
           </div>
       

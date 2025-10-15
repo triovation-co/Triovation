@@ -16,6 +16,7 @@ import CustomizableProductGrid from "./components/CustomizableProductGrid";
 import { CartProvider } from './context/CartContext';
 import Video from "./assets/Triovation_video.mp4";
 import Mobile from "./assets/mobile_video.mp4";
+import CustomizationPage from './pages/CustomizationPage.jsx';
 
 function App() {
   const [introComplete, setIntroComplete] = useState(
@@ -108,6 +109,7 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/Customize_product" element={<CustomizationPage />}/>
             <Route path="/About" element={<About />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Consultancy" element={<Service />} />

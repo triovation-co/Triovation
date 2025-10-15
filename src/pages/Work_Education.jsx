@@ -104,7 +104,7 @@ const Work_Education = () => {
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src={workshop}
+                src="\src\assets\workshop1.png"
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />
@@ -118,16 +118,20 @@ const Work_Education = () => {
             className="mt-8 lg:mt-0 lg:mr-12 xl:mr-20 text-center lg:text-left fade-in-section"
           >
             <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 bg-gradient-to-r from-pink-500 via-red-400 to-pink-500 bg-clip-text text-transparent animate-gradient bg-300%">
-              Workshop
+              Immersive Hands-On Workshops
             </h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-              It all began (like all good things do) over a (good) bottle of wine. 
-              Vivek and Shubhra were tired of all the random souvenirs that India had to offer. 
-              They set out to start a company that would go on to sell souvenirs that depicted India, 
-              the way you and I saw it. Mad, Crazy, Colourful.
+Elevate your skills with our intensive, project based workshops, running from one day to a
+full week. Our sessions offer practical, hands on training in critical creative and fabrication
+technologies, including product design fundamentals, 3D modeling, and operation of
+advanced tools like 3D printers and laser cutters. Participants will also gain proficiency in
+essential digital skills such as Digital Illustration and professional video editing softwares.
+For those interested in hardware, we offer a dedicated Introduction to Robotics session
+where attendees can build and program foundational kits, including line-following and
+obstacle-avoiding robots, providing a tangible understanding of electronics and coding
             </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">CONTACT US</span>
+              <span className="relative z-10">STAY TUNE</span>
             </button>
           </div>
         </div>
@@ -145,16 +149,22 @@ const Work_Education = () => {
             className="text-center lg:text-left order-2 lg:order-1 fade-in-section"
           >
             <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 bg-gradient-to-r from-red-500 via-pink-400 to-red-500 bg-clip-text text-transparent animate-gradient bg-300%">
-              Education
+              Specialized STEM Education and Skill
+Training
             </h1>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl mb-4 leading-relaxed">
-              We blend creativity with technology to deliver exceptional solutions.
-              With a team of skilled professionals, we've been transforming ideas
-              into reality since 2024. Our commitment to quality, innovation, and 
-              client satisfaction sets us apart as.
+              Ignite the passion of the next generation of innovators with our specialized STEM
+Education courses, meticulously designed for students aged 8-18. We offer detailed classes
+that progress from basic to advanced concepts in electronics, providing a strong theoretical
+foundation coupled with intensive digital fabrication training. Our curriculum includes
+hands on instruction in prototyping, enabling students to bring their ideas to life using
+professional tools. Furthermore, we integrate essential creative skills such as branding and
+product presentation, ensuring students not only build functional projects but also understand
+how to communicate their value effectively. These courses deliver practical, hands-on
+training tailored to foster expertise in future-ready skills.
             </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">CONTACT US</span>
+              <span className="relative z-10">STAY TUNE</span>
             </button>
           </div>
 
@@ -163,7 +173,7 @@ const Work_Education = () => {
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg order-1 lg:order-2"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src={Education}
+                src="\src\assets\Education1.png"
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />

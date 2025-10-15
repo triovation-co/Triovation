@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import ProductSection from "../components/ProductSection.jsx";
 import { useProductManager } from "../hooks/useProductManager.jsx";
-import img from "../assets/image1.jpg";
+import bulkorder1 from "../assets/bulkorder1.png";
+import bulkorder2 from "../assets/bulkorder2.png";
 import WhatsAppButton from "../components/whatsapp.jsx";
 import {
   sections, whatsNewItems, bestSellerItems, FestiveSeason,
@@ -606,7 +607,7 @@ const Products = () => {
                   xl:w-[425px] xl:h-[500px]
                   overflow-hidden shadow-lg rounded-t-full"
                 >
-                  <img src={img} alt="Gift Background Right" className="w-full h-full object-cover" />
+                  <img src={bulkorder1} alt="Gift Background Right" className="w-full h-full object-cover" />
                 </div>
 
                 <div
@@ -622,7 +623,7 @@ const Products = () => {
                             xl:w-[375px] xl:h-[400px]
                             mx-auto"
                 >
-                  <img src={img} alt="Gift Foreground Left" className="w-full h-full object-cover" />
+                  <img src={bulkorder2} alt="Gift Foreground Left" className="w-full h-full object-cover" />
                 </div>
               </div>
 
@@ -634,7 +635,7 @@ const Products = () => {
                   Corporate Bulk Gifting
                 </h1>
                 <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
-                  Email at <span className="font-semibold">Triovation@gmail.in</span> for any B2B gifting requirement!
+                  Email at <span className="font-semibold">Triovation.co@gmail.com</span> for any B2B gifting requirement!
                 </p>
                 <button className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base">
                   Contact Us

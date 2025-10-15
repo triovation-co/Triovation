@@ -1,5 +1,6 @@
 import React from 'react';
-import img from "../assets/image1.jpg";
+import bulkorder1 from "../assets/bulkorder1.png";
+import bulkorder2 from "../assets/bulkorder2.png";
 
 const ContactUs = () => {
   return (
@@ -22,7 +23,7 @@ const ContactUs = () => {
                     xl:w-[425px] xl:h-[500px]
                     overflow-hidden shadow-lg rounded-t-full"
                   >
-                    <img src={img} alt="Gift Background Right" className="w-full h-full object-cover" />
+                    <img src={bulkorder1} alt="Gift Background Right" className="w-full h-full object-cover" />
                   </div>
     
                   {/* Left image (in front) */}
@@ -32,14 +33,14 @@ const ContactUs = () => {
                               top-[55%] sm:top-[15%] md:top-[62.7%] lg:top-[57%] xl:top-[60.2%]
                               top-1/2 -translate-y-1/2
                               rounded-t-full overflow-hidden
-                              w-[180px] h-[230px] 
+                              w-[180px] h-[230px]
                               sm:w-[225px] sm:h-[250px]  
                               md:w-[225px] md:h-[250px]
                               lg:w-[275px] lg:h-[300px] 
                               xl:w-[375px] xl:h-[400px]
                               mx-auto"
                   >
-                    <img src={img} alt="Gift Foreground Left" className="w-full h-full object-cover" />
+                    <img src={bulkorder2} alt="Gift Foreground Left" className="w-full h-full object-cover" />
                   </div>
                 </div>
     
@@ -52,7 +53,7 @@ const ContactUs = () => {
                     Corporate Bulk Gifting
                   </h1>
                   <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
-                    Email at <span className="font-semibold">Triovation@gmail.in</span> for any B2B gifting requirement!
+                    Email at <span className="font-semibold">Triovation.co@gmail.com</span> for any B2B gifting requirement!
                   </p>
                   <button className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base">
                     Contact Us
