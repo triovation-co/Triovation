@@ -4,15 +4,20 @@ import img from "../assets/image1.jpg";
 const Footer = () => {
   return (
     <>
+    {/* grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-20 lg:gap-30 2xl:gap-40 */}
       {/* Footer Section */}
       <footer className="bg-gray-50 text-gray-700 mt-20">
-        <div className="container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 py-10 
-                grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-20 lg:gap-30 2xl:gap-40">
+        <div className="
+            container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 py-10
+            grid grid-cols-2 gap-10
+            lg:flex lg:flex-row lg:justify-evenly lg:gap-25 2xl:gap-40
+          ">
+
           {/* Column 1 - Logo & Contact */}
           <div>
             <img src={Logo} alt="Logo" className="h-12 w-auto mb-4 -ml-1" />
             <p className="text-sm 2xl:text-base mb-6">
-              An online gift shop offering unique, creative gifts for boys and girls. Explore distinctive gifts for any occasion.
+              An online gift shop offering unique, <br/>creative gifts for boys and girls.<br/> Explore distinctive gifts for any occasion.
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <p className="text-sm 2xl:text-base">011-66763875</p>
@@ -28,7 +33,7 @@ const Footer = () => {
           <div className="mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">HELPFUL LINKS</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
-              <li><a href="#" className="hover:text-blue-600">Contact us</a></li>
+              <li><a href="/ContactUs" className="hover:text-blue-600">Contact us</a></li>
               <li><a href="#" className="hover:text-blue-600">Wholesale & Corporate enquiries</a></li>
               <li><a href="#" className="hover:text-blue-600">Cancellation & refund policy</a></li>
             </ul>
@@ -41,9 +46,9 @@ const Footer = () => {
           <div className="mt-1 lg:mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">Our Company</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
-              <li><a href="#" className="hover:text-blue-600">Home</a></li>
-              <li><a href="#" className="hover:text-blue-600">About Us</a></li>
-              <li><a href="#" className="hover:text-blue-600">Contact Us</a></li>
+              <li><a href="/" className="hover:text-blue-600">Home</a></li>
+              <li><a href="/About" className="hover:text-blue-600">About Us</a></li>
+              <li><a href="/ContactUs" className="hover:text-blue-600">Contact Us</a></li>
             </ul>
           </div>
 
