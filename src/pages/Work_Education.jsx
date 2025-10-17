@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react'
 import image1 from '../assets/image1.jpg'
 import workshop from '../assets/workshop.jpg'
 import Education from '../assets/Education.jpg'
-
+import Education1 from "../assets/Education1.png"
+import workshop1 from "../assets/workshop1.png"
 
 const Work_Education = () => {
   const sectionRefs = useRef([]);
