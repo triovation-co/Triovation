@@ -105,7 +105,7 @@ const Work_Education = () => {
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src="\src\assets\workshop1.png"
+                src={workshop1}
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />
@@ -174,7 +174,7 @@ training tailored to foster expertise in future-ready skills.
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg order-1 lg:order-2"> 
             <div className="rounded-[3rem] overflow-hidden w-full aspect-square mb-8 lg:mb-0">
               <img 
-                src="\src\assets\Education1.png"
+                src={Education1}
                 alt="Vivek and Shubhra" 
                 className="w-full h-full object-cover" 
               />

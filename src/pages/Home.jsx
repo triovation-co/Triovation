@@ -178,12 +178,10 @@ const Home = () => {
             <div className="absolute inset-0 bg-gradient-to-br from-[#f47e82]/5 to-[#fca5a5]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
             {/* Circle Badge */}
-            <div className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-[#f47e82] to-[#fca5a5] flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-[#f47e82]/30 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 z-10">
+            <div className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-[#f47e82] to-[#fca5a5] flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-[#f47e82]/30 transform">
               <span className="text-white text-xl sm:text-2xl font-extrabold">
                 {card.id}
               </span>
-              {/* Animated Ring */}
-              <div className="absolute inset-0 rounded-full border-2 border-[#f47e82]/30 scale-150 opacity-0 group-hover:opacity-100 group-hover:scale-175 transition-all duration-700"></div>
             </div>
 
             {/* Title */}
