@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
 import ProductSection from "../components/ProductSection.jsx";
 import { useProductManager } from "../hooks/useProductManager.jsx";
@@ -12,13 +12,25 @@ import {
   mechanicalProducts, designConsultancyProducts, educationWorkshopsProducts,
 } from "../assets/data.jsx";
 
-// Loading Component
+// Loading Component for initial page load
 const LoadingScreen = () => (
   <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center">
     <div className="text-center">
       <div className="inline-block animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mb-6"></div>
       <p className="text-gray-700 text-xl font-semibold">Loading products...</p>
       <p className="text-gray-500 text-sm mt-2">Please wait while we fetch the latest items</p>
+    </div>
+  </div>
+);
+
+// Search Loading Overlay - Glassmorphism style
+const SearchLoadingOverlay = () => (
+  <div className="fixed inset-0 bg-white bg-opacity-40 backdrop-blur-md z-40 flex items-center justify-center">
+    <div className="bg-white bg-opacity-80 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white border-opacity-30">
+      <div className="flex flex-col items-center">
+        <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-4 border-orange-500 mb-4"></div>
+        <p className="text-gray-700 text-lg font-semibold">Searching products...</p>
+      </div>
     </div>
   </div>
 );
@@ -32,11 +44,10 @@ const scrollToRef = (ref) => {
   }
 };
 
-const useQuery = () => {
-  return new URLSearchParams(window.location.search);
-};
-
 const Products = () => {
+  // Use React Router's useLocation hook
+  const location = useLocation();
+  
   // State
   const [showAllFestive, setShowAllFestive] = useState(false);
   const [showAllCorporate, setShowAllCorporate] = useState(false);
@@ -49,10 +60,21 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [pageReady, setPageReady] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchSource, setSearchSource] = useState('search'); // Track search source: 'search' or 'dropdown'
   
   const [sortBy, setSortBy] = useState('featured');
   const { products: sheetProducts, loading: productsLoading, refreshProducts } = useProductManager();
+
+  // Force minimum loading time of 1.5 seconds for initial load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPageReady(true);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Function to sort products locally
   const sortProductsLocally = (products, sortOption) => {
@@ -144,67 +166,180 @@ const Products = () => {
         education: sortProductsLocally(educationWorkshopsProducts, sortBy)
       });
     }
-    
-    // Mark initial load as complete once products are loaded
-    if (!productsLoading && isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  }, [sheetProducts, sortBy, productsLoading]);
+  }, [sheetProducts, sortBy]);
 
-  // Search functionality - Wait for products to load
-  useEffect(() => {
-    if (productsLoading) {
+  // Enhanced intelligent search function with relevance-based ranking
+  const performSearch = async (query) => {
+    if (!query || query.trim() === '') {
+      setSearchResults([]);
+      setIsSearchActive(false);
+      setIsSearching(false);
       return;
     }
 
-    const query = useQuery();
-    const search = query.get('search');
-    
-    if (search) {
-      setSearchQuery(search);
-      setIsSearchActive(true);
+    // Show loading indicator for search
+    setIsSearching(true);
+
+    // Simulate minimum search time for better UX (300ms)
+    const searchPromise = new Promise((resolve) => {
       setTimeout(() => {
-        performSearch(search);
-      }, 100);
+        const searchLower = query.toLowerCase().trim();
+        
+        const allProducts = [
+          ...enhancedProducts.festive,
+          ...enhancedProducts.corporate,
+          ...enhancedProducts.customisation,
+          ...enhancedProducts.homeDecor,
+          ...enhancedProducts.mechanical,
+          ...enhancedProducts.design,
+          ...enhancedProducts.education
+        ];
+
+        console.log('🔍 Search query:', searchLower);
+        console.log('📦 Total products to search:', allProducts.length);
+
+        // Split search query into words
+        const searchWords = searchLower.split(/\s+/);
+        
+        // Create search variations (handle plurals)
+        const createSearchVariations = (term) => {
+          const variations = [term];
+          
+          if (term.endsWith('s') && term.length > 2) {
+            variations.push(term.slice(0, -1));
+          } else {
+            variations.push(term + 's');
+          }
+          
+          if (term.endsWith('es') && term.length > 3) {
+            variations.push(term.slice(0, -2));
+          }
+          
+          if (term.endsWith('ies') && term.length > 4) {
+            variations.push(term.slice(0, -3) + 'y');
+          } else if (term.endsWith('y') && term.length > 2) {
+            variations.push(term.slice(0, -1) + 'ies');
+          }
+          
+          return variations;
+        };
+        
+        // Score each product based on relevance
+        const scoredProducts = allProducts.map(product => {
+          const name = (product.name || '').toLowerCase();
+          const description = (product.description || '').toLowerCase();
+          const category = (product.category || '').toLowerCase();
+          
+          let score = 0;
+          
+          // Check for exact match (highest priority)
+          if (name === searchLower) {
+            score = 10000;
+            console.log('✅ Exact match:', product.name, '| Score:', score);
+            return { product, score };
+          }
+          
+          // Count how many search words match
+          let matchedWordsCount = 0;
+          const totalSearchWords = searchWords.length;
+          
+          searchWords.forEach(word => {
+            const variations = createSearchVariations(word);
+            
+            variations.forEach(variation => {
+              // Name matches score highest
+              if (name.includes(variation)) {
+                matchedWordsCount++;
+                score += 100; // High score for name match
+              }
+              // Description matches score medium
+              else if (description.includes(variation)) {
+                matchedWordsCount++;
+                score += 30; // Medium score for description match
+              }
+              // Category matches score lowest
+              else if (category.includes(variation)) {
+                matchedWordsCount++;
+                score += 10; // Low score for category match
+              }
+            });
+          });
+          
+          // Bonus for matching percentage
+          const matchPercentage = (matchedWordsCount / totalSearchWords) * 100;
+          score += matchPercentage * 5; // Bonus based on match percentage
+          
+          // Bonus if all words match
+          if (matchedWordsCount >= totalSearchWords) {
+            score += 200; // Extra bonus for matching all search terms
+          }
+          
+          if (score > 0) {
+            console.log('✅ Match found:', product.name, '| Matched words:', matchedWordsCount, '/', totalSearchWords, '| Score:', score.toFixed(2));
+          }
+          
+          return { product, score };
+        });
+        
+        // Filter products with score > 0 and sort by score (highest first)
+        const results = scoredProducts
+          .filter(item => item.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .map(item => item.product);
+
+        console.log('✨ Total results found:', results.length);
+        
+        // Apply sorting preference AFTER relevance sorting
+        const finalResults = sortBy === 'featured' ? results : sortProductsLocally(results, sortBy);
+        
+        resolve(finalResults);
+      }, 300);
+    });
+
+    const results = await searchPromise;
+    setSearchResults(results);
+    setIsSearching(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Uses location.search which is REACTIVE
+  useEffect(() => {
+    if (!pageReady) {
+      return;
+    }
+
+    const params = new URLSearchParams(location.search);
+    const search = params.get('search');
+    const highlight = params.get('highlight');
+    
+    console.log('🔄 URL Changed - Search param:', search, '| Highlight param:', highlight);
+    
+    // Update search query IMMEDIATELY (synchronously)
+    if (highlight) {
+      console.log('📌 Setting search query to:', highlight);
+      setSearchQuery(highlight);
+      setSearchSource('dropdown'); // Track that this came from dropdown
+      setIsSearchActive(true);
+      performSearch(highlight);
+    } else if (search) {
+      console.log('📌 Setting search query to:', search);
+      setSearchQuery(search);
+      setSearchSource('search'); // Track that this came from search field
+      setIsSearchActive(true);
+      performSearch(search);
     } else {
+      console.log('📌 Clearing search');
       setSearchQuery('');
       setIsSearchActive(false);
       setSearchResults([]);
     }
-  }, [window.location.search, enhancedProducts, productsLoading]);
-
-  const performSearch = (query) => {
-    if (!query || query.trim() === '') {
-      setSearchResults([]);
-      setIsSearchActive(false);
-      return;
-    }
-
-    const searchLower = query.toLowerCase();
-    const allProducts = [
-      ...enhancedProducts.festive,
-      ...enhancedProducts.corporate,
-      ...enhancedProducts.customisation,
-      ...enhancedProducts.homeDecor,
-      ...enhancedProducts.mechanical,
-      ...enhancedProducts.design,
-      ...enhancedProducts.education
-    ];
-
-    const results = allProducts.filter(product => 
-      product.name.toLowerCase().includes(searchLower) ||
-      (product.description && product.description.toLowerCase().includes(searchLower)) ||
-      (product.category && product.category.toLowerCase().includes(searchLower))
-    );
-
-    setSearchResults(sortProductsLocally(results, sortBy));
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, [location.search, enhancedProducts, pageReady]);
 
   const clearSearch = () => {
     setSearchQuery('');
     setIsSearchActive(false);
     setSearchResults([]);
+    setIsSearching(false);
     window.history.replaceState({}, document.title, window.location.pathname);
   };
 
@@ -290,22 +425,6 @@ const Products = () => {
     }
   };
 
-  useEffect(() => {
-    const query = useQuery();
-    const highlightParam = query.get('highlight');
-    if (highlightParam) {
-      setHighlightedProduct(highlightParam);
-      setTimeout(() => {
-        scrollToProduct(highlightParam);
-      }, 500);
-      setTimeout(() => {
-        setHighlightedProduct(null);
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, newUrl);
-      }, 5000);
-    }
-  }, []);
-
   const shouldHighlight = (product) => {
     return highlightedProduct && (
       product.name.toLowerCase().includes(highlightedProduct.toLowerCase()) ||
@@ -313,8 +432,8 @@ const Products = () => {
     );
   };
 
-  // Show loading screen on initial load or when sorting/searching
-  if (isInitialLoad || productsLoading) {
+  // Show loading screen until page is ready
+  if (!pageReady || productsLoading) {
     return <LoadingScreen />;
   }
 
@@ -328,6 +447,9 @@ const Products = () => {
 
   return (
     <div className="min-h-screen">
+      {/* Search Loading Overlay */}
+      {isSearching && <SearchLoadingOverlay />}
+      
       <div className="w-full px-4 sm:px-6 lg:px-4 py-8">
         {/* Sort Controls */}
         <div className="w-full px-2 py-4 lg:ml-6 2xl:ml-10">
@@ -351,7 +473,7 @@ const Products = () => {
 
         {/* Search Results Section */}
         {isSearchActive && (
-          <div className="mb-12">
+          <div className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-gray-800">
                 Search Results for "{searchQuery}"
@@ -368,18 +490,18 @@ const Products = () => {
             {searchResults.length > 0 ? (
               <>
                 <p className="text-gray-600 mb-6">Found {searchResults.length} product{searchResults.length !== 1 ? 's' : ''}</p>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-20">
                   {searchResults.map((product) => (
                     <div 
                       key={product.id}
-                      className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full shadow-md hover:shadow-lg transition-shadow"
+                      className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full"
                     >
                       <Link to={`/product/${product.id}`}>
                         <div className="relative">
                           <img 
                             src={product.image} 
                             alt={product.name} 
-                            className="rounded-2xl w-full h-48 sm:h-56 md:h-64 object-cover"
+                            className="rounded-2xl w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover"
                           />
                           {product.savePercent && (
                             <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
@@ -394,10 +516,9 @@ const Products = () => {
                           <h2 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">
                             {product.name}
                           </h2>
-                          <p className="text-gray-600 text-xs sm:text-sm mb-3 leading-relaxed flex-grow line-clamp-2">
+                          <p className="text-gray-600 text-xs sm:text-sm lg:text-xs 2xl:text-sm mb-3 leading-relaxed flex-grow line-clamp-2">
                             {product.description || `${product.name} - Perfect for your needs.`}
                           </p>
-
                           <div className="flex justify-center items-center text-xs sm:text-sm mb-2">
                             {product.rating ? (
                               <>⭐ <span className="ml-1">{product.rating} ({product.reviews} reviews)</span></>
@@ -405,7 +526,6 @@ const Products = () => {
                               <>⭐ <span className="ml-1">4.5 (10 reviews)</span></>
                             )}
                           </div>
-
                           <p className="font-medium text-gray-800 mb-4 text-sm sm:text-base">
                             {product.originalPrice ? (
                               <>
@@ -417,6 +537,13 @@ const Products = () => {
                             )}
                           </p>
                         </Link>
+                        <div className="w-full flex justify-center mt-auto">
+                          <button
+                            className="bg-orange-500 hover:bg-orange-600 text-white px-3 lg:px-2 2xl:px-4 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-md lg:text-xs 2xl:text-lg rounded-md transition-colors w-auto"
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -424,13 +551,43 @@ const Products = () => {
               </>
             ) : (
               <div className="text-center py-12">
-                <p className="text-gray-600 text-lg mb-4">No products found matching "{searchQuery}"</p>
-                <button
-                  onClick={clearSearch}
-                  className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 transition-colors"
-                >
-                  Browse All Products
-                </button>
+                {searchSource === 'dropdown' ? (
+                  // Message for dropdown/highlight searches (product not in stock)
+                  <>
+                    <div className="mb-4">
+                      <svg className="mx-auto h-16 w-16 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-700 text-xl font-semibold mb-2">Stay tuned for more products!</p>
+                    <p className="text-gray-500 mb-6">
+                      We're constantly adding new items. "{searchQuery}" will be available soon.
+                    </p>
+                    <button
+                      onClick={clearSearch}
+                      className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 transition-colors"
+                    >
+                      Browse All Products
+                    </button>
+                  </>
+                ) : (
+                  // Message for regular search (no products found)
+                  <>
+                    <div className="mb-4">
+                      <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-600 text-lg mb-4">No products found matching "{searchQuery}"</p>
+                    <p className="text-gray-500 text-sm mb-6">Try adjusting your search terms or browse our categories</p>
+                    <button
+                      onClick={clearSearch}
+                      className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600 transition-colors"
+                    >
+                      Browse All Products
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -439,69 +596,6 @@ const Products = () => {
         {/* Regular Product Sections - Only show if not searching */}
         {!isSearchActive && (
           <>
-            {/* What's New Section */}
-            {/* <div className="mb-12">
-              <div className="px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-                <div className="flex items-center my-10">
-                  <div className="flex-grow border-t-2 border-gray-300"></div>
-                  <span className="mx-4 text-gray-800 font-semibold text-xl">WHAT'S NEW</span>
-                  <div className="flex-grow border-t-2 border-gray-300"></div>
-                </div>
-                <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-6 gap-4 sm:gap-6 lg:gap-8 justify-items-center">
-                  {whatsNewItems.map((item, index) => (
-                    <Link 
-                      key={index} 
-                      to={`/category/${encodeURIComponent(item.title)}`}
-                      className="w-full max-w-xs 2xl:rounded-2xl overflow-hidden bg-white flex flex-col h-full"
-                    >
-                      <div className="relative aspect-square">
-                        <img 
-                          src={item.image} 
-                          alt={item.title}
-                          className="rounded-2xl w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="p-2 flex flex-col flex-grow text-center">
-                        <h3 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">{item.title}</h3>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div> */}
-
-            {/* Best Seller Section */}
-            {/* <div className="mb-12">
-              <div className="px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-                <div className="flex items-center my-10">
-                  <div className="flex-grow border-t-2 border-gray-300"></div>
-                  <span className="mx-4 text-gray-800 font-semibold text-xl">BEST SELLER</span>
-                  <div className="flex-grow border-t-2 border-gray-300"></div>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 2xl:gap-8">
-                  {bestSellerItems.map((item, index) => (
-                    <Link 
-                      key={index} 
-                      to={`/category/${encodeURIComponent(item.title)}`}
-                      className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full mx-auto"
-                    >
-                      <div className="relative">
-                        <img 
-                          src={item.image} 
-                          alt={item.title}
-                          className="rounded-2xl w-full h-48 sm:h-56 md:h-64 2xl:h-100 object-cover"
-                        />
-                      </div>
-                      <div className="p-4 flex flex-col flex-grow text-center">
-                        <h3 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">{item.title}</h3>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div> */}
-
-            {/* All Product Sections */}
             <ProductSection
               title="Festive Season"
               products={enhancedProducts.festive}

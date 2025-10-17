@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Menu, X, ShoppingCart } from "lucide-react";
 import Logo from "../assets/logo_bg.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useProductManager } from "../hooks/useProductManager";
 
@@ -68,9 +68,27 @@ const Navbar = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
   const timeoutRef = useRef(null);
+  
+  const navigate = useNavigate();
+  const location = useLocation();
 
   // Get products from Google Sheets
   const { products: sheetProducts, loading: productsLoading } = useProductManager();
+
+  // Read search term from URL when component mounts or URL changes
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchParam = params.get('search');
+    const highlightParam = params.get('highlight');
+    
+    if (searchParam) {
+      setSearchTerm(searchParam);
+    } else if (highlightParam) {
+      setSearchTerm(highlightParam);
+    } else {
+      setSearchTerm('');
+    }
+  }, [location.search]);
 
   // Extract all product items for search suggestions - NOW INCLUDING SHEET PRODUCTS
   useEffect(() => {
@@ -162,7 +180,7 @@ const Navbar = () => {
     setSearchTerm(suggestion);
     setShowSuggestions(false);
     setMobileSearchOpen(false);
-    window.location.href = `/Products?search=${encodeURIComponent(suggestion)}`;
+    navigate(`/Products?search=${encodeURIComponent(suggestion)}`);
   };
 
   const handleSearchSubmit = (e) => {
@@ -170,7 +188,7 @@ const Navbar = () => {
     if (searchTerm.trim()) {
       setShowSuggestions(false);
       setMobileSearchOpen(false);
-      window.location.href = `/Products?search=${encodeURIComponent(searchTerm)}`;
+      navigate(`/Products?search=${encodeURIComponent(searchTerm.trim())}`);
     }
   };
 
@@ -183,6 +201,10 @@ const Navbar = () => {
   const clearSearch = () => {
     setSearchTerm('');
     setShowSuggestions(false);
+    // Clear the search from URL if on Products page
+    if (location.pathname === '/Products') {
+      navigate('/Products');
+    }
   };
 
   return (
@@ -256,9 +278,7 @@ const Navbar = () => {
                                     {itemsToShow.map((subItem, subIdx) => (
                                       <li key={subIdx}>
                                         <a
-                                          href={`/Products?highlight=${encodeURIComponent(
-                                            subItem
-                                          )}`}
+                                          href={`/Products?highlight=${encodeURIComponent(subItem)}`}
                                           className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
                                           onClick={() => {
                                             setActiveDropdown(null);
@@ -345,7 +365,7 @@ const Navbar = () => {
               {showSuggestions && filteredSuggestions.length === 0 && searchTerm && !productsLoading && (
                 <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                   <div className="px-4 py-3 text-sm text-gray-500">
-                    No results found for "{searchTerm}"
+                    No suggestions found - press Enter to search all products
                   </div>
                 </div>
               )}
@@ -455,7 +475,6 @@ const Navbar = () => {
               <button
                 onClick={() => {
                   setMobileSearchOpen(false);
-                  setSearchTerm('');
                   setShowSuggestions(false);
                 }}
                 className="text-gray-500 hover:text-red-500"
@@ -493,7 +512,7 @@ const Navbar = () => {
             {showSuggestions && filteredSuggestions.length === 0 && searchTerm && !productsLoading && (
               <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                 <div className="px-4 py-3 text-sm text-gray-500">
-                  No results found for "{searchTerm}"
+                  No suggestions found - press Enter to search all products
                 </div>
               </div>
             )}
