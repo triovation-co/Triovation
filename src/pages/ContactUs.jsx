@@ -2,6 +2,12 @@ import React from 'react';
 import bulkorder1 from "../assets/bulkorder1.png";
 import bulkorder2 from "../assets/bulkorder2.png";
 
+const phoneNumber = "+918828293426";
+const message = "Thank you for contacting Triovaton! Please let us know how we can help you.";
+const handleClick = () => {
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  };
 const ContactUs = () => {
   return (
    <>
@@ -55,7 +61,7 @@ const ContactUs = () => {
                   <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
                     Email at <span className="font-semibold">Triovation.co@gmail.com</span> for any B2B gifting requirement!
                   </p>
-                  <button className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base">
+                  <button onClick={handleClick} className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base">
                     Contact Us
                   </button>
                 </div>
