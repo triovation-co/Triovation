@@ -17,6 +17,10 @@ import { CartProvider } from './context/CartContext';
 import Video from "./assets/Triovation_video.mp4";
 import Mobile from "./assets/mobile_video.mp4";
 import CustomizationPage from './pages/CustomizationPage.jsx';
+import TermsAndConditions from "./footer_pages/Terms_Condition.jsx";
+import PrivacyPolicy from "./footer_pages/Privacy_Policies.jsx";
+import ShippingPolicy from "./footer_pages/Shipping_Delivery.jsx";
+import CancellationRefundPolicy from "./footer_pages/Cancellation-Refund.jsx";
 
 function App() {
   const [introComplete, setIntroComplete] = useState(
@@ -122,6 +126,10 @@ function App() {
             <Route path="/product-grid" element={<CustomizableProductGrid />} />
             <Route path="/grid" element={<CustomizableProductGrid />} />
             <Route path="/admin" element={<CustomizableProductGrid />} />
+            <Route path="/terms-condition" element={<TermsAndConditions />} />
+            <Route path="/privacy-policies" element={<PrivacyPolicy />} />
+            <Route path="/shipping-delivery" element={<ShippingPolicy />} />
+            <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
           </Routes>
         </main>
 
