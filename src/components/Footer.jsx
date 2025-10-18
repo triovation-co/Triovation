@@ -56,7 +56,7 @@ const Footer = () => {
           <div className="mt-1 lg:mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">Help</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
-              <li><a href="#" className="hover:text-blue-600">Cancellation & Refund</a></li>
+              <li><a href="/cancellation-refund" className="hover:text-blue-600">Cancellation & Refund</a></li>
               <li><a href="/shipping-delivery" className="hover:text-blue-600">Shipping & Delivery</a></li>
               <li><a href="/terms-condition" className="hover:text-blue-600">Terms & Conditions</a></li>
               <li><a href="/privacy-policies" className="hover:text-blue-600">Privacy Policy</a></li>

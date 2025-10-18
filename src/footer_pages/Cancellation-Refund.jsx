@@ -6,7 +6,7 @@ const CancellationRefundPolicy = () => {
       <h1 className="text-3xl font-bold mb-6 text-center">Cancellation & Refund Policy</h1>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3">Order Cancellation</h2>
+        <h2 className="text-2xl font-semibold flex justify-center mb-3">Order Cancellation</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>For customized products, cancellations must be made within <strong>1 hour</strong> of placing the order.</li>
           <li>For non-customized products, cancellations must be made within <strong>2 hours</strong> of placing the order.</li>
@@ -16,7 +16,7 @@ const CancellationRefundPolicy = () => {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3">Return Policy</h2>
+        <h2 className="text-2xl font-semibold flex justify-center mb-3">Return Policy</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>Only retail orders of up to 3 pieces are eligible for return.</li>
           <li>Returns must be requested within <strong>3 days</strong> of receiving the order.</li>
@@ -28,7 +28,7 @@ const CancellationRefundPolicy = () => {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-2xl font-semibold mb-3">Refund Policy</h2>
+        <h2 className="text-2xl font-semibold flex justify-center mb-3">Refund Policy</h2>
         <ul className="list-disc pl-6 space-y-2">
           <li>For prepaid orders (customized and non-customized), refunds will be processed within <strong>24 hours</strong> of order cancellation and credited back to the same payment source.</li>
           <li>For COD orders, customers must share bank account details. Refunds will be processed within <strong>7–10 working days</strong> or via PayTM.</li>
@@ -36,7 +36,7 @@ const CancellationRefundPolicy = () => {
       </section>
 
       <section>
-        <h2 className="text-2xl font-semibold mb-3">Contact Us</h2>
+        <h2 className="text-2xl font-semibold flex justify-center mb-3">Contact Us</h2>
         <p>For cancellations, returns, or refunds:</p>
         <ul className="mt-2 space-y-1">
           <li>📧 <a href="mailto:support@triovation.in" className="text-blue-600">support@triovation.in</a></li>
