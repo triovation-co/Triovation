@@ -82,3 +82,11 @@ body {
   margin-top: 1.1428571em;
   margin-bottom: 1.1428571em;
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
