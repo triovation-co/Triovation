@@ -22,6 +22,7 @@ import PrivacyPolicy from "./footer_pages/Privacy_Policies.jsx";
 import ShippingPolicy from "./footer_pages/Shipping_Delivery.jsx";
 import CancellationRefundPolicy from "./footer_pages/Cancellation-Refund.jsx";
 
+
 function App() {
   const [introComplete, setIntroComplete] = useState(
     sessionStorage.getItem('introWatched') === 'true'
@@ -29,6 +30,7 @@ function App() {
   const [fadeOut, setFadeOut] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const videoRef = useRef(null);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,6 +40,7 @@ function App() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
 
   useEffect(() => {
     if (!introComplete && videoRef.current) {
@@ -50,6 +53,7 @@ function App() {
     }
   }, [introComplete, isMobile]);
 
+
   const handleVideoEnd = () => {
     setFadeOut(true);
     setTimeout(() => {
@@ -58,6 +62,7 @@ function App() {
     }, 500);
   };
 
+
   const handleSkip = () => {
     setFadeOut(true);
     setTimeout(() => {
@@ -65,6 +70,7 @@ function App() {
       sessionStorage.setItem('introWatched', 'true');
     }, 500);
   };
+
 
   return (
     <CartProvider>
@@ -87,6 +93,7 @@ function App() {
             </video>
           )}
 
+
           {/* Mobile Video */}
           {isMobile && (
             <video
@@ -104,16 +111,19 @@ function App() {
         </div>
       )}
 
+
       {/* Main App Content */}
       <div className={`flex flex-col min-h-screen w-auto transition-opacity duration-500 ${introComplete ? 'opacity-100' : 'opacity-0'}`}>
         {/* Navbar */}
         <Navbar />
+
 
         {/* Main content */}
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/Customize_product" element={<CustomizationPage />}/>
+            <Route path="/customize/:id" element={<CustomizationPage />} />
             <Route path="/About" element={<About />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Consultancy" element={<Service />} />
@@ -133,11 +143,13 @@ function App() {
           </Routes>
         </main>
 
+
         {/* Footer */}
         <Footer />
       </div>
     </CartProvider>
   );
 }
+
 
 export default App;

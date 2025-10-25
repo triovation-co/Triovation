@@ -1,5 +1,17 @@
-import React, { useState } from "react";
-import { ShoppingCart, Search, Check } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { ShoppingCart, Search, Check, ArrowLeft } from "lucide-react";
+import { useCart } from '../context/CartContext';
+import { useProductManager } from '../hooks/useProductManager.jsx';
+import {
+  FestiveSeason,
+  corporateGiftingProducts,
+  customisationProducts,
+  homeDecorProducts,
+  mechanicalProducts,
+  designConsultancyProducts,
+  educationWorkshopsProducts,
+} from '../assets/data.jsx';
 
 const powerSources = [
   {
@@ -86,183 +98,282 @@ const lampDesigns = [
 ];
 
 export default function CustomizationPage() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+  const { products: sheetProducts, loading: sheetLoading } = useProductManager();
+  
   const [selectedPower, setSelectedPower] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
   const [selectedDesign, setSelectedDesign] = useState("");
+  const [product, setProduct] = useState(null);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Fetch product details
+  useEffect(() => {
+    if (sheetLoading || !id) return;
+
+    const allStaticProducts = [
+      ...FestiveSeason,
+      ...corporateGiftingProducts,
+      ...customisationProducts,
+      ...homeDecorProducts,
+      ...mechanicalProducts,
+      ...designConsultancyProducts,
+      ...educationWorkshopsProducts,
+    ];
+
+    const allProducts = [...allStaticProducts, ...sheetProducts];
+    const foundProduct = allProducts.find((p) => p.id.toString() === id);
+
+    if (foundProduct) {
+      setProduct(foundProduct);
+    }
+  }, [id, sheetProducts, sheetLoading]);
 
   const getPreviewImg = (arr, val) => arr.find((opt) => opt.value === val)?.img;
 
+  const handleAddToCart = () => {
+    if (!product || !selectedPower || !selectedColor || !selectedDesign) return;
+
+    // Create customization details string
+    const customizationDetails = `Power: ${powerSources.find(p => p.value === selectedPower)?.label}, LED: ${ledColors.find(c => c.value === selectedColor)?.label}, Design: ${lampDesigns.find(d => d.value === selectedDesign)?.label}`;
+
+    // Add to cart with customization details
+    addToCart({
+      id: `${product.id}-custom-${Date.now()}`, // Unique ID for customized product
+      name: `${product.name} (Customized)`,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      customization: customizationDetails,
+    });
+
+    // Show success message
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      // Navigate to cart after 1.5 seconds
+      setTimeout(() => {
+        navigate('/cart');
+      }, 500);
+    }, 1500);
+  };
+
+  if (sheetLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center pt-20">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mb-4"></div>
+          <div className="text-orange-600 text-lg">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-16">
-        {/* Preview Section */}
-        {(selectedPower || selectedColor || selectedDesign) && (
-          <section className="mb-16 p-8 bg-gray-50 rounded-2xl border border-gray-100">
-            <div className="flex flex-wrap items-center justify-center gap-8">
-              {selectedPower && (
-                <div className="text-center">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white pt-16 sm:pt-20">
+      {/* Success Message */}
+      {showSuccess && (
+        <div className="fixed top-24 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2">
+          <Check className="w-5 h-5" />
+          <span>Added to cart successfully!</span>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-4 sm:mb-6 flex items-center text-orange-600 hover:text-orange-700 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 mr-2" />
+          <span className="text-base">Back to Product</span>
+        </button>
+
+        {/* Header */}
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+            Customize Your Product
+          </h1>
+          {product && (
+            <div>
+              <p className="text-lg text-gray-700 font-medium">{product.name}</p>
+              <p className="text-sm text-gray-600">
+                Product ID: <span className="font-semibold text-orange-600">{id}</span>
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Preview Section */}
+          <div className="bg-white rounded-lg shadow-lg p-6 h-fit sticky top-24">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">Live Preview</h2>
+            <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg overflow-hidden aspect-square flex items-center justify-center">
+              {selectedPower || selectedColor || selectedDesign ? (
+                <div className="relative w-full h-full">
                   <img
-                    src={getPreviewImg(powerSources, selectedPower)}
-                    alt="power"
-                    className="w-32 h-32 object-cover rounded-xl mb-3"
+                    src={
+                      getPreviewImg(lampDesigns, selectedDesign) ||
+                      getPreviewImg(ledColors, selectedColor) ||
+                      getPreviewImg(powerSources, selectedPower) ||
+                      product?.image ||
+                      "https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=800&q=80"
+                    }
+                    alt="Preview"
+                    className="w-full h-full object-cover"
                   />
-                  <p className="text-sm text-gray-600">Power Source</p>
+                  <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm rounded-lg p-4">
+                    <div className="space-y-2 text-sm">
+                      {selectedPower && (
+                        <p>
+                          <span className="font-semibold">Power:</span>{" "}
+                          {powerSources.find((p) => p.value === selectedPower)?.label}
+                        </p>
+                      )}
+                      {selectedColor && (
+                        <p>
+                          <span className="font-semibold">LED:</span>{" "}
+                          {ledColors.find((c) => c.value === selectedColor)?.label}
+                        </p>
+                      )}
+                      {selectedDesign && (
+                        <p>
+                          <span className="font-semibold">Design:</span>{" "}
+                          {lampDesigns.find((d) => d.value === selectedDesign)?.label}
+                        </p>
+                      )}
+                    </div>
+                  </div>
                 </div>
-              )}
-              {selectedColor && (
-                <div className="text-center">
-                  <img
-                    src={getPreviewImg(ledColors, selectedColor)}
-                    alt="color"
-                    className="w-32 h-32 object-cover rounded-xl mb-3"
-                  />
-                  <p className="text-sm text-gray-600">LED Colour</p>
-                </div>
-              )}
-              {selectedDesign && (
-                <div className="text-center">
-                  <img
-                    src={getPreviewImg(lampDesigns, selectedDesign)}
-                    alt="design"
-                    className="w-32 h-32 object-cover rounded-xl mb-3"
-                  />
-                  <p className="text-sm text-gray-600">Lamp Design</p>
+              ) : (
+                <div className="text-center p-8">
+                  <Search className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                  <p className="text-gray-500 text-lg">
+                    Select options to see your customized product
+                  </p>
                 </div>
               )}
             </div>
-            {selectedPower && selectedColor && selectedDesign && (
-              <button className="mt-6 w-full bg-gradient-to-r from-red-400 to-pink-400 text-white font-medium py-3 rounded-lg hover:from-red-500 hover:to-pink-500 transition-all">
-                Get Customized
-              </button>
-            )}
-          </section>
-        )}
+          </div>
 
-        {/* Why Choose Us */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-2">
-            Customize Your Lamp
-          </h2>
-          <div className="w-16 h-1 bg-gradient-to-r from-red-400 to-pink-400 mx-auto"></div>
+          {/* Customization Options */}
+          <div className="space-y-8">
+            {/* Power Source */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-bold mb-4 text-gray-900">Power Source</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {powerSources.map((power) => (
+                  <button
+                    key={power.value}
+                    onClick={() => setSelectedPower(power.value)}
+                    className={`relative rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedPower === power.value
+                        ? "border-orange-500 ring-2 ring-orange-200"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <img
+                      src={power.img}
+                      alt={power.label}
+                      className="w-full h-32 object-cover"
+                    />
+                    <div className="p-3 bg-white">
+                      <p className="text-sm font-medium text-gray-900">{power.label}</p>
+                    </div>
+                    {selectedPower === power.value && (
+                      <div className="absolute top-2 right-2 bg-orange-500 rounded-full p-1">
+                        <Check className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* LED Color */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-bold mb-4 text-gray-900">LED Colour</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {ledColors.map((color) => (
+                  <button
+                    key={color.value}
+                    onClick={() => setSelectedColor(color.value)}
+                    className={`relative rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedColor === color.value
+                        ? "border-orange-500 ring-2 ring-orange-200"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <img
+                      src={color.img}
+                      alt={color.label}
+                      className="w-full h-24 object-cover"
+                    />
+                    <div className="p-2 bg-white">
+                      <p className="text-xs font-medium text-gray-900">{color.label}</p>
+                    </div>
+                    {selectedColor === color.value && (
+                      <div className="absolute top-2 right-2 bg-orange-500 rounded-full p-1">
+                        <Check className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Lamp Design */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <h2 className="text-xl font-bold mb-4 text-gray-900">Lamp Design</h2>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                {lampDesigns.map((design) => (
+                  <button
+                    key={design.value}
+                    onClick={() => setSelectedDesign(design.value)}
+                    className={`relative rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedDesign === design.value
+                        ? "border-orange-500 ring-2 ring-orange-200"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <img
+                      src={design.img}
+                      alt={design.label}
+                      className="w-full h-24 object-cover"
+                    />
+                    <div className="p-2 bg-white">
+                      <p className="text-xs font-medium text-gray-900">{design.label}</p>
+                    </div>
+                    {selectedDesign === design.value && (
+                      <div className="absolute top-2 right-2 bg-orange-500 rounded-full p-1">
+                        <Check className="w-3 h-3 text-white" />
+                      </div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Add to Cart Button */}
+            <div className="bg-white rounded-lg shadow-lg p-6">
+              <button
+                onClick={handleAddToCart}
+                disabled={!selectedPower || !selectedColor || !selectedDesign}
+                className="w-full bg-orange-500 text-white py-4 px-6 rounded-lg hover:bg-orange-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors font-semibold text-lg flex items-center justify-center gap-2"
+              >
+                <ShoppingCart className="w-5 h-5" />
+                Add Customized Product to Cart
+              </button>
+              {(!selectedPower || !selectedColor || !selectedDesign) && (
+                <p className="text-sm text-gray-500 text-center mt-3">
+                  Please select all options to add to cart
+                </p>
+              )}
+            </div>
+          </div>
         </div>
-
-        {/* Power Source */}
-        <section className="mb-16">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">Power Source</h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            {powerSources.map((opt) => (
-              <button
-                key={opt.value}
-                className={`relative group overflow-hidden rounded-xl transition-all ${
-                  selectedPower === opt.value
-                    ? "ring-2 ring-red-400 shadow-lg"
-                    : "hover:shadow-md"
-                }`}
-                onClick={() => setSelectedPower(opt.value)}
-              >
-                <img 
-                  src={opt.img} 
-                  alt={opt.label} 
-                  className="w-full h-56 object-cover"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-t transition-all ${
-                  selectedPower === opt.value 
-                    ? "from-red-400/80 to-transparent" 
-                    : "from-black/50 to-transparent group-hover:from-red-400/60"
-                }`}>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-white font-medium">{opt.label}</p>
-                    {selectedPower === opt.value && (
-                      <div className="mt-2 inline-flex items-center gap-1 bg-white text-red-500 px-2 py-1 rounded-full text-xs font-medium">
-                        <Check className="w-3 h-3" />
-                        Selected
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* LED Colour */}
-        <section className="mb-16">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">LED Colour</h3>
-          <div className="grid md:grid-cols-4 gap-6">
-            {ledColors.map((opt) => (
-              <button
-                key={opt.value}
-                className={`relative group overflow-hidden rounded-xl transition-all ${
-                  selectedColor === opt.value
-                    ? "ring-2 ring-orange-400 shadow-lg"
-                    : "hover:shadow-md"
-                }`}
-                onClick={() => setSelectedColor(opt.value)}
-              >
-                <img 
-                  src={opt.img} 
-                  alt={opt.label} 
-                  className="w-full h-48 object-cover"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-t transition-all ${
-                  selectedColor === opt.value 
-                    ? "from-orange-400/80 to-transparent" 
-                    : "from-black/50 to-transparent group-hover:from-orange-400/60"
-                }`}>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-white font-medium">{opt.label}</p>
-                    {selectedColor === opt.value && (
-                      <div className="mt-2 inline-flex items-center gap-1 bg-white text-orange-500 px-2 py-1 rounded-full text-xs font-medium">
-                        <Check className="w-3 h-3" />
-                        Selected
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* Lamp Design */}
-        <section className="mb-16">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6">Lamp Design</h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {lampDesigns.map((opt) => (
-              <button
-                key={opt.value}
-                className={`relative group overflow-hidden rounded-xl transition-all ${
-                  selectedDesign === opt.value
-                    ? "ring-2 ring-pink-400 shadow-lg"
-                    : "hover:shadow-md"
-                }`}
-                onClick={() => setSelectedDesign(opt.value)}
-              >
-                <img 
-                  src={opt.img} 
-                  alt={opt.label} 
-                  className="w-full h-48 object-cover"
-                />
-                <div className={`absolute inset-0 bg-gradient-to-t transition-all ${
-                  selectedDesign === opt.value 
-                    ? "from-pink-400/80 to-transparent" 
-                    : "from-black/50 to-transparent group-hover:from-pink-400/60"
-                }`}>
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
-                    <p className="text-white font-medium">{opt.label}</p>
-                    {selectedDesign === opt.value && (
-                      <div className="mt-2 inline-flex items-center gap-1 bg-white text-pink-500 px-2 py-1 rounded-full text-xs font-medium">
-                        <Check className="w-3 h-3" />
-                        Selected
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </section>
       </div>
     </div>
   );
