@@ -160,7 +160,7 @@ const ProductDetails = () => {
   const availableImages = getAvailableImages();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white pt-16 sm:pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white ">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
         {/* Back Button */}
         <button
