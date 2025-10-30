@@ -127,10 +127,10 @@ const About = () => {
                 <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transform origin-left scale-x-0 animate-expand-width"></div>
               </h1>
               <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-300 hover:text-gray-700 transition-colors duration-300">
-                In 2025, a simple hangout between <span className="text-rose-600 font-semibold">Himanshi</span>, who craved building her own venture, and <span className="text-pink-600 font-semibold">Samrudhi</span>, driven by passion, sparked a realization: the journey from idea to successful business was fragmented. Product design, branding, and startup guidance were disconnected.
-              </p>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-500 hover:text-gray-700 transition-colors duration-300">
-                Then, <span className="text-violet-600 font-semibold">Akhilesh Sir</span>, a mentor and tech enthusiast, helped shape their raw ideas into a focused mission. Born from this synergy, <span className="bg-gradient-to-r from-rose-600 to-violet-600 bg-clip-text text-transparent font-bold">TRIOVATION</span> is the space where creativity meets strategy and vision turns into reality, uniting Design, Gifting, Startup Ventures, and Education under one roof.
+              It all began in 2025 with a simple conversation and a shared thought, why does turning an idea into something real feel so disconnected? Design, branding, startup guidance and gifting rarely came together the way they should.
+
+<br></br><br></br>That spark grew into a vision to build a space where ideas could truly come alive. A place where creativity meets strategy, and imagination finds direction. That’s how TRIOVATION came to life bringing together Design, Gifting, Startup Ventures, and Education under one roof.
+             
               </p>
             </div>
 

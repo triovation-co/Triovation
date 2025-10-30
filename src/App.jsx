@@ -14,7 +14,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./components/Checkout";
 import CustomizableProductGrid from "./components/CustomizableProductGrid";
 import { CartProvider } from './context/CartContext';
-import Video from "./assets/Triovation_video.mp4";
+import Video from "./assets/Triovation_video.mov";
 import Mobile from "./assets/mobile_video.mp4";
 import CustomizationPage from './pages/CustomizationPage.jsx';
 import TermsAndConditions from "./footer_pages/Terms_Condition.jsx";

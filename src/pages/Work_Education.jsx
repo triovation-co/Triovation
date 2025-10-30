@@ -43,8 +43,8 @@ const Work_Education = () => {
   return (
     <>
       {/* Card Section */}
-      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-10">
-        <div className="grid grid-cols-2 sm:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20 mt-20 px-6 sm:px-12 lg:px-20">
+      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-10 -mb-30">
+        <div className="grid grid-cols-2 sm:grid-cols-2 gap-8 sm:gap-12 md:gap-16 lg:gap-20 px-6 sm:px-12 lg:px-20">
           
 {/* Card 1 - Workshop */}
 <div className="flex flex-col items-center w-full lg:w-auto">
@@ -97,9 +97,9 @@ const Work_Education = () => {
 
 
       {/* Workshop Section */}
-      <main id="workshop" className="mx-auto max-w-[1440px] px-6 md:px-8 xl:px-12 flex items-center justify-center mt-40 scroll-mt-20 relative">
+      <main id="workshop" className="container mx-auto px-6 md:px-8 xl:px-12 flex items-center justify-center mt-40 scroll-mt-20 relative">
         <div className="absolute -top-10 -left-10 w-40 h-40 bg-pink-100 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-40 items-center">
           
           {/* Left Column: Image */}
           <div className="relative w-full max-w-sm mx-auto lg:max-w-md xl:max-w-lg"> 

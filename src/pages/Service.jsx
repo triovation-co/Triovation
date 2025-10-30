@@ -117,7 +117,7 @@ const Service = () => {
       
               
       {/* Design Consultancy Section */}
-      <main id="design-consultancy" className="container mx-auto px-6 md:px-8 xl:px-12 mt-20 scroll-mt-1 relative">
+      <main id="design-consultancy" className="container mx-auto px-6 md:px-8 xl:px-12 mt-20 scroll-mt-1 relative -mb-20">
         <div className="absolute -top-10 -left-10 w-40 h-4 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
                 

@@ -23,6 +23,8 @@
   import couple2c from "../assets/customization_page/couple_2c.jpg";
   import moonCouple from "../assets/customization_page/moon_and_couple.jpg";
   import uShapeCalendar from "../assets/customization_page/u_shape_calendar.jpg";
+  import Blue from "../assets/customization_page/blue_light.jpg";
+  import warm from "../assets/customization_page/warn_light.jpg";
 
   const powerSources = [
     {
@@ -46,22 +48,22 @@
     {
       label: "Warm White",
       value: "warm_white",
-      img: "https://images.unsplash.com/photo-1573676386604-78f8ed228e2b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHdhcm0lMjBsaWdodCUyMGxhbXB8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500",
+      img: warm,
     },
     {
       label: "White",
       value: "white",
-      img: "https://images.unsplash.com/photo-1524484485831-a92ffc0de03f?auto=format&fit=crop&w=400&q=80",
+      img: "https://m.media-amazon.com/images/I/41dW89u4gjL.jpg",
     },
     {
       label: "Red",
       value: "red",
-      img: "https://images.unsplash.com/photo-1512524699095-229a007e69d5?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTI4fHxyZWQlMjBsZWQlMjBsYW1wfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=500",
+      img: "https://ledcentre.in/wp-content/uploads/2022/05/red-strip.jpg",
     },
     {
       label: "Blue",
       value: "blue",
-      img: "https://images.unsplash.com/photo-1562978625-e94c524cfc17?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTE0fHxibHVlJTIwbGVkJTIwbGFtcCUyMGFjcnlsaWN8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&q=60&w=500",
+      img: Blue,
     },
   ];
 
