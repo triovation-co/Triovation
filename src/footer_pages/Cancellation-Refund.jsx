@@ -10,7 +10,7 @@ const CancellationRefundPolicy = () => {
         <ul className="list-disc pl-6 space-y-2">
           <li>For customized products, cancellations must be made within <strong>1 hour</strong> of placing the order.</li>
           <li>For non-customized products, cancellations must be made within <strong>2 hours</strong> of placing the order.</li>
-          <li>To cancel an order, please email us at <a href="mailto:support@triovation.in" className="text-blue-600">support@triovation.in</a> with your order number in the subject line.</li>
+          <li>To cancel an order, please email us at <a href="mailto:triovation.co@gmail.com" className="text-blue-600">triovation.co@gmail.com</a> with your order number in the subject line.</li>
           <li>Once the order is processed or dispatched, cancellations are no longer possible. Customized products cannot be refunded. For non-customized products, you may refuse delivery at the doorstep and inform us via email.</li>
         </ul>
       </section>
@@ -39,7 +39,7 @@ const CancellationRefundPolicy = () => {
         <h2 className="text-2xl font-semibold flex justify-center mb-3">Contact Us</h2>
         <p>For cancellations, returns, or refunds:</p>
         <ul className="mt-2 space-y-1">
-          <li>📧 <a href="mailto:support@triovation.in" className="text-blue-600">support@triovation.in</a></li>
+          <li>📧 <a href="mailto:triovation.co@gmail.com" className="text-blue-600">triovation.co@gmail.com</a></li>
         </ul>
       </section>
     </div>

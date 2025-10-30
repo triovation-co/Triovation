@@ -50,8 +50,8 @@ export default function ShippingPolicy() {
           <li>GST is applicable only on orders within India.</li>
           <li>
             For international shipping, please reach out to us at {" "}
-            <a href="mailto:support@triovation.in" className="text-blue-600">
-              support@triovation.in
+            <a href="mailto:triovation.co@gmail.com" className="text-blue-600">
+              triovation.co@gmail.com
             </a>
             .
           </li>
@@ -68,8 +68,8 @@ export default function ShippingPolicy() {
         <p className="mt-3 text-gray-700">
           If you receive a product in damaged condition, with tampered packaging, or broken before
           opening, please refuse the delivery and notify us immediately at {" "}
-          <a href="mailto:support@triovation.in" className="text-blue-600">
-            support@triovation.in
+          <a href="mailto:triovation.co@gmail.com" className="text-blue-600">
+            triovation.co@gmail.com
           </a>{" "}
           with your Order ID. For accepted deliveries, please share an unboxing video as proof in
           case of damage claims.

@@ -45,7 +45,7 @@ export default function PrivacyPolicy() {
 
         <p className="mt-3 text-gray-700">
           If you believe that any information we are holding on you is incorrect or incomplete,
-          please email us at <a href="mailto:support@triovation.in" className="text-blue-600">support@triovation.in</a> and we will promptly correct any errors.
+          please email us at <a href="mailto:triovation.co@gmail.com" className="text-blue-600">triovation.co@gmail.com</a> and we will promptly correct any errors.
         </p>
       </section>
 

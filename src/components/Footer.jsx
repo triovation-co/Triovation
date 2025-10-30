@@ -21,7 +21,7 @@ const Footer = () => {
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <p className="text-sm 2xl:text-base">011-66763875</p>
-            <p className="text-sm 2xl:text-base">support@Triovation.in</p>
+            <p className="text-sm 2xl:text-base">triovation.co@gmail.com</p>
             <p className="text-sm 2xl:text-base">India </p>
             <div className="flex gap-3 mt-4">
               <a href="#" className="text-pink-600 text-2xl"><i className="fab fa-instagram"></i></a>
