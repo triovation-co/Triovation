@@ -15,7 +15,7 @@ export default function ShippingPolicy() {
         <ul className="list-disc list-inside text-gray-700 space-y-1">
           <li>All products are ready to be dispatched within 2–3 business working days after the order is placed.</li>
           <li>Normal delivery will be sent via India Post.</li>
-          <li>Electronic products will be shipped only via reputed courier services such as Bluedart, Delhivery, Xpressbees, or DTDC.</li>
+          <li>Electronic products will be shipped only via reputed courier services such as Bluedart, Delhivery, Xpressbees,or DTDC.</li>
         </ul>
       </section>
 

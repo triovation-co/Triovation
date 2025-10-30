@@ -41,7 +41,7 @@ const Service = () => {
 
   return (
     <>
-      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-10">
+      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-5 -mb-15 -mt-10">
         <div className="grid grid-cols-3 md:grid-cols-3 gap-10 xl:gap-20 mt-20 mx-5 sm:mx-10 lg:mx-20">
 
         {/* Card 1 - Design Consultancy */}
