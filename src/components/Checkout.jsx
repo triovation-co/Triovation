@@ -6,7 +6,11 @@ const Checkout = () => {
   const { cart, getCartTotal, clearCart } = useCart();
   const navigate = useNavigate();
 
-  // 🔥 Scroll to top when page loads
+  // 🔥 ADD YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbySVheSKDD3wbFUsPoa3pc0m95-Xz0Zu9WICK-UURxSCezHV3trd99IHFjLTTbYJmdP/exec';
+  // Example: 'https://script.google.com/macros/s/AKfycby.../exec'
+
+  // Scroll to top when page loads
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -29,6 +33,8 @@ const Checkout = () => {
   });
 
   const [paymentMethod, setPaymentMethod] = useState('whatsapp');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
 
   const subtotal = getCartTotal();
   const shipping = 0; // Free shipping
@@ -42,13 +48,49 @@ const Checkout = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Order Data:', { formData, cart: cart.items, total });
+    setIsSubmitting(true);
+    setSubmitError(null);
 
-    clearCart();
-    alert('Order placed successfully! We will contact you on WhatsApp for payment.');
-    navigate('/');
+    try {
+      // Prepare order data
+      const orderData = {
+        formData: formData,
+        cart: cart.items,
+        subtotal: subtotal,
+        shipping: shipping,
+        total: total,
+        paymentMethod: paymentMethod,
+        orderDate: new Date().toISOString()
+      };
+
+      console.log('📤 Sending order data:', orderData);
+
+      // Send to Google Apps Script
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors', // Important for Google Apps Script
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
+
+      // Note: With mode: 'no-cors', we can't read the response
+      // But if no error is thrown, we assume success
+      console.log('✅ Order sent successfully');
+
+      // Clear cart and show success
+      clearCart();
+      alert('Order placed successfully! We will contact you on WhatsApp for payment.');
+      navigate('/');
+
+    } catch (error) {
+      console.error('❌ Error submitting order:', error);
+      setSubmitError('Failed to submit order. Please try again or contact us directly.');
+      setIsSubmitting(false);
+    }
   };
 
   if (cart.items.length === 0) {
@@ -92,6 +134,16 @@ const Checkout = () => {
           </div>
         </div>
       </div>
+
+      {/* Error Message */}
+      {submitError && (
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
+            <strong className="font-bold">Error: </strong>
+            <span className="block sm:inline">{submitError}</span>
+          </div>
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -318,12 +370,21 @@ const Checkout = () => {
                 </div>
 
                 {cart.items.map((item) => (
-                  <div key={item.id} className="flex justify-between text-sm">
-                    <div>
-                      <span className="text-gray-900">{item.name}</span>
-                      <span className="text-gray-500"> × {item.quantity}</span>
+                  <div key={item.id} className="text-sm">
+                    <div className="flex justify-between">
+                      <div>
+                        <span className="text-gray-900">{item.name}</span>
+                        <span className="text-gray-500"> × {item.quantity}</span>
+                      </div>
+                      <span className="text-gray-900">₹{((item.price || 0) * item.quantity).toFixed(2)}</span>
                     </div>
-                    <span className="text-gray-900">₹{((item.price || 0) * item.quantity).toFixed(2)}</span>
+                    {/* Show customization details */}
+                    {item.customization && (
+                      <div className="mt-2 ml-4 p-2 bg-blue-50 border-l-2 border-blue-400 rounded">
+                        <p className="text-xs text-blue-800 font-semibold">🎨 Customization:</p>
+                        <p className="text-xs text-gray-700 mt-1">{item.customization}</p>
+                      </div>
+                    )}
                   </div>
                 ))}
 
@@ -368,7 +429,7 @@ const Checkout = () => {
                     className="mt-1 rounded border-gray-300 text-black focus:ring-black"
                   />
                   <span className="text-xs text-gray-600">
-                    I would you like to be invited to review your order? China News is required by message from Creative (an independent review service) such as a review form.
+                    I agree to receive order updates and confirmation via email and WhatsApp.
                   </span>
                 </label>
               </div>
@@ -376,9 +437,10 @@ const Checkout = () => {
               <button
                 type="submit"
                 onClick={handleSubmit}
-                className="w-full bg-black text-white py-3 px-4 rounded hover:bg-gray-800 transition-colors font-medium"
+                disabled={isSubmitting}
+                className="w-full bg-black text-white py-3 px-4 rounded hover:bg-gray-800 transition-colors font-medium disabled:bg-gray-400 disabled:cursor-not-allowed"
               >
-                Place order
+                {isSubmitting ? 'Processing...' : 'Place order'}
               </button>
 
               <div className="mt-4 text-center">

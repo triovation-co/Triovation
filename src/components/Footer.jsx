@@ -17,7 +17,8 @@ const Footer = () => {
           <div>
             <img src={Logo} alt="Logo" className="h-12 w-auto mb-4 -ml-1" />
             <p className="text-sm 2xl:text-base mb-6">
-              An online gift shop offering unique, <br/>creative gifts for boys and girls.<br/> Explore distinctive gifts for any occasion.
+              Turn your imagination into reality with Triovation.<br></br>
+From custom gifts to creative solutions! let’s build<br></br> somethingextraordinary together.
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <p className="text-sm 2xl:text-base">8828293426</p>

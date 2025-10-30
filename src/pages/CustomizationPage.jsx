@@ -170,6 +170,7 @@
               Customize Product
             </h1>
             {product && <p className="text-gray-600">{product.name}</p>}
+            <p className="text-red-400">you can select one option from each sections </p>
           </div>
 
           <div className="space-y-12">
@@ -190,7 +191,7 @@
                     <img
                       src={power.img}
                       alt={power.label}
-                      className="w-full h-40 object-cover"
+                      className="w-full h-80 object-cover"
                     />
                     <div className="p-4 bg-white">
                       <p className="text-sm font-medium text-gray-900">{power.label}</p>
@@ -279,7 +280,7 @@
           <img
             src={design.img}
             alt={design.label}
-            className="w-full h-80 object-cover rounded-lg"
+            className="w-full h-100 object-cover rounded-lg"
           />
           <div className="p-3 bg-white">
             <p className="text-sm font-medium text-gray-900 truncate">

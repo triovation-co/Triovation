@@ -1,7 +1,7 @@
 import React from "react";
 import { FaWhatsapp } from "react-icons/fa";
 
-const WhatsAppButton = ({ phoneNumber = "+918828293426", message = "Thank you for contacting Triovaton! Please let us know how we can help you." }) => {
+const WhatsAppButton = ({ phoneNumber = "+918828293426", message = "" }) => {
   const handleClick = () => {
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");
