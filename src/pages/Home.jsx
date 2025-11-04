@@ -238,8 +238,6 @@ const Home = () => {
         </div>
       </section>
 
-      <WhatsAppButton />
-
       {/* Custom CSS Animations */}
       <style jsx>{`
         @keyframes fade-in-up {
@@ -281,7 +279,9 @@ const Home = () => {
           -webkit-background-clip: text;
         }
       `}</style>
-    </div>
+        <WhatsAppButton />
+
+    </div>    
   );
 };
 
