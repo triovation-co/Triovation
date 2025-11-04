@@ -3,7 +3,7 @@ import image1 from '../assets/image1.jpg'
 import Manufacturing_support from '../assets/Manufacturing_support.jpg'
 import Design_Consultancy from '../assets/Design_Consultancy.jpg'
 import Startup_Venture_Support from '../assets/Startup_Venture_Support.jpg'
-
+import WhatsAppButton from "../components/whatsapp";
 
 const Service = () => {
   const sectionRefs = useRef([]);
@@ -237,6 +237,7 @@ framework to move seamlessly from an innovative idea to a market-ready, powerful
           </div>
         </div>
       </main>
+ <WhatsAppButton />
 
       <style jsx>{`
         @keyframes gradient {

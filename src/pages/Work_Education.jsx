@@ -4,6 +4,7 @@ import workshop from '../assets/workshop.jpg'
 import Education from '../assets/Education.jpg'
 import Education1 from "../assets/Education1.png"
 import workshop1 from "../assets/workshop1.png"
+import WhatsAppButton from "../components/whatsapp";
 
 const Work_Education = () => {
   const sectionRefs = useRef([]);
@@ -182,7 +183,7 @@ training tailored to foster expertise in future-ready skills.
           </div>
         </div>
       </main>
-
+<WhatsAppButton/>
       <style jsx>{`
         @keyframes gradient {
           0% {
