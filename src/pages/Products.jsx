@@ -62,7 +62,7 @@ const Products = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
   const [pageReady, setPageReady] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  const [searchSource, setSearchSource] = useState('search'); // Track search source: 'search' or 'dropdown'
+  const [searchSource, setSearchSource] = useState('search');
   
   const [sortBy, setSortBy] = useState('featured');
   const { products: sheetProducts, loading: productsLoading, refreshProducts } = useProductManager();
@@ -177,10 +177,8 @@ const Products = () => {
       return;
     }
 
-    // Show loading indicator for search
     setIsSearching(true);
 
-    // Simulate minimum search time for better UX (300ms)
     const searchPromise = new Promise((resolve) => {
       setTimeout(() => {
         const searchLower = query.toLowerCase().trim();
@@ -195,13 +193,8 @@ const Products = () => {
           ...enhancedProducts.education
         ];
 
-        console.log('🔍 Search query:', searchLower);
-        console.log('📦 Total products to search:', allProducts.length);
-
-        // Split search query into words
         const searchWords = searchLower.split(/\s+/);
         
-        // Create search variations (handle plurals)
         const createSearchVariations = (term) => {
           const variations = [term];
           
@@ -224,7 +217,6 @@ const Products = () => {
           return variations;
         };
         
-        // Score each product based on relevance
         const scoredProducts = allProducts.map(product => {
           const name = (product.name || '').toLowerCase();
           const description = (product.description || '').toLowerCase();
@@ -232,14 +224,11 @@ const Products = () => {
           
           let score = 0;
           
-          // Check for exact match (highest priority)
           if (name === searchLower) {
             score = 10000;
-            console.log('✅ Exact match:', product.name, '| Score:', score);
             return { product, score };
           }
           
-          // Count how many search words match
           let matchedWordsCount = 0;
           const totalSearchWords = searchWords.length;
           
@@ -247,49 +236,34 @@ const Products = () => {
             const variations = createSearchVariations(word);
             
             variations.forEach(variation => {
-              // Name matches score highest
               if (name.includes(variation)) {
                 matchedWordsCount++;
-                score += 100; // High score for name match
-              }
-              // Description matches score medium
-              else if (description.includes(variation)) {
+                score += 100;
+              } else if (description.includes(variation)) {
                 matchedWordsCount++;
-                score += 30; // Medium score for description match
-              }
-              // Category matches score lowest
-              else if (category.includes(variation)) {
+                score += 30;
+              } else if (category.includes(variation)) {
                 matchedWordsCount++;
-                score += 10; // Low score for category match
+                score += 10;
               }
             });
           });
           
-          // Bonus for matching percentage
           const matchPercentage = (matchedWordsCount / totalSearchWords) * 100;
-          score += matchPercentage * 5; // Bonus based on match percentage
+          score += matchPercentage * 5;
           
-          // Bonus if all words match
           if (matchedWordsCount >= totalSearchWords) {
-            score += 200; // Extra bonus for matching all search terms
-          }
-          
-          if (score > 0) {
-            console.log('✅ Match found:', product.name, '| Matched words:', matchedWordsCount, '/', totalSearchWords, '| Score:', score.toFixed(2));
+            score += 200;
           }
           
           return { product, score };
         });
         
-        // Filter products with score > 0 and sort by score (highest first)
         const results = scoredProducts
           .filter(item => item.score > 0)
           .sort((a, b) => b.score - a.score)
           .map(item => item.product);
-
-        console.log('✨ Total results found:', results.length);
         
-        // Apply sorting preference AFTER relevance sorting
         const finalResults = sortBy === 'featured' ? results : sortProductsLocally(results, sortBy);
         
         resolve(finalResults);
@@ -302,7 +276,6 @@ const Products = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Uses location.search which is REACTIVE
   useEffect(() => {
     if (!pageReady) {
       return;
@@ -312,23 +285,17 @@ const Products = () => {
     const search = params.get('search');
     const highlight = params.get('highlight');
     
-    console.log('🔄 URL Changed - Search param:', search, '| Highlight param:', highlight);
-    
-    // Update search query IMMEDIATELY (synchronously)
     if (highlight) {
-      console.log('📌 Setting search query to:', highlight);
       setSearchQuery(highlight);
-      setSearchSource('dropdown'); // Track that this came from dropdown
+      setSearchSource('dropdown');
       setIsSearchActive(true);
       performSearch(highlight);
     } else if (search) {
-      console.log('📌 Setting search query to:', search);
       setSearchQuery(search);
-      setSearchSource('search'); // Track that this came from search field
+      setSearchSource('search');
       setIsSearchActive(true);
       performSearch(search);
     } else {
-      console.log('📌 Clearing search');
       setSearchQuery('');
       setIsSearchActive(false);
       setSearchResults([]);
@@ -432,6 +399,15 @@ const Products = () => {
     );
   };
 
+  // Check if category has products
+  const hasFestiveProducts = enhancedProducts.festive && enhancedProducts.festive.length > 0;
+  const hasCorporateProducts = enhancedProducts.corporate && enhancedProducts.corporate.length > 0;
+  const hasCustomisationProducts = enhancedProducts.customisation && enhancedProducts.customisation.length > 0;
+  const hasHomeDecorProducts = enhancedProducts.homeDecor && enhancedProducts.homeDecor.length > 0;
+  const hasMechanicalProducts = enhancedProducts.mechanical && enhancedProducts.mechanical.length > 0;
+  const hasDesignProducts = enhancedProducts.design && enhancedProducts.design.length > 0;
+  const hasEducationProducts = enhancedProducts.education && enhancedProducts.education.length > 0;
+
   // Show loading screen until page is ready
   if (!pageReady || productsLoading) {
     return <LoadingScreen />;
@@ -447,7 +423,6 @@ const Products = () => {
 
   return (
     <div className="min-h-screen">
-      {/* Search Loading Overlay */}
       {isSearching && <SearchLoadingOverlay />}
       
       <div className="w-full px-4 sm:px-6 lg:px-4 py-8">
@@ -552,7 +527,6 @@ const Products = () => {
             ) : (
               <div className="text-center py-12">
                 {searchSource === 'dropdown' ? (
-                  // Message for dropdown/highlight searches (product not in stock)
                   <>
                     <div className="mb-4">
                       <svg className="mx-auto h-16 w-16 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -571,7 +545,6 @@ const Products = () => {
                     </button>
                   </>
                 ) : (
-                  // Message for regular search (no products found)
                   <>
                     <div className="mb-4">
                       <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -593,92 +566,106 @@ const Products = () => {
           </div>
         )}
 
-        {/* Regular Product Sections - Only show if not searching */}
+        {/* Regular Product Sections - Only show if not searching AND category has products */}
         {!isSearchActive && (
           <>
-            <ProductSection
-              title="Festive Season"
-              products={enhancedProducts.festive}
-              displayedProducts={displayedFestiveProducts}
-              showAll={showAllFestive}
-              setShowAll={setShowAllFestive}
-              sectionRef={festiveRef}
-              scrollToRef={scrollToRef}
-              shouldHighlight={shouldHighlight}
-              buttonColor="bg-orange-400"
-            />
+            {hasFestiveProducts && (
+              <ProductSection
+                title="Festive Season"
+                products={enhancedProducts.festive}
+                displayedProducts={displayedFestiveProducts}
+                showAll={showAllFestive}
+                setShowAll={setShowAllFestive}
+                sectionRef={festiveRef}
+                scrollToRef={scrollToRef}
+                shouldHighlight={shouldHighlight}
+                buttonColor="bg-orange-400"
+              />
+            )}
 
-            <ProductSection
-              title="Corporate Gifting"
-              products={enhancedProducts.corporate}
-              displayedProducts={displayedCorporateProducts}
-              showAll={showAllCorporate}
-              setShowAll={setShowAllCorporate}
-              sectionRef={corporateRef}
-              scrollToRef={scrollToRef}
-              shouldHighlight={shouldHighlight}
-              buttonColor="bg-orange-400"
-            />
+            {hasCorporateProducts && (
+              <ProductSection
+                title="Corporate Gifting"
+                products={enhancedProducts.corporate}
+                displayedProducts={displayedCorporateProducts}
+                showAll={showAllCorporate}
+                setShowAll={setShowAllCorporate}
+                sectionRef={corporateRef}
+                scrollToRef={scrollToRef}
+                shouldHighlight={shouldHighlight}
+                buttonColor="bg-orange-400"
+              />
+            )}
 
-            <ProductSection
-              title="Customisation & Merchandising"
-              products={enhancedProducts.customisation}
-              displayedProducts={displayedCustomisationProducts}
-              showAll={showAllCustomisation}
-              setShowAll={setShowAllCustomisation}
-              sectionRef={customisationRef}
-              scrollToRef={scrollToRef}
-              shouldHighlight={shouldHighlight}
-              buttonColor="bg-orange-400"
-            />
+            {hasCustomisationProducts && (
+              <ProductSection
+                title="Customisation & Merchandising"
+                products={enhancedProducts.customisation}
+                displayedProducts={displayedCustomisationProducts}
+                showAll={showAllCustomisation}
+                setShowAll={setShowAllCustomisation}
+                sectionRef={customisationRef}
+                scrollToRef={scrollToRef}
+                shouldHighlight={shouldHighlight}
+                buttonColor="bg-orange-400"
+              />
+            )}
 
-            <ProductSection
-              title="Home Decor"
-              products={enhancedProducts.homeDecor}
-              displayedProducts={displayedHomeDecorProducts}
-              showAll={showAllHomeDecor}
-              setShowAll={setShowAllHomeDecor}
-              sectionRef={homeDecorRef}
-              scrollToRef={scrollToRef}
-              shouldHighlight={shouldHighlight}
-              buttonColor="bg-orange-400"
-            />
+            {hasHomeDecorProducts && (
+              <ProductSection
+                title="Home Decor"
+                products={enhancedProducts.homeDecor}
+                displayedProducts={displayedHomeDecorProducts}
+                showAll={showAllHomeDecor}
+                setShowAll={setShowAllHomeDecor}
+                sectionRef={homeDecorRef}
+                scrollToRef={scrollToRef}
+                shouldHighlight={shouldHighlight}
+                buttonColor="bg-orange-400"
+              />
+            )}
 
-            <ProductSection
-              title="Mechanical Products"
-              products={enhancedProducts.mechanical}
-              displayedProducts={displayedMechanicalProducts}
-              showAll={showAllMechanical}
-              setShowAll={setShowAllMechanical}
-              sectionRef={mechanicalRef}
-              scrollToRef={scrollToRef}
-              shouldHighlight={shouldHighlight}
-              buttonColor="bg-orange-400"
-            />
+            {hasMechanicalProducts && (
+              <ProductSection
+                title="Mechanical Products"
+                products={enhancedProducts.mechanical}
+                displayedProducts={displayedMechanicalProducts}
+                showAll={showAllMechanical}
+                setShowAll={setShowAllMechanical}
+                sectionRef={mechanicalRef}
+                scrollToRef={scrollToRef}
+                shouldHighlight={shouldHighlight}
+                buttonColor="bg-orange-400"
+              />
+            )}
 
-            <ProductSection
-              title="Design Consultancy"
-              products={enhancedProducts.design}
-              displayedProducts={displayedDesignProducts}
-              showAll={showAllDesign}
-              setShowAll={setShowAllDesign}
-              sectionRef={designRef}
-              scrollToRef={scrollToRef}
-              shouldHighlight={shouldHighlight}
-              buttonColor="bg-orange-400"
-            />
+            {hasDesignProducts && (
+              <ProductSection
+                title="Design Consultancy"
+                products={enhancedProducts.design}
+                displayedProducts={displayedDesignProducts}
+                showAll={showAllDesign}
+                setShowAll={setShowAllDesign}
+                sectionRef={designRef}
+                scrollToRef={scrollToRef}
+                shouldHighlight={shouldHighlight}
+                buttonColor="bg-orange-400"
+              />
+            )}
 
-            <ProductSection
-              title="Education & Workshops"
-              products={enhancedProducts.education}
-              displayedProducts={displayedEducationProducts}
-              showAll={showAllEducation}
-              setShowAll={setShowAllEducation}
-              sectionRef={educationRef}
-              scrollToRef={scrollToRef}
-              shouldHighlight={shouldHighlight}
-              buttonColor="bg-orange-400"
-            />
+            {hasEducationProducts && (
+              <ProductSection
+                title="Education & Workshops"
+                products={enhancedProducts.education}
+                displayedProducts={displayedEducationProducts}
+                showAll={showAllEducation}
+                setShowAll={setShowAllEducation}
+                sectionRef={educationRef}
+                scrollToRef={scrollToRef}
+                shouldHighlight={shouldHighlight}
+                buttonColor="bg-orange-400"
+              />
+            )}
           </>
         )}
       </div>

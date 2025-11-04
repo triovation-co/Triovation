@@ -3,7 +3,7 @@ import bulkorder1 from "../assets/bulkorder1.png";
 import bulkorder2 from "../assets/bulkorder2.png";
 
 const phoneNumber = "+918828293426";
-const message = "Thank you for contacting Triovaton! Please let us know how we can help you.";
+const message = "";
 const handleClick = () => {
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, "_blank");

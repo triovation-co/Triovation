@@ -138,12 +138,12 @@ const Home = () => {
               creative collective bringing together design, manufacturing,
               gifting, and hands-on education on a single platform. Our
               expertise lies in transforming abstract ideas into tangible
-              products and experiences — from custom corporate hampers to
+              products and experiences from custom corporate hampers to
               product design consultancy and machine-learning workshops. Partner
               with us to craft meaningful gifts, unlock innovative design
               solutions, and inspire learning through creativity and technology.
               We combine creativity, precision, and customization to bring ideas
-              to life — whether it's a unique corporate hamper, product design
+              to life whether it's a unique corporate hamper, product design
               support, or an engaging workshop.
             </p>
           </div>

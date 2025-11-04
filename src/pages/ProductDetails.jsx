@@ -110,6 +110,21 @@ const ProductDetails = () => {
     navigate(`/customize/${product.id}`);
   };
 
+  const handleBuyNow = () => {
+    if (product) {
+      // Add product to cart first
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantity,
+      });
+      // Then redirect to cart
+      navigate('/cart');
+    }
+  };
+
   const formatPrice = (price) => {
     if (!price && price !== 0) return 'Price not set';
     const numPrice = typeof price === 'string' ? parseFloat(price) : price;
@@ -323,7 +338,9 @@ const ProductDetails = () => {
                   >
                     Add to Cart
                   </button>
-                  <button className="flex-1 bg-gray-900 text-white py-3 sm:py-3.5 px-6 rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors font-semibold text-sm sm:text-base touch-manipulation shadow-md hover:shadow-lg">
+                  <button 
+                  onClick={handleBuyNow}
+                  className="flex-1 bg-gray-900 text-white py-3 sm:py-3.5 px-6 rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors font-semibold text-sm sm:text-base touch-manipulation shadow-md hover:shadow-lg">
                     Buy Now
                   </button>
                   {isCustomizable && (

@@ -2,10 +2,14 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
+import { useEffect } from 'react'; 
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
   const navigate = useNavigate();
+  useEffect(() => {
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+}, []);
 
   const subtotal = getCartTotal();
   const shipping = 0; // Free shipping

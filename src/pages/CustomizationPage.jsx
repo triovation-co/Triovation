@@ -25,6 +25,7 @@
   import uShapeCalendar from "../assets/customization_page/u_shape_calendar.jpg";
   import Blue from "../assets/customization_page/blue_light.jpg";
   import warm from "../assets/customization_page/warn_light.jpg";
+import WhatsAppButton from "../components/whatsapp.jsx";
 
   const powerSources = [
     {
@@ -345,12 +346,18 @@
               </button>
               {(!selectedPower || !selectedColor || !selectedDesign) && (
                 <p className="text-sm text-gray-500 mt-3">
-                  Please select all options to continue
+                  Please select all options to continue <br />
+                <p className="text-sm text-blue-800 mt-3 font-medium">
+  If you want more personalised custom product,<br />
+  Click the <span className="text-green-500 font-medium">whatsapp</span> image and send your requirements
+</p>                <WhatsAppButton/>
                 </p>
               )}
             </div>
           </div>
         </div>
+        
       </div>
+      
     );
   }
