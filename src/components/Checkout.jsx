@@ -151,12 +151,6 @@ const Checkout = () => {
           {/* Billing Form */}
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded">
-                <p className="text-sm text-blue-700">
-                  <span className="font-medium">Returning customer?</span>{' '}
-                  <button className="text-blue-600 hover:underline">Click here to login</button>
-                </p>
-              </div>
 
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Billing details</h2>
 
@@ -315,30 +309,6 @@ const Checkout = () => {
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
                   />
-                </div>
-
-                <div className="space-y-4">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="createAccount"
-                      checked={formData.createAccount}
-                      onChange={handleInputChange}
-                      className="rounded border-gray-300 text-black focus:ring-black"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Create an account?</span>
-                  </label>
-
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="shipToDifferent"
-                      checked={formData.shipToDifferent}
-                      onChange={handleInputChange}
-                      className="rounded border-gray-300 text-black focus:ring-black"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Ship to a different address?</span>
-                  </label>
                 </div>
 
                 <div>
