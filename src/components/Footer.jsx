@@ -18,7 +18,7 @@ const Footer = () => {
             <img src={Logo} alt="Logo" className="h-12 w-auto mb-4 -ml-1" />
             <p className="text-sm 2xl:text-base mb-6">
               Turn your imagination into reality with Triovation.<br></br>
-From custom gifts to creative solutions! let’s build<br></br> somethingextraordinary together.
+From custom gifts to creative solutions! let’s build<br></br> something extraordinary together.
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <p className="text-sm 2xl:text-base">+91-8828293426</p>
