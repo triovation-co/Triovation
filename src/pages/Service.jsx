@@ -41,8 +41,8 @@ const Service = () => {
 
   return (
     <>
-      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-5 -mb-15 -mt-10">
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-10 xl:gap-20 mt-20 mx-5 sm:mx-10 lg:mx-20">
+      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-5 mb-25 -mt-10">
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-10 xl:gap-20 mt-20 mx-4 sm:mx-10 lg:mx-20">
 
         {/* Card 1 - Design Consultancy */}
 <div className="flex flex-col items-center w-full">
@@ -117,7 +117,7 @@ const Service = () => {
       
               
       {/* Design Consultancy Section */}
-      <main id="design-consultancy" className="container mx-auto px-6 md:px-8 xl:px-12 mt-20 scroll-mt-1 relative -mb-20">
+      <main id="design-consultancy" className="container mx-auto px-6 md:px-8 xl:px-12 mt-20 scroll-mt-1 relative -mb-10">
         <div className="absolute -top-10 -left-10 w-40 h-4 rounded-full filter blur-3xl opacity-30 animate-pulse"></div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20 items-center">
                 

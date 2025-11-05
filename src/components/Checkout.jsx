@@ -378,7 +378,7 @@ const Checkout = () => {
               <div className="mb-6">
                 <h3 className="text-sm font-medium text-gray-700 mb-4">Payment on WhatsApp</h3>
                 <div className="p-4 bg-gray-50 rounded border">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-green-600">
                     We will contact you on WhatsApp for payment.
                   </p>
                 </div>

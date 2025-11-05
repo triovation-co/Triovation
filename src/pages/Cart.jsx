@@ -196,7 +196,7 @@ const Cart = () => {
                 onClick={proceedToCheckout}
                 className="w-full bg-black text-white py-3 px-4 rounded hover:bg-gray-800 transition-colors font-medium text-base"
               >
-                Proceed to checkout
+                Proceed 
               </button>
 
               <div className="mt-4 text-center">

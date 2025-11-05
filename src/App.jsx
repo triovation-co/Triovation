@@ -21,6 +21,7 @@ import TermsAndConditions from "./footer_pages/Terms_Condition.jsx";
 import PrivacyPolicy from "./footer_pages/Privacy_Policies.jsx";
 import ShippingPolicy from "./footer_pages/Shipping_Delivery.jsx";
 import CancellationRefundPolicy from "./footer_pages/Cancellation-Refund.jsx";
+import WhatsAppButton from "./components/whatsapp.jsx";
 
 
 function App() {
@@ -142,7 +143,7 @@ function App() {
             <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
           </Routes>
         </main>
-
+<WhatsAppButton/>
 
         {/* Footer */}
         <Footer />

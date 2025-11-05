@@ -3,6 +3,19 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import ViewToggleButton from './Buttons.jsx';
 
+// inside ProductSection file, add this helper near top (below imports)
+const stripHtml = (html = '') => {
+  try {
+    // decode &lt;p&gt; etc and strip tags
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return (doc.body.textContent || '').trim();
+  } catch (err) {
+    // fallback: naive tag stripper
+    return String(html).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  }
+};
+
+
 const ProductSection = ({
   title,
   products = [],
@@ -73,10 +86,11 @@ const ProductSection = ({
                     {product.name}
                   </h2>
 
-                  {/* Compact description for mobile with clamp */}
-                  <p className="text-gray-600 text-xs sm:text-sm mb-2 leading-relaxed line-clamp-2">
-                    {product.description || `${product.name} - Perfect for your needs.`}
-                  </p>
+{/* Compact description for mobile with clamp (HTML stripped) */}
+<p className="text-gray-600 text-xs sm:text-sm mb-2 leading-relaxed line-clamp-2">
+  {stripHtml(product.description) || `${product.name} - Perfect for your needs.`}
+</p>
+
 
                   <p className="font-medium text-gray-800 mb-3 text-sm sm:text-base">
                     {product.originalPrice ? (
