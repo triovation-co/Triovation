@@ -36,7 +36,7 @@ const ProductSection = ({
     <div className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8">
       <div ref={sectionRef} className="flex items-center my-10">
         <div className="flex-grow border-t-2 border-gray-300"></div>
-        <span className="mx-4 text-gray-800 font-semibold text-xl">{title}</span>
+        <span className="mx-4 text-gray-800 font-semibold lg:text-xl">{title}</span>
         <div className="flex-grow border-t-2 border-gray-300"></div>
       </div>
 
