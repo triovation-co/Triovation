@@ -5,6 +5,154 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useProductManager } from "../hooks/useProductManager";
 
+/* ================================
+   Search Normalization + Mappings
+   ================================ */
+
+// Normalize user input / labels
+const normalize = (s = "") =>
+  s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[̀-ͯ˞˟ˠ-ˤ᷀-᷿]/g, "") // strip diacritics
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9\s]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+
+// Canonical tokens we want to send to /Products?search=...
+// LEFT side keys are normalized display labels from menu/suggestions
+// RIGHT side values are unique tokens used to filter products.
+const CANONICAL = {
+  // Corporate Gifting
+  "acrylic lamps": "acrylic-lamp",
+  "lithophane": "lithophane",
+  "water bottle": "bottle",
+  "organising desk": "desk-organizer",
+  "coasters": "coaster",
+  "trophy": "trophy",
+  "keychain": "keychain",
+  "phone stand holder": "phone-stand",
+  "flower pot": "planter",
+  "notebooks": "book",
+  "pen stands": "pen-stand",
+  "badges": "badge",
+  "pop sockets": "pop-socket",
+  "scented candles": "candle",
+
+  // Customisation & Merchandising
+  "ceramic cups": "ceramic-cup",
+  "keychains": "keychain",
+  "lithophane frame": "lithophane-frame",
+  "t-shirts": "tshirt",
+  "bottle engraving": "bottle-engraving",
+  "characters": "character", // ← keep this single definition
+  "cap": "cap",
+  "tote bags": "tote-bag",
+  "phone cover": "phone-case",
+  "name plates": "name-plate",
+  "stickers": "sticker",
+  "spotify playlist on product": "spotify-product",
+  "airpod engraving": "airpod-engraving",
+  "silver coin printing": "coin-printing",
+  "fabric printing": "fabric-printing",
+
+  // Home & Decor
+  "clocks": "clock",
+  // "characters": "character", // ← remove this duplicate
+  "mandala abstract boards": "mandala-board",
+  "puzzle frame": "puzzle-frame",
+  "gods frame idol": "god-frame",
+  "ac charger stand": "charger-stand",
+
+  // Mechanical Products
+  "kinetic clock": "kinetic-clock",
+  "sanitiser dispenser": "sanitiser-dispenser",
+  "small furniture": "small-furniture",
+  "touch lamps": "touch-lamp",
+
+  // Design, Prototyping & Consultancy
+  "design consultancy": "design-consultancy",
+  "branding": "branding",
+  "ui ux": "ui-ux",
+  "zine": "zine",
+  "books": "book",
+  "poster infographics": "poster",
+  "social media posts": "social-post",
+  "illustration": "illustration",
+  "mockups": "mockup",
+  "business cards": "business-card",
+
+  // Education & Workshops
+  "poster graphics": "poster",
+};
+
+// Synonyms/Aliases → canonical tokens above
+const ALIASES = new Map([
+  // book / notebook family
+  ["notebook", "book"],
+  ["notebooks", "book"],
+  ["diary", "book"],
+  ["journal", "book"],
+  ["sketch book", "book"],
+  ["sketchbook", "book"],
+  ["book", "book"],
+  ["books", "book"],
+
+  // desk organizer family
+  ["organising desk", "desk-organizer"],
+  ["organizing desk", "desk-organizer"],
+  ["desk organiser", "desk-organizer"],
+  ["desk organizer", "desk-organizer"],
+  ["stationery holder", "desk-organizer"],
+  ["table organiser", "desk-organizer"],
+  ["table organizer", "desk-organizer"],
+
+  // lamp families
+  ["acrylic lamp", "acrylic-lamp"],
+  ["acrylic lamps", "acrylic-lamp"],
+  ["edge lit lamp", "acrylic-lamp"],
+  ["night lamp", "acrylic-lamp"],
+  ["touch lamp", "touch-lamp"],
+  ["touch lamps", "touch-lamp"],
+  ["photo lamp", "lithophane"],
+  ["3d photo lamp", "lithophane"],
+
+  // misc
+  ["key ring", "keychain"],
+  ["pen stand", "pen-stand"],
+  ["pen holder", "pen-stand"],
+  ["charger stand", "charger-stand"],
+  ["airpods engraving", "airpod-engraving"],
+  ["caps", "cap"],
+  ["t shirt", "tshirt"],
+  ["t shirts", "tshirt"],
+  ["t-shirt", "tshirt"],
+  ["t-shirts", "tshirt"],
+]);
+
+// Convert any label or free text to a canonical token
+const toCanonical = (labelOrTerm = "") => {
+  const n = normalize(labelOrTerm);
+
+  // 1) exact CANONICAL key match
+  if (Object.prototype.hasOwnProperty.call(CANONICAL, n)) {
+    return CANONICAL[n];
+  }
+
+  // 2) alias match
+  if (ALIASES.has(n)) return ALIASES.get(n);
+
+  // 3) simple plural trims → alias
+  if (n.endsWith("s") && ALIASES.has(n.slice(0, -1))) return ALIASES.get(n.slice(0, -1));
+  if (n.endsWith("es") && ALIASES.has(n.slice(0, -2))) return ALIASES.get(n.slice(0, -2));
+
+  // 4) fallback to normalized string (keeps free text functional)
+  return n;
+};
+
+/* ============== Menu Data ============== */
+
 const menuData = {
   Products: {
     categories: [
@@ -12,48 +160,83 @@ const menuData = {
         title: "Corporate Gifting",
         defaultItems: ["Acrylic lamps", "Lithophane", "Water Bottle", "Organising Desk"],
         allItems: [
-          "Acrylic lamps", "Lithophane", "Water Bottle", "Organising Desk", "Coasters",
-          "Trophy", "Keychain", "Phone stand holder", "Flower pot", "Notebooks",
-          "Pen stands", "Badges", "Pop sockets", "Scented Candles"
-        ]
+          "Acrylic lamps",
+          "Lithophane",
+          "Water Bottle",
+          "Organising Desk",
+          "Coasters",
+          "Trophy",
+          "Keychain",
+          "Phone stand holder",
+          "Flower pot",
+          "Notebooks",
+          "Pen stands",
+          "Badges",
+          "Pop sockets",
+          "Scented Candles",
+        ],
       },
       {
         title: "Customisation & <br />Merchandising",
         defaultItems: ["Ceramic Cups", "Keychains", "Lithophane Frame", "T-shirts"],
         allItems: [
-          "Ceramic Cups", "Keychains", "Lithophane Frame", "T-shirts", "Bottle engraving",
-          "Characters", "Cap", "Tote bags", "Phone cover", "Name Plates", "Stickers",
-          "Spotify playlist on product", "Airpod engraving", "Silver coin printing", "Fabric Printing"
-        ]
+          "Ceramic Cups",
+          "Keychains",
+          "Lithophane Frame",
+          "T-shirts",
+          "Bottle engraving",
+          "Characters",
+          "Cap",
+          "Tote bags",
+          "Phone cover",
+          "Name Plates",
+          "Stickers",
+          "Spotify playlist on product",
+          "Airpod engraving",
+          "Silver coin printing",
+          "Fabric Printing",
+        ],
       },
       {
         title: "Home & Decor",
         defaultItems: ["Clocks", "Characters", "Mandala/Abstract Boards", "Puzzle frame"],
         allItems: [
-          "Clocks", "Characters", "Mandala/Abstract Boards", "Puzzle frame",
-          "Gods Frame/idol", "Ac/Charger Stand"
-        ]
+          "Clocks",
+          "Characters",
+          "Mandala/Abstract Boards",
+          "Puzzle frame",
+          "Gods Frame/idol",
+          "Ac/Charger Stand",
+        ],
       },
       {
         title: "Mechanical Products",
         defaultItems: ["Kinetic Clock", "Sanitiser Dispenser"],
-        allItems: ["Kinetic Clock", "Sanitiser Dispenser", "Small Furniture", "Touch Lamps"]
+        allItems: ["Kinetic Clock", "Sanitiser Dispenser", "Small Furniture", "Touch Lamps"],
       },
       {
         title: "Design, Prototyping <br />& Consultancy",
         defaultItems: ["Design Consultancy", "Branding", "UI/UX", "Zine"],
         allItems: [
-          "Design Consultancy", "Branding", "UI/UX", "Zine", "Books", "Poster & Infographics",
-          "Social media posts", "Illustration", "Mockups", "Business Cards"
-        ]
+          "Design Consultancy",
+          "Branding",
+          "UI/UX",
+          "Zine",
+          "Books",
+          "Poster & Infographics",
+          "Social media posts",
+          "Illustration",
+          "Mockups",
+          "Business Cards",
+        ],
       },
       {
         title: "Education &<br />  Workshops",
         defaultItems: ["Design Consultancy", "Branding", "UI/UX", "Zine"],
-        allItems: ["Design Consultancy", "Branding", "UI/UX", "Zine", "Books", "Poster & Graphics"]
-      }
-    ]
-  }
+        allItems: ["Design Consultancy", "Branding", "UI/UX", "Zine", "Books", "Poster & Graphics"],
+      },
+    ],
+  },
 };
 
 const Navbar = () => {
@@ -63,12 +246,12 @@ const Navbar = () => {
   const [expandedCategories, setExpandedCategories] = useState(new Set());
   const [currentPage, setCurrentPage] = useState("");
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const searchRef = useRef(null);
   const timeoutRef = useRef(null);
-  
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -78,38 +261,48 @@ const Navbar = () => {
   // Read search term from URL when component mounts or URL changes
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const searchParam = params.get('search');
-    const highlightParam = params.get('highlight');
-    
+    const searchParam = params.get("search");
+    const highlightParam = params.get("highlight");
+
     if (searchParam) {
       setSearchTerm(searchParam);
     } else if (highlightParam) {
       setSearchTerm(highlightParam);
     } else {
-      setSearchTerm('');
+      setSearchTerm("");
     }
   }, [location.search]);
 
-  // Extract all product items for search suggestions - NOW INCLUDING SHEET PRODUCTS
+  // Extract all product items for search suggestions (static + dynamic)
   useEffect(() => {
     const staticItems = [];
-    
+
     // Get static items from menuData
-    menuData.Products.categories.forEach(category => {
-      category.allItems.forEach(item => {
-        if (!staticItems.includes(item)) {
-          staticItems.push(item);
-        }
+    menuData.Products.categories.forEach((category) => {
+      category.allItems.forEach((item) => {
+        if (!staticItems.includes(item)) staticItems.push(item);
       });
     });
 
     // Add products from Google Sheets
     if (sheetProducts && sheetProducts.length > 0) {
-      const dynamicItems = sheetProducts.map(product => product.name);
-      // Combine and remove duplicates
+      const dynamicItems = sheetProducts.map((product) => product.name);
       const allItems = [...staticItems, ...dynamicItems];
-      const uniqueItems = [...new Set(allItems)];
-      setSuggestions(uniqueItems);
+
+      // Deduplicate while preserving display labels
+      const labelSet = new Set();
+      const displayItems = [];
+      allItems.forEach((label) => {
+        const clean = label?.toString().trim();
+        if (!clean) return;
+        const key = clean.toLowerCase();
+        if (!labelSet.has(key)) {
+          labelSet.add(key);
+          displayItems.push(clean);
+        }
+      });
+
+      setSuggestions(displayItems);
     } else {
       setSuggestions(staticItems);
     }
@@ -129,9 +322,9 @@ const Navbar = () => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -177,33 +370,35 @@ const Navbar = () => {
   };
 
   const handleSuggestionClick = (suggestion) => {
-    setSearchTerm(suggestion);
+    const q = toCanonical(suggestion);
+    setSearchTerm(suggestion); // keep UI-friendly label
     setShowSuggestions(false);
     setMobileSearchOpen(false);
-    navigate(`/Products?search=${encodeURIComponent(suggestion)}`);
+    navigate(`/Products?search=${encodeURIComponent(q)}`);
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
+      const q = toCanonical(searchTerm.trim());
       setShowSuggestions(false);
       setMobileSearchOpen(false);
-      navigate(`/Products?search=${encodeURIComponent(searchTerm.trim())}`);
+      navigate(`/Products?search=${encodeURIComponent(q)}`);
     }
   };
 
-  const filteredSuggestions = searchTerm 
-    ? suggestions.filter(item => 
-        item.toLowerCase().includes(searchTerm.toLowerCase())
-      ).slice(0, 8)
+  const filteredSuggestions = searchTerm
+    ? suggestions
+        .filter((item) => item.toLowerCase().includes(searchTerm.toLowerCase()))
+        .slice(0, 8)
     : [];
 
   const clearSearch = () => {
-    setSearchTerm('');
+    setSearchTerm("");
     setShowSuggestions(false);
     // Clear the search from URL if on Products page
-    if (location.pathname === '/Products') {
-      navigate('/Products');
+    if (location.pathname === "/Products") {
+      navigate("/Products");
     }
   };
 
@@ -254,9 +449,7 @@ const Navbar = () => {
                     <div
                       className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
                       style={{ animation: "fadeIn 0.3s ease-out forwards" }}
-                      onMouseEnter={() =>
-                        timeoutRef.current && clearTimeout(timeoutRef.current)
-                      }
+                      onMouseEnter={() => timeoutRef.current && clearTimeout(timeoutRef.current)}
                       onMouseLeave={handleMenuLeave}
                     >
                       <div className="p-8 sm:p-10 flex justify-center">
@@ -278,7 +471,9 @@ const Navbar = () => {
                                     {itemsToShow.map((subItem, subIdx) => (
                                       <li key={subIdx}>
                                         <a
-                                          href={`/Products?highlight=${encodeURIComponent(subItem)}`}
+                                          href={`/Products?highlight=${encodeURIComponent(
+                                            toCanonical(subItem)
+                                          )}`}
                                           className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
                                           onClick={() => {
                                             setActiveDropdown(null);
@@ -290,12 +485,9 @@ const Navbar = () => {
                                       </li>
                                     ))}
                                   </ul>
-                                  {category.allItems.length >
-                                    category.defaultItems.length && (
+                                  {category.allItems.length > category.defaultItems.length && (
                                     <button
-                                      onClick={() =>
-                                        toggleCategoryExpansion(category.title)
-                                      }
+                                      onClick={() => toggleCategoryExpansion(category.title)}
                                       className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
                                     >
                                       {isExpanded ? "View Less ↑" : "View All →"}
@@ -362,23 +554,29 @@ const Navbar = () => {
               )}
 
               {/* No results message */}
-              {showSuggestions && filteredSuggestions.length === 0 && searchTerm && !productsLoading && (
-                <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                  <div className="px-4 py-3 text-sm text-gray-500">
-                    No suggestions found - press Enter to search all products
+              {showSuggestions &&
+                filteredSuggestions.length === 0 &&
+                searchTerm &&
+                !productsLoading && (
+                  <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                    <div className="px-4 py-3 text-sm text-gray-500">
+                      No suggestions found - press Enter to search all products
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {/* Loading state */}
-              {showSuggestions && searchTerm && productsLoading && filteredSuggestions.length === 0 && (
-                <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                  <div className="px-4 py-3 text-sm text-gray-500 flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
-                    Searching products...
+              {showSuggestions &&
+                searchTerm &&
+                productsLoading &&
+                filteredSuggestions.length === 0 && (
+                  <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                    <div className="px-4 py-3 text-sm text-gray-500 flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
+                      Searching products...
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
 
             {/* Desktop Cart */}
@@ -408,10 +606,7 @@ const Navbar = () => {
             )}
 
             {/* Mobile Cart */}
-            <Link
-              to="/cart"
-              className="relative text-gray-700 hover:text-orange-500 transition-colors"
-            >
+            <Link to="/cart" className="relative text-gray-700 hover:text-orange-500 transition-colors">
               <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-semibold">
@@ -429,17 +624,13 @@ const Navbar = () => {
                 <Menu
                   size={28}
                   className={`transition-all duration-300 ${
-                    isOpen
-                      ? "opacity-0 rotate-180 scale-0"
-                      : "opacity-100 rotate-0 scale-100"
+                    isOpen ? "opacity-0 rotate-180 scale-0" : "opacity-100 rotate-0 scale-100"
                   }`}
                 />
                 <X
                   size={28}
                   className={`absolute top-0 left-0 transition-all duration-500 ${
-                    isOpen
-                      ? "opacity-100 rotate-0 scale-100"
-                      : "opacity-0 rotate-180 scale-0"
+                    isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-180 scale-0"
                   }`}
                 />
               </div>
@@ -509,26 +700,32 @@ const Navbar = () => {
             )}
 
             {/* Mobile No results message */}
-            {showSuggestions && filteredSuggestions.length === 0 && searchTerm && !productsLoading && (
-              <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                <div className="px-4 py-3 text-sm text-gray-500">
-                  No suggestions found - press Enter to search all products
+            {showSuggestions &&
+              filteredSuggestions.length === 0 &&
+              searchTerm &&
+              !productsLoading && (
+                <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <div className="px-4 py-3 text-sm text-gray-500">
+                    No suggestions found - press Enter to search all products
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Mobile Loading state */}
-            {showSuggestions && searchTerm && productsLoading && filteredSuggestions.length === 0 && (
-              <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                <div className="px-4 py-3 text-sm text-gray-500 flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
-                  Searching products...
+            {showSuggestions &&
+              searchTerm &&
+              productsLoading &&
+              filteredSuggestions.length === 0 && (
+                <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <div className="px-4 py-3 text-sm text-gray-500 flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500 mr-2"></div>
+                    Searching products...
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         )}
-        
+
         {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
