@@ -12,6 +12,17 @@ import {
   mechanicalProducts, designConsultancyProducts, educationWorkshopsProducts,
 } from "../assets/data.jsx";
 
+// Decode entities and remove tags safely
+const stripHtml = (html = '') => {
+  try {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return (doc.body.textContent || '').trim();
+  } catch {
+    return String(html).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  }
+};
+
+
 // Loading Component for initial page load
 const LoadingScreen = () => (
   <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center">
@@ -219,7 +230,7 @@ const Products = () => {
         
         const scoredProducts = allProducts.map(product => {
           const name = (product.name || '').toLowerCase();
-          const description = (product.description || '').toLowerCase();
+          const description = stripHtml(product.description || '').toLowerCase();
           const category = (product.category || '').toLowerCase();
           
           let score = 0;
@@ -492,15 +503,8 @@ const Products = () => {
                             {product.name}
                           </h2>
                           <p className="text-gray-600 text-xs sm:text-sm lg:text-xs 2xl:text-sm mb-3 leading-relaxed flex-grow line-clamp-2">
-                            {product.description || `${product.name} - Perfect for your needs.`}
+                            {stripHtml(product.description) || `${product.name} - Perfect for your needs.`}
                           </p>
-                          <div className="flex justify-center items-center text-xs sm:text-sm mb-2">
-                            {product.rating ? (
-                              <>⭐ <span className="ml-1">{product.rating} ({product.reviews} reviews)</span></>
-                            ) : (
-                              <>⭐ <span className="ml-1">4.5 (10 reviews)</span></>
-                            )}
-                          </div>
                           <p className="font-medium text-gray-800 mb-4 text-sm sm:text-base">
                             {product.originalPrice ? (
                               <>

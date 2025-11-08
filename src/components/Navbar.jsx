@@ -25,67 +25,67 @@ const normalize = (s = "") =>
 // RIGHT side values are unique tokens used to filter products.
 const CANONICAL = {
   // Corporate Gifting
-  "acrylic lamps": "acrylic-lamp",
+  "acrylic lamps": "acrylic lamp",
   "lithophane": "lithophane",
   "water bottle": "bottle",
-  "organising desk": "desk-organizer",
+  "organising desk": "desk organizer",
   "coasters": "coaster",
   "trophy": "trophy",
   "keychain": "keychain",
-  "phone stand holder": "phone-stand",
+  "phone stand holder": "phone stand",
   "flower pot": "planter",
   "notebooks": "book",
-  "pen stands": "pen-stand",
+  "pen stands": "pen stand",
   "badges": "badge",
-  "pop sockets": "pop-socket",
+  "pop sockets": "pop socket",
   "scented candles": "candle",
 
   // Customisation & Merchandising
-  "ceramic cups": "ceramic-cup",
+  "ceramic cups": "ceramic cup",
   "keychains": "keychain",
-  "lithophane frame": "lithophane-frame",
+  "lithophane frame": "lithophane frame",
   "t-shirts": "tshirt",
-  "bottle engraving": "bottle-engraving",
-  "characters": "character", // ← keep this single definition
+  "bottle engraving": "bottle engraving",
+  "characters": "character",
   "cap": "cap",
-  "tote bags": "tote-bag",
-  "phone cover": "phone-case",
-  "name plates": "name-plate",
+  "tote bags": "tote bag",
+  "phone cover": "phone case",
+  "name plates": "name plate",
   "stickers": "sticker",
-  "spotify playlist on product": "spotify-product",
-  "airpod engraving": "airpod-engraving",
-  "silver coin printing": "coin-printing",
-  "fabric printing": "fabric-printing",
+  "spotify playlist on product": "spotify",
+  "airpod engraving": "airpod engraving",
+  "silver coin printing": "coin printing",
+  "fabric printing": "fabric printing",
 
   // Home & Decor
   "clocks": "clock",
-  // "characters": "character", // ← remove this duplicate
-  "mandala abstract boards": "mandala-board",
-  "puzzle frame": "puzzle-frame",
-  "gods frame idol": "god-frame",
-  "ac charger stand": "charger-stand",
+  "mandala abstract boards": "mandala",
+  "puzzle frame": "puzzle frame",
+  "gods frame idol": "god frame",
+  "ac charger stand": "charger stand",
 
   // Mechanical Products
-  "kinetic clock": "kinetic-clock",
-  "sanitiser dispenser": "sanitiser-dispenser",
-  "small furniture": "small-furniture",
-  "touch lamps": "touch-lamp",
+  "kinetic clock": "kinetic clock",
+  "sanitiser dispenser": "sanitiser dispenser",
+  "small furniture": "furniture",
+  "touch lamps": "touch lamp",
 
   // Design, Prototyping & Consultancy
-  "design consultancy": "design-consultancy",
+  "design consultancy": "design consultancy",
   "branding": "branding",
-  "ui ux": "ui-ux",
+  "ui ux": "ui ux",
   "zine": "zine",
   "books": "book",
   "poster infographics": "poster",
-  "social media posts": "social-post",
+  "social media posts": "social media",
   "illustration": "illustration",
   "mockups": "mockup",
-  "business cards": "business-card",
+  "business cards": "business card",
 
   // Education & Workshops
   "poster graphics": "poster",
 };
+
 
 // Synonyms/Aliases → canonical tokens above
 const ALIASES = new Map([
@@ -100,36 +100,37 @@ const ALIASES = new Map([
   ["books", "book"],
 
   // desk organizer family
-  ["organising desk", "desk-organizer"],
-  ["organizing desk", "desk-organizer"],
-  ["desk organiser", "desk-organizer"],
-  ["desk organizer", "desk-organizer"],
-  ["stationery holder", "desk-organizer"],
-  ["table organiser", "desk-organizer"],
-  ["table organizer", "desk-organizer"],
+  ["organising desk", "desk organizer"],
+  ["organizing desk", "desk organizer"],
+  ["desk organiser", "desk organizer"],
+  ["desk organizer", "desk organizer"],
+  ["stationery holder", "desk organizer"],
+  ["table organiser", "desk organizer"],
+  ["table organizer", "desk organizer"],
 
   // lamp families
-  ["acrylic lamp", "acrylic-lamp"],
-  ["acrylic lamps", "acrylic-lamp"],
-  ["edge lit lamp", "acrylic-lamp"],
-  ["night lamp", "acrylic-lamp"],
-  ["touch lamp", "touch-lamp"],
-  ["touch lamps", "touch-lamp"],
+  ["acrylic lamp", "acrylic lamp"],
+  ["acrylic lamps", "acrylic lamp"],
+  ["edge lit lamp", "acrylic lamp"],
+  ["night lamp", "acrylic lamp"],
+  ["touch lamp", "touch lamp"],
+  ["touch lamps", "touch lamp"],
   ["photo lamp", "lithophane"],
   ["3d photo lamp", "lithophane"],
 
   // misc
   ["key ring", "keychain"],
-  ["pen stand", "pen-stand"],
-  ["pen holder", "pen-stand"],
-  ["charger stand", "charger-stand"],
-  ["airpods engraving", "airpod-engraving"],
+  ["pen stand", "pen stand"],
+  ["pen holder", "pen stand"],
+  ["charger stand", "charger stand"],
+  ["airpods engraving", "airpod engraving"],
   ["caps", "cap"],
   ["t shirt", "tshirt"],
   ["t shirts", "tshirt"],
   ["t-shirt", "tshirt"],
   ["t-shirts", "tshirt"],
 ]);
+
 
 // Convert any label or free text to a canonical token
 const toCanonical = (labelOrTerm = "") => {
