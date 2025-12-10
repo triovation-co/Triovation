@@ -1,6 +1,6 @@
 import Logo from "../assets/logo_bg.png";
 import img from "../assets/image1.jpg";
-
+import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <>
@@ -34,7 +34,12 @@ From custom gifts to creative solutions! let’s build<br></br> something extrao
           <div className="mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">HELPFUL LINKS</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
-              <li><a href="/ContactUs" className="hover:text-blue-600">Contact us</a></li>
+<li>
+<Link to="/open-catalogue">Open Catalogue</Link>
+
+</li>
+
+
               <li><a href="#" className="hover:text-blue-600">Wholesale & Corporate enquiries</a></li>
               <li><a href="#" className="hover:text-blue-600">Cancellation & refund policy</a></li>
             </ul>

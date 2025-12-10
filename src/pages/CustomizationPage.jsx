@@ -69,14 +69,14 @@ import WhatsAppButton from "../components/whatsapp.jsx";
   ];
 
   const lampDesigns = [
-    { label: "Acrylic Lamp", value: "acrylic_lamp", img: acrylicLamp },
-    { label: "Acrylic Lamp 4", value: "acrylic_lamp_4", img: acrylicLamp4 },
-    { label: "Acrylic Lamp 5", value: "acrylic_lamp_5", img: acrylicLamp5 },
+    { label: "U shape", value: "acrylic_lamp", img: acrylicLamp },
+    { label: "Rectangular shape", value: "acrylic_lamp_4", img: acrylicLamp4 },
+    { label: "Spotify frame", value: "acrylic_lamp_5", img: acrylicLamp5 },
     { label: "Couple 1", value: "couple_1", img: couple1 },
-    { label: "Couple 2", value: "couple_2a", img: couple2a },
+    { label: "Circular & Rectangular frame", value: "couple_2a", img: couple2a },
     { label: "Couple 2b", value: "couple_2b", img: couple2b },
-    { label: "Couple 2c", value: "couple_2c", img: couple2c },
-    { label: "Moon and Couple", value: "moon_couple", img: moonCouple },
+    { label: "Couple Silhouette Frame", value: "couple_2c", img: couple2c },
+    { label: "Moon shaped frame", value: "moon_couple", img: moonCouple },
     { label: "U Shape Calendar", value: "u_shape_calendar", img: uShapeCalendar },
   ];
 

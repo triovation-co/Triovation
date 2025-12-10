@@ -22,6 +22,8 @@ import PrivacyPolicy from "./footer_pages/Privacy_Policies.jsx";
 import ShippingPolicy from "./footer_pages/Shipping_Delivery.jsx";
 import CancellationRefundPolicy from "./footer_pages/Cancellation-Refund.jsx";
 import WhatsAppButton from "./components/whatsapp.jsx";
+import CatalogueViewer from "./components/CatalogueViewer";
+
 
 
 function App() {
@@ -141,6 +143,7 @@ function App() {
             <Route path="/privacy-policies" element={<PrivacyPolicy />} />
             <Route path="/shipping-delivery" element={<ShippingPolicy />} />
             <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
+            <Route path="/open-catalogue" element={<CatalogueViewer />} />
           </Routes>
         </main>
 <WhatsAppButton/>
