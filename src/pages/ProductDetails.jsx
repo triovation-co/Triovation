@@ -145,6 +145,14 @@ const ProductDetails = () => {
     return [...new Set(images)];
   };
 
+  const handlePreviousImage = () => {
+    setSelectedImage((prev) => (prev === 0 ? availableImages.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = () => {
+    setSelectedImage((prev) => (prev === availableImages.length - 1 ? 0 : prev + 1));
+  };
+
   if (loading || sheetLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white flex items-center justify-center px-4">
@@ -203,7 +211,7 @@ const ProductDetails = () => {
             {/* Product Images */}
             <div className="space-y-3 sm:space-y-4">
               {/* Main Image */}
-              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group">
                 <img
                   src={availableImages[selectedImage] || 'https://via.placeholder.com/500x500'}
                   alt={product.name}
@@ -212,6 +220,33 @@ const ProductDetails = () => {
                     e.target.src = 'https://via.placeholder.com/500x500';
                   }}
                 />
+                
+                {/* Navigation Arrows - Only show if multiple images */}
+                {availableImages.length > 1 && (
+                  <>
+                    {/* Left Arrow */}
+                    <button
+                      onClick={handlePreviousImage}
+                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity touch-manipulation"
+                      aria-label="Previous image"
+                    >
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                    </button>
+                    
+                    {/* Right Arrow */}
+                    <button
+                      onClick={handleNextImage}
+                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity touch-manipulation"
+                      aria-label="Next image"
+                    >
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </button>
+                  </>
+                )}
               </div>
 
               {/* Thumbnail Images */}
@@ -339,8 +374,9 @@ const ProductDetails = () => {
                     Add to Cart
                   </button>
                   <button 
-                  onClick={handleBuyNow}
-                  className="flex-1 bg-gray-900 text-white py-3 sm:py-3.5 px-6 rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors font-semibold text-sm sm:text-base touch-manipulation shadow-md hover:shadow-lg">
+                    onClick={handleBuyNow}
+                    className="flex-1 bg-gray-900 text-white py-3 sm:py-3.5 px-6 rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors font-semibold text-sm sm:text-base touch-manipulation shadow-md hover:shadow-lg"
+                  >
                     Buy Now
                   </button>
                   {isCustomizable && (
@@ -404,4 +440,4 @@ const ProductDetails = () => {
   );
 };
 
-export default ProductDetails;
+export default ProductDetails
