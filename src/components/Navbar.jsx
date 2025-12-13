@@ -185,7 +185,7 @@ const menuData = {
           "Keychains",
           "Lithophane Frame",
           "T-shirts",
-          "Bottle engraving",
+          "Bottle",
           "Characters",
           "Cap",
           "Tote bags",
