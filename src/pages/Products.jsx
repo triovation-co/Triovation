@@ -1,16 +1,31 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronUp, X } from "lucide-react";
-import ProductSection from "../components/ProductSection.jsx";
 import { useProductManager } from "../hooks/useProductManager.jsx";
 import bulkorder1 from "../assets/bulkorder1.png";
 import bulkorder2 from "../assets/bulkorder2.png";
 import WhatsAppButton from "../components/whatsapp.jsx";
+import { lazy, Suspense } from "react";
+const ProductSection = lazy(() =>
+  import("../components/ProductSection.jsx")
+);
 import {
   sections, whatsNewItems, bestSellerItems, FestiveSeason,
   corporateGiftingProducts, customisationProducts, homeDecorProducts,
   mechanicalProducts, designConsultancyProducts, educationWorkshopsProducts,
 } from "../assets/data.jsx";
+
+const SectionSkeleton = () => (
+  <div className="px-4 mb-20">
+    <div className="h-6 w-40 bg-gray-200 rounded mb-6 animate-pulse"></div>
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {[...Array(8)].map((_, i) => (
+        <div key={i} className="h-64 bg-gray-200 rounded-2xl animate-pulse" />
+      ))}
+    </div>
+  </div>
+);
+
 
 // Decode entities and remove tags safely
 const stripHtml = (html = '') => {
@@ -574,6 +589,7 @@ const Products = () => {
         {!isSearchActive && (
           <>
             {hasFestiveProducts && (
+              <Suspense fallback={<SectionSkeleton />}>
               <ProductSection
                 title="Festive Season"
                 products={enhancedProducts.festive}
@@ -585,9 +601,11 @@ const Products = () => {
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
               />
+              </Suspense>
             )}
 
             {hasCorporateProducts && (
+              <Suspense fallback={<SectionSkeleton />}>
               <ProductSection
                 title="Corporate Gifting"
                 products={enhancedProducts.corporate}
@@ -599,9 +617,11 @@ const Products = () => {
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
               />
+              </Suspense>
             )}
 
             {hasCustomisationProducts && (
+               <Suspense fallback={<SectionSkeleton />}>
               <ProductSection
                 title="Customisation & Merchandising"
                 products={enhancedProducts.customisation}
@@ -613,9 +633,11 @@ const Products = () => {
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
               />
+              </Suspense>
             )}
 
             {hasHomeDecorProducts && (
+              <Suspense fallback={<SectionSkeleton />}>
               <ProductSection
                 title="Home Decor"
                 products={enhancedProducts.homeDecor}
@@ -627,9 +649,11 @@ const Products = () => {
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
               />
+              </Suspense>
             )}
 
             {hasMechanicalProducts && (
+               <Suspense fallback={<SectionSkeleton />}>
               <ProductSection
                 title="Mechanical Products"
                 products={enhancedProducts.mechanical}
@@ -641,9 +665,11 @@ const Products = () => {
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
               />
+              </Suspense>
             )}
 
             {hasDesignProducts && (
+               <Suspense fallback={<SectionSkeleton />}>
               <ProductSection
                 title="Design Consultancy"
                 products={enhancedProducts.design}
@@ -655,9 +681,11 @@ const Products = () => {
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
               />
+              </Suspense>
             )}
 
             {hasEducationProducts && (
+              <Suspense fallback={<SectionSkeleton />}>
               <ProductSection
                 title="Education & Workshops"
                 products={enhancedProducts.education}
@@ -669,6 +697,7 @@ const Products = () => {
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
               />
+              </Suspense>
             )}
           </>
         )}
