@@ -5,6 +5,7 @@ import { useProductManager } from "../hooks/useProductManager.jsx";
 import bulkorder1 from "../assets/bulkorder1.png";
 import bulkorder2 from "../assets/bulkorder2.png";
 import WhatsAppButton from "../components/whatsapp.jsx";
+import HeroBanner from "../components/HeroBanner.jsx";
 import { lazy, Suspense } from "react";
 const ProductSection = lazy(() =>
   import("../components/ProductSection.jsx")
@@ -348,6 +349,15 @@ const Products = () => {
     }
   };
 
+  // Handler for category banner clicks
+  const handleCategoryClick = (searchQuery) => {
+    setSearchQuery(searchQuery);
+    setSearchSource('banner');
+    setIsSearchActive(true);
+    performSearch(searchQuery);
+    window.history.pushState({}, '', `/products?search=${encodeURIComponent(searchQuery)}`);
+  };
+
   // Refs
   const festiveRef = useRef(null);
   const corporateRef = useRef(null);
@@ -449,6 +459,10 @@ const Products = () => {
 
   return (
     <div className="min-h-screen">
+
+      {/* FULL WIDTH HERO BANNER */}
+      {!isSearchActive && <HeroBanner />}
+
       {isSearching && <SearchLoadingOverlay />}
       
       <div className="w-full px-4 sm:px-6 lg:px-4 py-8">
@@ -471,6 +485,9 @@ const Products = () => {
             </div>
           </div>
         </div>
+
+        {/* Category Banners - Show only when not searching */}
+        
 
         {/* Search Results Section */}
         {isSearchActive && (
@@ -545,7 +562,7 @@ const Products = () => {
               </>
             ) : (
               <div className="text-center py-12">
-                {searchSource === 'dropdown' ? (
+                {searchSource === 'dropdown' || searchSource === 'banner' ? (
                   <>
                     <div className="mb-4">
                       <svg className="mx-auto h-16 w-16 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
