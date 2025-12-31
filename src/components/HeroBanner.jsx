@@ -17,7 +17,7 @@ const banners = [
   },
   {
     id: 3,
-    title: "Home Decor",
+    title: "Planters",
     subtitle: "Upgrade Your Space",
     image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=1600&q=80",
   },
@@ -32,6 +32,24 @@ const banners = [
     title: "Caps",
     subtitle: "Trendy Collection",
     image: "https://images.unsplash.com/photo-1653704841996-c2ed854aedd8?q=80&w=1170&auto=format&fit=crop",
+  },
+   {
+    id: 6,
+    title: "Trophy",
+    subtitle: "Trendy Collection",
+    image: "https://images.unsplash.com/photo-1757365225211-1515ecc8a109?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+  {
+    id: 7,
+    title: "Book",
+    subtitle: "Customised Books",
+    image: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  },
+    {
+    id: 8,
+    title: "Bags",
+    subtitle: "Customised Bags",
+    image: "https://plus.unsplash.com/premium_photo-1683746792239-6ce8cdd3ac78?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
 ];
 
