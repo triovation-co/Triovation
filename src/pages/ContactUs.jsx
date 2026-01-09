@@ -179,8 +179,8 @@ const handleSubmit = async (e) => {
 {success && (
   <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
     <div className="bg-white p-8 rounded-xl shadow-xl text-center">
-      <h2 className="text-2xl font-bold mb-2">Thank You!</h2>
-      <p>Your enquiry has been sent successfully.</p>
+      <h2 className="text-2xl font-bold mb-2">Thank You for your enquiry</h2>
+      <p>Our team will get back to you shortly.</p>
       <button
         onClick={() => setSuccess(false)}
         className="mt-4 bg-blue-500 text-white px-6 py-2 rounded"
