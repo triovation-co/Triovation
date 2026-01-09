@@ -10,6 +10,8 @@ import Learn_fab from "../assets/Learn_fab.png";
 import education from "../assets/education.png";
 import WhatsAppButton from "../components/whatsapp";
 import Triovationmain from "../assets/Triovation_main.jpg";
+import { useNavigate } from "react-router-dom";
+
 
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,6 +25,24 @@ const Home = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+const navigate = useNavigate();
+
+const handleServiceClick = (serviceName) => {
+  const routes = {
+    "Corporate Gifting": "/Products",
+    "Customized Gifting": "/Products",
+    "Design Consultancy": "/Consultancy",
+    "Learn and Fabricate": "/Education",
+    "Learning Zone": "/Education",
+    "Education": "/Education",
+  };
+
+  if (routes[serviceName]) {
+    navigate(routes[serviceName]);
+  }
+};
+
 
   const services = [
     { name: "Corporate Gifting", image: corporateGifting },
@@ -214,12 +234,14 @@ const Home = () => {
 
         {/* Services Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="flex flex-col items-center group cursor-pointer animate-fade-in-up"
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
+{services.map((service, index) => (
+  <div
+    key={index}
+    onClick={() => handleServiceClick(service.name)}
+    className="flex flex-col items-center group cursor-pointer animate-fade-in-up"
+    style={{ animationDelay: `${index * 150}ms` }}
+  >
+
               {/* Service Thumbnails */}
               <div className="rounded-t-full overflow-hidden w-40 h-40 sm:w-50 sm:h-60 md:w-50 md:h-55 lg:w-60 lg:h-60 xl:w-74 xl:h-80 mb-4 relative transition-all duration-700 hover:scale-110">
                 <img

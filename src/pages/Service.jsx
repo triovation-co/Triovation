@@ -137,7 +137,7 @@ aesthetic redesign of your existing products. Our goal is to create distinctive,
 solutions that captivate your audience and establish a powerful, cohesive brand presence.
               </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">STAY TUNE</span>
+              <span className="relative z-10">Explore Now</span>
             </button>
           </div>
       
@@ -190,7 +190,7 @@ specialized electronics fabrication consultancy, we ensure a seamless, end to en
 from concept to market-ready hardware.
             </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">STAY TUNE</span>
+              <span className="relative z-10">Explore Now</span>
             </button>
           </div>
         </div>
@@ -221,7 +221,7 @@ to ensuring your final manufactured product reflects your core aesthetic. We pro
 framework to move seamlessly from an innovative idea to a market-ready, powerful brand.
             </p>
             <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">STAY TUNE</span>
+              <span className="relative z-10">Explore Now</span>
             </button>
           </div>
       

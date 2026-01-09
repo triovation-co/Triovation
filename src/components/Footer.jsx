@@ -35,9 +35,16 @@ From custom gifts to creative solutions! let’s build<br></br> something extrao
             <h2 className="font-bold text-base 2xl:text-lg mb-3">HELPFUL LINKS</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
 <li>
-<Link to="/open-catalogue">Open Catalogue</Link>
-
+  <a
+    href="/catalogue.pdf"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="hover:text-blue-600"
+  >
+    Product Catalogue
+  </a>
 </li>
+
 
 
               <li><a href="#" className="hover:text-blue-600">Wholesale & Corporate enquiries</a></li>

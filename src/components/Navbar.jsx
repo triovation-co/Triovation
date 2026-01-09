@@ -1,9 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Menu, X, ShoppingCart } from "lucide-react";
 import Logo from "../assets/logo_bg.png";
+
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useProductManager } from "../hooks/useProductManager";
+const formatMenuLabel = (text = "") => {
+  return text
+    .replace(/([a-z])([A-Z])/g, "$1 $2")  // ContactUs → Contact Us
+    .replace(/_/g, " ");
+};
+
 
 /* ================================
    Search Normalization + Mappings
@@ -420,7 +427,7 @@ const Navbar = () => {
             className="flex items-center cursor-pointer transition-transform hover:scale-105"
             onClick={() => (window.location.href = "/")}
           >
-            <img src={Logo} alt="Logo" className="h-10 sm:h-12 md:h-14 w-auto" />
+            <img src={Logo} alt="Logo" className="h-10 sm:h-12 md:h-20 w-auto" />
           </div>
 
           {/* Desktop Links */}
@@ -441,7 +448,8 @@ const Navbar = () => {
                     }}
                     className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-sm lg:text-[17px] relative group"
                   >
-                    {item.replace("_", " ")}
+                    {formatMenuLabel(item)}
+
                     <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
                   </a>
 
@@ -745,7 +753,7 @@ const Navbar = () => {
                   }}
                   className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
                 >
-                  {item.replace("_", " ")}
+             {formatMenuLabel(item)}
                 </a>
               )
             )}
