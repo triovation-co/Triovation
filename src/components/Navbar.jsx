@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, Menu, X, ShoppingCart } from "lucide-react";
-import Logo from "../assets/logo_bg.png";
+import Logo from "../assets/FinalLogo.png";
 
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
@@ -176,7 +176,7 @@ const menuData = {
           "Trophy",
           "Keychain",
           "Phone stand holder",
-          "Flower pot",
+          "Planters",
           "Notebooks",
           "Pen stands",
           "Badges",
@@ -427,7 +427,7 @@ const Navbar = () => {
             className="flex items-center cursor-pointer transition-transform hover:scale-105"
             onClick={() => (window.location.href = "/")}
           >
-            <img src={Logo} alt="Logo" className="h-10 sm:h-12 md:h-20 w-auto" />
+            <img src={Logo} alt="Logo" className="h-10 sm:h-12 md:h-16 w-auto" />
           </div>
 
           {/* Desktop Links */}

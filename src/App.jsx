@@ -23,6 +23,10 @@ import ShippingPolicy from "./footer_pages/Shipping_Delivery.jsx";
 import CancellationRefundPolicy from "./footer_pages/Cancellation-Refund.jsx";
 import WhatsAppButton from "./components/whatsapp.jsx";
 import ScrollToTop from "./components/ScrollToTop";
+import ThankYou from "./pages/ThankYou";
+import EnquiryModal from "./components/EnquiryModal";
+
+
 
 
 
@@ -125,6 +129,7 @@ function App() {
         {/* Main content */}
         <main className="flex-grow">
           <Routes>
+            
             <Route path="/" element={<Home />} />
             <Route path="/Customize_product" element={<CustomizationPage />}/>
             <Route path="/customize/:id" element={<CustomizationPage />} />
@@ -144,7 +149,11 @@ function App() {
             <Route path="/privacy-policies" element={<PrivacyPolicy />} />
             <Route path="/shipping-delivery" element={<ShippingPolicy />} />
             <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
+            <Route path="/thank-you" element={<ThankYou />} />
+        
+
           </Routes>
+             <EnquiryModal />
         </main>
 <WhatsAppButton/>
 

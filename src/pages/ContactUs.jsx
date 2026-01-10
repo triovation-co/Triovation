@@ -1,43 +1,49 @@
 import React, { useState } from "react";
 import bulkorder1 from "../assets/bulkorder1.png";
 import bulkorder2 from "../assets/bulkorder2.png";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+
 
 const ContactUs = () => {
- const [openModal, setOpenModal] = useState(false);
-const [success, setSuccess] = useState(false);
-const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const form = new FormData(e.target);
 
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbxzU1x17yJEzyGhqKDdlbwSf81_eig3ZFLLxuyWDHNEKMie_J4C3yIeZC2psGJ3Tfgx/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(data),
+        }
+      );
 
-  const form = new FormData(e.target);
+      e.target.reset();
+      setOpenModal(false);
+      navigate("/thank-you"); // ✅ redirect
 
-  const data = {
-    name: form.get("name"),
-    email: form.get("email"),
-    phone: form.get("phone"),
-    message: form.get("message"),
+    } catch {
+      alert("Failed to send. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  try {
-   await fetch("https://script.google.com/macros/s/AKfycbxzU1x17yJEzyGhqKDdlbwSf81_eig3ZFLLxuyWDHNEKMie_J4C3yIeZC2psGJ3Tfgx/exec", {
-  method: "POST",
-  mode: "no-cors",
-  body: JSON.stringify(data),
-});
+  useEffect(() => {
+  const openForm = () => setOpenModal(true);
 
-
-    setOpenModal(false);
-    setSuccess(true);
-    e.target.reset();
-  } catch {
-    alert("Failed to send. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+  window.addEventListener("open-enquiry-form", openForm);
+  return () => window.removeEventListener("open-enquiry-form", openForm);
+}, []);
 
 
   return (
@@ -88,109 +94,20 @@ const handleSubmit = async (e) => {
               <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
                 Email at <span className="font-semibold">Triovation.co@gmail.com</span>
               </p>
+<button
+  onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}
+  className="group relative overflow-hidden px-7 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-blue-400 text-white font-semibold tracking-wide shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
+>
+  <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition"></span>
+  Contact Us
+</button>
 
-              <button
-                onClick={() => setOpenModal(true)}
-                className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base"
-              >
-                Contact Us
-              </button>
+
+
             </div>
           </div>
         </main>
       </div>
-
-      {/* Enquiry Popup */}
-{openModal && (
-  <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-4">
-    <div className="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-2xl animate-fadeIn">
-
-      {/* Close */}
-      <button
-        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition"
-        onClick={() => setOpenModal(false)}
-      >
-        ✕
-      </button>
-
-      {/* Header */}
-      <div className="mb-6 text-center">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-1">
-          Contact Our Team
-        </h2>
-        <p className="text-sm text-gray-500">
-          Fill in your details and we’ll get back to you shortly.
-        </p>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="text-xs text-gray-500">Full Name</label>
-          <input
-            className="w-full border px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-            placeholder="Your full name"
-            name="name"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="text-xs text-gray-500">Email Address</label>
-          <input
-          name="email"
-            type="email"
-            className="w-full border px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-            placeholder="you@example.com"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="text-xs text-gray-500">Phone Number</label>
-          <input
-          name="phone"
-            className="w-full border px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-            placeholder="+91 XXXXX XXXXX"
-            required
-          />
-        </div>
-
-        <div>
-          <label className="text-xs text-gray-500">Message</label>
-          <textarea
-          name="message"
-            rows="3"
-            className="w-full border px-4 py-2.5 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none resize-none"
-            placeholder="Write your enquiry here..."
-            required
-          />
-        </div>
-
-        <button
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2.5 rounded-lg font-medium tracking-wide transition shadow-md"
-        >
-          Submit Enquiry
-        </button>
-      </form>
-    </div>
-  </div>
-)}
-{success && (
-  <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center">
-    <div className="bg-white p-8 rounded-xl shadow-xl text-center">
-      <h2 className="text-2xl font-bold mb-2">Thank You for your enquiry</h2>
-      <p>Our team will get back to you shortly.</p>
-      <button
-        onClick={() => setSuccess(false)}
-        className="mt-4 bg-blue-500 text-white px-6 py-2 rounded"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
-
     </>
   );
 };

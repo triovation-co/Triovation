@@ -50,9 +50,15 @@ From custom gifts to creative solutions! let’s build<br></br> something extrao
               <li><a href="#" className="hover:text-blue-600">Wholesale & Corporate enquiries</a></li>
               <li><a href="#" className="hover:text-blue-600">Cancellation & refund policy</a></li>
             </ul>
-            <button className="mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm 2xl:text-base">
-              Send Enquiry
-            </button>
+<button
+  onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}
+  className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 text-blue-500 text-sm font-medium hover:bg-blue-100 hover:text-blue-600 transition"
+>
+  Send Enquiry →
+</button>
+
+
+
           </div>
 
           {/* Column 3 - Our Company */}
