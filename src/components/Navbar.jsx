@@ -272,13 +272,16 @@ const Navbar = () => {
     const searchParam = params.get("search");
     const highlightParam = params.get("highlight");
 
-    if (searchParam) {
-      setSearchTerm(searchParam);
-    } else if (highlightParam) {
-      setSearchTerm(highlightParam);
-    } else {
-      setSearchTerm("");
-    }
+   // Only show value if user typed manually (not dropdown navigation)
+const isMenuSearch = sessionStorage.getItem("menuSearch") === "true";
+
+if (!isMenuSearch) {
+  setSearchTerm(searchParam || highlightParam || "");
+}
+
+sessionStorage.removeItem("menuSearch");
+
+
   }, [location.search]);
 
   // Extract all product items for search suggestions (static + dynamic)
@@ -377,13 +380,15 @@ const Navbar = () => {
     setShowSuggestions(value.length > 0);
   };
 
-  const handleSuggestionClick = (suggestion) => {
-    const q = toCanonical(suggestion);
-    setSearchTerm(suggestion); // keep UI-friendly label
-    setShowSuggestions(false);
-    setMobileSearchOpen(false);
-    navigate(`/Products?search=${encodeURIComponent(q)}`);
-  };
+const handleSuggestionClick = (suggestion) => {
+  const q = toCanonical(suggestion);
+  sessionStorage.setItem("menuSearch", "true");   // 👈 store flag
+  setSearchTerm("");
+  setShowSuggestions(false);
+  setMobileSearchOpen(false);
+  navigate(`/Products?search=${encodeURIComponent(q)}`);
+};
+
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -479,18 +484,18 @@ const Navbar = () => {
                                   <ul className="space-y-2">
                                     {itemsToShow.map((subItem, subIdx) => (
                                       <li key={subIdx}>
-                                        <a
-                                          href={`/Products?highlight=${encodeURIComponent(
-                                            toCanonical(subItem)
-                                          )}`}
-                                          className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
-                                          onClick={() => {
-                                            setActiveDropdown(null);
-                                            setExpandedCategories(new Set());
-                                          }}
-                                        >
-                                          {subItem}
-                                        </a>
+           <button
+  onClick={() => {
+    sessionStorage.setItem("menuSearch", "true");
+    navigate(`/Products?highlight=${encodeURIComponent(toCanonical(subItem))}`);
+    setActiveDropdown(null);
+    setExpandedCategories(new Set());
+  }}
+  className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
+>
+  {subItem}
+</button>
+
                                       </li>
                                     ))}
                                   </ul>

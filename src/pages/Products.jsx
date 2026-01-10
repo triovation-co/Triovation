@@ -195,113 +195,68 @@ const Products = () => {
     }
   }, [sheetProducts, sortBy]);
 
-  // Enhanced intelligent search function with relevance-based ranking
-  const performSearch = async (query) => {
-    if (!query || query.trim() === '') {
-      setSearchResults([]);
-      setIsSearchActive(false);
-      setIsSearching(false);
-      return;
-    }
+ const normalizeTitle = (str = "") =>
+  str
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 
-    setIsSearching(true);
+const singularize = (word) => {
+  if (word.endsWith("ies")) return word.slice(0, -3) + "y";   // batteries → battery
+  if (word.endsWith("es")) return word.slice(0, -2);         // boxes → box
+  if (word.endsWith("s") && word.length > 3) return word.slice(0, -1); // planters → planter
+  return word;
+};
 
-    const searchPromise = new Promise((resolve) => {
-      setTimeout(() => {
-        const searchLower = query.toLowerCase().trim();
-        
-        const allProducts = [
-          ...enhancedProducts.festive,
-          ...enhancedProducts.corporate,
-          ...enhancedProducts.customisation,
-          ...enhancedProducts.homeDecor,
-          ...enhancedProducts.mechanical,
-          ...enhancedProducts.design,
-          ...enhancedProducts.education
-        ];
+const strictTitleMatch = (title, search) => {
+  const t = normalizeTitle(title);
+  const q = normalizeTitle(search);
 
-        const searchWords = searchLower.split(/\s+/);
-        
-        const createSearchVariations = (term) => {
-          const variations = [term];
-          
-          if (term.endsWith('s') && term.length > 2) {
-            variations.push(term.slice(0, -1));
-          } else {
-            variations.push(term + 's');
-          }
-          
-          if (term.endsWith('es') && term.length > 3) {
-            variations.push(term.slice(0, -2));
-          }
-          
-          if (term.endsWith('ies') && term.length > 4) {
-            variations.push(term.slice(0, -3) + 'y');
-          } else if (term.endsWith('y') && term.length > 2) {
-            variations.push(term.slice(0, -1) + 'ies');
-          }
-          
-          return variations;
-        };
-        
-        const scoredProducts = allProducts.map(product => {
-          const name = (product.name || '').toLowerCase();
-          const description = stripHtml(product.description || '').toLowerCase();
-          const category = (product.category || '').toLowerCase();
-          
-          let score = 0;
-          
-          if (name === searchLower) {
-            score = 10000;
-            return { product, score };
-          }
-          
-          let matchedWordsCount = 0;
-          const totalSearchWords = searchWords.length;
-          
-          searchWords.forEach(word => {
-            const variations = createSearchVariations(word);
-            
-            variations.forEach(variation => {
-              if (name.includes(variation)) {
-                matchedWordsCount++;
-                score += 100;
-              } else if (description.includes(variation)) {
-                matchedWordsCount++;
-                score += 30;
-              } else if (category.includes(variation)) {
-                matchedWordsCount++;
-                score += 10;
-              }
-            });
-          });
-          
-          const matchPercentage = (matchedWordsCount / totalSearchWords) * 100;
-          score += matchPercentage * 5;
-          
-          if (matchedWordsCount >= totalSearchWords) {
-            score += 200;
-          }
-          
-          return { product, score };
-        });
-        
-        const results = scoredProducts
-          .filter(item => item.score > 0)
-          .sort((a, b) => b.score - a.score)
-          .map(item => item.product);
-        
-        const finalResults = sortBy === 'featured' ? results : sortProductsLocally(results, sortBy);
-        
-        resolve(finalResults);
-      }, 300);
-    });
+  if (!q) return false;
 
-    const results = await searchPromise;
-    setSearchResults(results);
+  const titleWords = t.split(" ").map(singularize);
+  const queryWords = q.split(" ").map(singularize);
+
+  return queryWords.every(qw =>
+    titleWords.some(tw => tw.includes(qw) || qw.includes(tw))
+  );
+};
+
+
+
+const performSearch = async (query) => {
+  if (!query || !query.trim()) {
+    setSearchResults([]);
+    setIsSearchActive(false);
     setIsSearching(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+    return;
+  }
+
+  setIsSearching(true);
+
+  const allProducts = [
+    ...enhancedProducts.festive,
+    ...enhancedProducts.corporate,
+    ...enhancedProducts.customisation,
+    ...enhancedProducts.homeDecor,
+    ...enhancedProducts.mechanical,
+    ...enhancedProducts.design,
+    ...enhancedProducts.education
+  ];
+
+  const results = allProducts.filter(product =>
+    strictTitleMatch(product.name || "", query)
+  );
+
+  const finalResults =
+    sortBy === "featured" ? results : sortProductsLocally(results, sortBy);
+
+  setSearchResults(finalResults);
+  setIsSearching(false);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
 
   useEffect(() => {
     if (!pageReady) {
@@ -565,9 +520,6 @@ const Products = () => {
                 {searchSource === 'dropdown' || searchSource === 'banner' ? (
                   <>
                     <div className="mb-4">
-                      <svg className="mx-auto h-16 w-16 text-orange-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
                     </div>
                     <p className="text-gray-700 text-xl font-semibold mb-2">Stay tuned for more products!</p>
                     <p className="text-gray-500 mb-6">
@@ -768,9 +720,13 @@ const Products = () => {
                 <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
                   Email at <span className="font-semibold">Triovation.co@gmail.com</span> for any B2B gifting requirement!
                 </p>
-                <button className="px-6 py-2 bg-blue-400 hover:bg-blue-500 text-white rounded-lg transition text-sm sm:text-base">
-                  Contact Us
-                </button>
+<button
+  onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}
+  className="group relative overflow-hidden px-7 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-blue-400 text-white font-semibold tracking-wide shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
+>
+  <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition"></span>
+  Contact Us
+</button>
               </div>
             </div>
           </main>
