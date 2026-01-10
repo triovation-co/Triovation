@@ -654,7 +654,8 @@ const handleSuggestionClick = (suggestion) => {
 
         {/* Mobile Search Bar */}
         {mobileSearchOpen && (
-          <div className="md:hidden px-4 py-2 bg-white border-t animate-fadeIn relative">
+          <div className="md:hidden px-4 py-2 bg-white border-t animate-fadeIn relative pointer-events-auto">
+
             <div className="flex items-center space-x-2">
               <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center relative">
                 <Search className="h-5 w-5 text-gray-500 absolute left-2" />
@@ -690,7 +691,7 @@ const handleSuggestionClick = (suggestion) => {
 
             {/* Mobile Suggestions Dropdown */}
             {showSuggestions && filteredSuggestions.length > 0 && (
-              <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+              <div className="absolute left-4 right-4 mt-2 bg-white border border-gray-200 rounded-md shadow-lg z-[9999] pointer-events-auto">
                 {productsLoading && (
                   <div className="px-4 py-2 text-xs text-gray-500 bg-gray-50 border-b">
                     Loading more products...
