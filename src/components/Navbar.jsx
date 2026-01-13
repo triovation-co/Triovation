@@ -5,6 +5,7 @@ import Logo from "../assets/FinalLogo.png";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useProductManager } from "../hooks/useProductManager";
+
 const formatMenuLabel = (text = "") => {
   return text
     .replace(/([a-z])([A-Z])/g, "$1 $2")  // ContactUs → Contact Us
@@ -257,6 +258,8 @@ const Navbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchKey, setSearchKey] = useState(0);
+
   const searchRef = useRef(null);
   const timeoutRef = useRef(null);
 
@@ -266,23 +269,55 @@ const Navbar = () => {
   // Get products from Google Sheets
   const { products: sheetProducts, loading: productsLoading } = useProductManager();
 
+  // Force clear on mount if on Products without search
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (location.pathname === "/Products" && !params.get("search") && !params.get("highlight")) {
+      setSearchTerm("");
+      setShowSuggestions(false);
+    }
+  }, []);
+
   // Read search term from URL when component mounts or URL changes
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const searchParam = params.get("search");
     const highlightParam = params.get("highlight");
+    
+    const isMenuSearch = sessionStorage.getItem("menuSearch") === "true";
+    const wasCleared = sessionStorage.getItem("searchCleared") === "true";
 
-   // Only show value if user typed manually (not dropdown navigation)
-const isMenuSearch = sessionStorage.getItem("menuSearch") === "true";
+    // If we're on Products page with no search params, always clear
+    if (location.pathname === "/Products" && !searchParam && !highlightParam) {
+      setSearchTerm("");
+      setShowSuggestions(false);
+      sessionStorage.removeItem("menuSearch");
+      sessionStorage.removeItem("searchCleared");
+      return;
+    }
 
-if (!isMenuSearch) {
-  setSearchTerm(searchParam || highlightParam || "");
-}
+    // If search was just cleared, don't restore anything
+    if (wasCleared) {
+      setSearchTerm("");
+      sessionStorage.removeItem("searchCleared");
+      sessionStorage.removeItem("menuSearch");
+      return;
+    }
 
-sessionStorage.removeItem("menuSearch");
+    // Only update search term if there's actually a search/highlight param
+    if (searchParam || highlightParam) {
+      if (!isMenuSearch) {
+        setSearchTerm(searchParam || highlightParam || "");
+      } else {
+        setSearchTerm("");
+      }
+    } else {
+      // No search params = clear the field
+      setSearchTerm("");
+    }
 
-
-  }, [location.search]);
+    sessionStorage.removeItem("menuSearch");
+  }, [location.search, location.pathname]);
 
   // Extract all product items for search suggestions (static + dynamic)
   useEffect(() => {
@@ -323,6 +358,32 @@ sessionStorage.removeItem("menuSearch");
     const pathname = window.location.pathname;
     const page = pathname === "/" ? "Home" : pathname.substring(1);
     setCurrentPage(page);
+  }, []);
+  
+  useEffect(() => {
+    const handlePageShow = (e) => {
+      if (e.persisted) {
+        // Page restored from browser cache
+        setSearchTerm("");
+        setShowSuggestions(false);
+        sessionStorage.removeItem("menuSearch");
+      }
+    };
+
+    // Listen for clear search event from Products page
+    const handleClearSearch = () => {
+      setSearchTerm("");
+      setShowSuggestions(false);
+      setSearchKey(k => k + 1);
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+    window.addEventListener("clearSearch", handleClearSearch);
+    
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow);
+      window.removeEventListener("clearSearch", handleClearSearch);
+    };
   }, []);
 
   // Close suggestions when clicking outside
@@ -380,15 +441,14 @@ sessionStorage.removeItem("menuSearch");
     setShowSuggestions(value.length > 0);
   };
 
-const handleSuggestionClick = (suggestion) => {
-  const q = toCanonical(suggestion);
-  sessionStorage.setItem("menuSearch", "true");   // 👈 store flag
-  setSearchTerm("");
-  setShowSuggestions(false);
-  setMobileSearchOpen(false);
-  navigate(`/Products?search=${encodeURIComponent(q)}`);
-};
-
+  const handleSuggestionClick = (suggestion) => {
+    const q = toCanonical(suggestion);
+    sessionStorage.setItem("menuSearch", "true");
+    setSearchTerm("");
+    setShowSuggestions(false);
+    setMobileSearchOpen(false);
+    navigate(`/Products?search=${encodeURIComponent(q)}`);
+  };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -409,10 +469,11 @@ const handleSuggestionClick = (suggestion) => {
   const clearSearch = () => {
     setSearchTerm("");
     setShowSuggestions(false);
-    // Clear the search from URL if on Products page
-    if (location.pathname === "/Products") {
-      navigate("/Products");
-    }
+    setSearchKey(k => k + 1);
+    setMobileSearchOpen(false);
+    sessionStorage.setItem("menuSearch", "true");
+    sessionStorage.setItem("searchCleared", "true");
+    navigate("/Products", { replace: true });
   };
 
   return (
@@ -484,18 +545,17 @@ const handleSuggestionClick = (suggestion) => {
                                   <ul className="space-y-2">
                                     {itemsToShow.map((subItem, subIdx) => (
                                       <li key={subIdx}>
-           <button
-  onClick={() => {
-    sessionStorage.setItem("menuSearch", "true");
-    navigate(`/Products?highlight=${encodeURIComponent(toCanonical(subItem))}`);
-    setActiveDropdown(null);
-    setExpandedCategories(new Set());
-  }}
-  className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
->
-  {subItem}
-</button>
-
+                                        <button
+                                          onClick={() => {
+                                            sessionStorage.setItem("menuSearch", "true");
+                                            navigate(`/Products?highlight=${encodeURIComponent(toCanonical(subItem))}`);
+                                            setActiveDropdown(null);
+                                            setExpandedCategories(new Set());
+                                          }}
+                                          className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
+                                        >
+                                          {subItem}
+                                        </button>
                                       </li>
                                     ))}
                                   </ul>
@@ -523,11 +583,14 @@ const handleSuggestionClick = (suggestion) => {
             <div className="relative flex mr-6 lg:mr-10" ref={searchRef}>
               <form onSubmit={handleSearchSubmit} className="relative w-full">
                 <input
+                  key={searchKey}
                   type="text"
+                  name="product-search"
                   placeholder="Search For Decor"
                   value={searchTerm}
                   onChange={handleSearchChange}
                   onFocus={() => searchTerm && setShowSuggestions(true)}
+                  autoComplete="off"
                   className="pl-10 pr-10 py-1.5 border rounded-md text-sm lg:text-[17px] w-full max-w-xs focus:outline-none focus:ring-1 focus:ring-gray-400 transition-all duration-300 focus:shadow-md focus:border-red-300"
                 />
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
@@ -655,17 +718,19 @@ const handleSuggestionClick = (suggestion) => {
         {/* Mobile Search Bar */}
         {mobileSearchOpen && (
           <div className="md:hidden px-4 py-2 bg-white border-t animate-fadeIn relative pointer-events-auto">
-
             <div className="flex items-center space-x-2">
               <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center relative">
                 <Search className="h-5 w-5 text-gray-500 absolute left-2" />
                 <input
+                  key={searchKey}
                   type="text"
+                  name="product-search-mobile"
                   placeholder="Search For Decor"
                   value={searchTerm}
                   onChange={handleSearchChange}
                   onFocus={() => searchTerm && setShowSuggestions(true)}
                   autoFocus
+                  autoComplete="off"
                   className="flex-1 border rounded-md pl-9 pr-8 py-1.5 text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 focus:border-red-300 w-full transition-all"
                 />
                 {searchTerm && (
@@ -700,14 +765,19 @@ const handleSuggestionClick = (suggestion) => {
                 <ul className="py-2">
                   {filteredSuggestions.map((suggestion, index) => (
                     <li key={index}>
-                      <button
-                        type="button"
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-red-500 transition-colors flex items-center"
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onTouchStart={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          handleSuggestionClick(suggestion);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 active:bg-gray-100 transition-colors flex items-center cursor-pointer"
                       >
                         <Search size={14} className="mr-3 text-gray-400" />
                         {suggestion}
-                      </button>
+                      </div>
                     </li>
                   ))}
                 </ul>

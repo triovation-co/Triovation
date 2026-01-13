@@ -284,13 +284,17 @@ const performSearch = async (query) => {
     }
   }, [location.search, enhancedProducts, pageReady]);
 
-  const clearSearch = () => {
-    setSearchQuery('');
-    setIsSearchActive(false);
-    setSearchResults([]);
-    setIsSearching(false);
-    window.history.replaceState({}, document.title, window.location.pathname);
-  };
+const clearSearch = () => {
+  setSearchQuery('');
+  setIsSearchActive(false);
+  setSearchResults([]);
+  setIsSearching(false);
+  sessionStorage.setItem("searchCleared", "true");
+  window.history.replaceState({}, document.title, window.location.pathname);
+  
+  // Dispatch custom event to notify navbar
+  window.dispatchEvent(new CustomEvent('clearSearch'));
+};
 
   const handleSortChange = async (newSortBy) => {
     setSortBy(newSortBy);
