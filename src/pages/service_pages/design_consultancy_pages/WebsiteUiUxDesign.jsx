@@ -1,6 +1,6 @@
 import React from "react";
 
-import f1 from "../../../assets/design_consultancy/Website_UIUx_design/Frame 15 (1).png";
+import f1 from "../../../assets/design_consultancy/Website_UIUx_design/Frame15.png";
 import f2 from "../../../assets/design_consultancy/Website_UIUx_design/research 3.png";
 
 const frames = [f1, f2];

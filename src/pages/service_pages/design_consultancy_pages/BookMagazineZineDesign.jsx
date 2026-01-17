@@ -1,8 +1,8 @@
 import React from "react";
 
-import f1 from "../../../assets/design_consultancy/Book_magazine_zinedesign/Frame 16 (1).png";
-import f2 from "../../../assets/design_consultancy/Book_magazine_zinedesign/Frame 32.png";
-import f3 from "../../../assets/design_consultancy/Book_magazine_zinedesign/Frame 33.png";
+import f1 from "../../../assets/design_consultancy/Book_magazine_zinedesign/Frame16.png";
+import f2 from "../../../assets/design_consultancy/Book_magazine_zinedesign/Frame32.png";
+import f3 from "../../../assets/design_consultancy/Book_magazine_zinedesign/Frame33.png";
 
 const frames = [f1, f2, f3];
 
