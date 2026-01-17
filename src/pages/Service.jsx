@@ -4,9 +4,13 @@ import Manufacturing_support from '../assets/Manufacturing_support.jpg'
 import Design_Consultancy from '../assets/Design_Consultancy.jpg'
 import Startup_Venture_Support from '../assets/Startup_Venture_Support.jpg'
 import WhatsAppButton from "../components/whatsapp";
+import { useNavigate } from "react-router-dom";
+
 
 const Service = () => {
   const sectionRefs = useRef([]);
+  const navigate = useNavigate();
+
 
   // Smooth scroll function
   const scrollToSection = (sectionId) => {
@@ -136,9 +140,13 @@ development and crafting a compelling brand identity to expert logo design and a
 aesthetic redesign of your existing products. Our goal is to create distinctive, market ready
 solutions that captivate your audience and establish a powerful, cohesive brand presence.
               </p>
-            <button className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
-              <span className="relative z-10">Explore Now</span>
-            </button>
+<button
+  onClick={() => navigate("/design-consultancy")}
+  className="relative border-2 border-red-400 rounded-lg p-2 px-8 text-white bg-red-400 hover:bg-red-500 hover:border-red-500 overflow-hidden group transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+>
+  <span className="relative z-10">Explore Now</span>
+</button>
+
           </div>
       
                 {/* Left Column: Image */}

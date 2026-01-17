@@ -25,6 +25,22 @@ import WhatsAppButton from "./components/whatsapp.jsx";
 import ScrollToTop from "./components/ScrollToTop";
 import ThankYou from "./pages/ThankYou";
 import EnquiryModal from "./components/EnquiryModal";
+import DesignConsultancy from "./pages/service_pages/DesignConsultancy.jsx";
+import BrandIdentityDesign from "./pages/service_pages/design_consultancy_pages/BrandIdentityDesign";
+import BrandManualDesign from "./pages/service_pages/design_consultancy_pages/BrandManualDesign";
+import DigitalIllustrationDesign from "./pages/service_pages/design_consultancy_pages/DigitalIllustrationDesign";
+import BusinessCollateralDesign from "./pages/service_pages/design_consultancy_pages/BusinessCollateralDesign";
+import BrandCampaignsDesign from "./pages/service_pages/design_consultancy_pages/BrandCampaignsDesign";
+import SocialMediaDesign from "./pages/service_pages/design_consultancy_pages/SocialMediaDesign";
+import DigitalPaintingDesign from "./pages/service_pages/design_consultancy_pages/DigitalPaintingDesign";
+import WebsiteUiUxDesign from "./pages/service_pages/design_consultancy_pages/WebsiteUiUxDesign";
+import BookMagazineZineDesign from "./pages/service_pages/design_consultancy_pages/BookMagazineZineDesign";
+import { MessageCircle, Mail } from "lucide-react";
+import { createPortal } from "react-dom";
+
+
+
+
 
 
 
@@ -78,6 +94,10 @@ function App() {
       sessionStorage.setItem('introWatched', 'true');
     }, 500);
   };
+
+  const openEnquiry = () => {
+  window.dispatchEvent(new Event("open-enquiry-form"));
+};
 
 
   return (
@@ -150,12 +170,62 @@ function App() {
             <Route path="/shipping-delivery" element={<ShippingPolicy />} />
             <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
             <Route path="/thank-you" element={<ThankYou />} />
-        
+            <Route path="/design-consultancy" element={<DesignConsultancy />} />
+            <Route path="/design-consultancy/brand-identity-design" element={<BrandIdentityDesign />}/>
+            <Route path="/design-consultancy/brand-manual-design" element={<BrandManualDesign />}/>
+            <Route path="/design-consultancy/digital-illustration-design" element={<DigitalIllustrationDesign />}/>
+            <Route path="/design-consultancy/business-collateral-design" element={<BusinessCollateralDesign />}/>
+            <Route path="/design-consultancy/brand-campaigns-design" element={<BrandCampaignsDesign />}/>
+            <Route path="/design-consultancy/social-media-design" element={<SocialMediaDesign />}/>
+            <Route path="/design-consultancy/digital-painting-design" element={<DigitalPaintingDesign />}/>
+            <Route path="/design-consultancy/website-uiux-design" element={<WebsiteUiUxDesign />}/>
+            <Route path="/design-consultancy/book-magazine-zine-design" element={<BookMagazineZineDesign />}/>
+
+
+
+
+
+
 
           </Routes>
              <EnquiryModal />
         </main>
 <WhatsAppButton/>
+{createPortal(
+  <div
+    style={{
+      position: "fixed",
+      inset: 0,
+      zIndex: 9999,
+      pointerEvents: "none",
+    }}
+  >
+    <button
+      onClick={openEnquiry}
+      style={{ pointerEvents: "auto" }}
+      className="
+        fixed right-6 bottom-25
+        bg-[#0F172A] text-white
+        px-3.5 py-3.5
+        rounded-full shadow-2xl
+        writing-vertical-rl
+        font-semibold tracking-widest
+        flex items-center gap-2
+
+        /* Hover & interaction */
+        hover:bg-[#020617]
+        hover:scale-105
+        hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.4)]
+        active:scale-95
+
+        transition-all duration-300
+      "
+    >
+      <Mail size={35} />
+    </button>
+  </div>,
+  document.body
+)}
 
         {/* Footer */}
         <Footer />
