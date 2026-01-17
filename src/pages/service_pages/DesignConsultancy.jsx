@@ -8,7 +8,7 @@ import businessCollateral from "../../assets/design_consultancy/Business_collate
 import brandCampaigns from "../../assets/design_consultancy/Brand_Campaigns/Thumbnail.png";
 import socialMedia from "../../assets/design_consultancy/Social_Media/Thumbnail.png";
 import digitalPainting from "../../assets/design_consultancy/Digital_painting/Thumbnail.jpg";
-import websiteUiux from "../../assets/design_consultancy/Website_UIUx_design/Thambnail.png";
+import websiteUiux from "../../assets/design_consultancy/Website_UiUx_design/Thambnail.png";
 import bookMagazine from "../../assets/design_consultancy/Book_magazine_zinedesign/Thumbnail.png";
 
 const DesignConsultancy = () => {
