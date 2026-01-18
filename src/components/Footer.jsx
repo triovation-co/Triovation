@@ -21,8 +21,18 @@ const Footer = () => {
 From custom gifts to creative solutions! let’s build<br></br> something extraordinary together.
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
-            <p className="text-sm 2xl:text-base">+91-8828293426</p>
-            <p className="text-sm 2xl:text-base">triovation.co@gmail.com</p>
+            <a 
+  href="tel:+918828293426"
+  className="text-sm 2xl:text-base hover:text-blue-600"
+>  +91-8828293426</a>
+<br/>
+            <a 
+  href="mailto:triovation.co@gmail.com"
+  className="text-sm 2xl:text-base text-blue-600 hover:underline"
+>
+  triovation.co@gmail.com
+</a>
+
             <p className="text-sm 2xl:text-base">India </p>
             <div className="flex gap-3 mt-4">
               <a href="#" className="text-pink-600 text-2xl"><i className="fab fa-instagram"></i></a>
@@ -85,7 +95,7 @@ From custom gifts to creative solutions! let’s build<br></br> something extrao
 
         {/* Bottom Bar */}
         <div className="border-t py-4 text-center text-sm 2xl:text-base text-gray-500">
-          Â© 2025 <span className="font-semibold">Triovation</span> All Rights Reserved.
+          Â© 2026 <span className="font-semibold">Triovation</span> All Rights Reserved.
         </div>
       </footer>
     </>

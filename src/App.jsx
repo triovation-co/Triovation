@@ -35,17 +35,8 @@ import SocialMediaDesign from "./pages/service_pages/design_consultancy_pages/So
 import DigitalPaintingDesign from "./pages/service_pages/design_consultancy_pages/DigitalPaintingDesign";
 import WebsiteUiUxDesign from "./pages/service_pages/design_consultancy_pages/WebsiteUiUxDesign";
 import BookMagazineZineDesign from "./pages/service_pages/design_consultancy_pages/BookMagazineZineDesign";
-import { MessageCircle, Mail } from "lucide-react";
+import { MessageCircleQuestion, Headset  } from "lucide-react";
 import { createPortal } from "react-dom";
-
-
-
-
-
-
-
-
-
 
 function App() {
   const [introComplete, setIntroComplete] = useState(
@@ -55,28 +46,23 @@ function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const videoRef = useRef(null);
 
-
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-
   useEffect(() => {
     if (!introComplete && videoRef.current) {
-      // Load the video source
       videoRef.current.load();
-      // Try to play
       videoRef.current.play().catch(err => {
         console.log("Autoplay prevented:", err);
       });
     }
   }, [introComplete, isMobile]);
-
 
   const handleVideoEnd = () => {
     setFadeOut(true);
@@ -85,7 +71,6 @@ function App() {
       sessionStorage.setItem('introWatched', 'true');
     }, 500);
   };
-
 
   const handleSkip = () => {
     setFadeOut(true);
@@ -96,18 +81,16 @@ function App() {
   };
 
   const openEnquiry = () => {
-  window.dispatchEvent(new Event("open-enquiry-form"));
-};
-
+    window.dispatchEvent(new Event("open-enquiry-form"));
+  };
 
   return (
     <CartProvider>
-      {/* Video Intro */}
+      {/* ===== VIDEO INTRO (ALWAYS ON TOP) ===== */}
       {!introComplete && (
-        <div 
+        <div
           className={`fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden transition-opacity duration-500 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
         >
-          {/* Desktop Video */}
           {!isMobile && (
             <video
               ref={videoRef}
@@ -121,8 +104,6 @@ function App() {
             </video>
           )}
 
-
-          {/* Mobile Video */}
           {isMobile && (
             <video
               ref={videoRef}
@@ -139,100 +120,90 @@ function App() {
         </div>
       )}
 
+      {/* ===== ENTIRE APP ONLY RENDERS AFTER INTRO ===== */}
+      {introComplete && (
+        <div className="flex flex-col min-h-screen w-auto">
+          <Navbar />
+          <ScrollToTop />
 
-      {/* Main App Content */}
-      <div className={`flex flex-col min-h-screen w-auto transition-opacity duration-500 ${introComplete ? 'opacity-100' : 'opacity-0'}`}>
-        {/* Navbar */}
-        <Navbar />
-<ScrollToTop />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/Customize_product" element={<CustomizationPage />} />
+              <Route path="/customize/:id" element={<CustomizationPage />} />
+              <Route path="/About" element={<About />} />
+              <Route path="/Products" element={<Products />} />
+              <Route path="/Consultancy" element={<Service />} />
+              <Route path="/Education" element={<Work_Education />} />
+              <Route path="/ContactUs" element={<ContactUs />} />
+              <Route path="/Category_page/:categoryName" element={<Category_page />} />
+              <Route path="/product/:id" element={<ProductDetails />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/product-grid" element={<CustomizableProductGrid />} />
+              <Route path="/grid" element={<CustomizableProductGrid />} />
+              <Route path="/admin" element={<CustomizableProductGrid />} />
+              <Route path="/terms-condition" element={<TermsAndConditions />} />
+              <Route path="/privacy-policies" element={<PrivacyPolicy />} />
+              <Route path="/shipping-delivery" element={<ShippingPolicy />} />
+              <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
+              <Route path="/thank-you" element={<ThankYou />} />
+              <Route path="/design-consultancy" element={<DesignConsultancy />} />
+              <Route path="/design-consultancy/brand-identity-design" element={<BrandIdentityDesign />} />
+              <Route path="/design-consultancy/brand-manual-design" element={<BrandManualDesign />} />
+              <Route path="/design-consultancy/digital-illustration-design" element={<DigitalIllustrationDesign />} />
+              <Route path="/design-consultancy/business-collateral-design" element={<BusinessCollateralDesign />} />
+              <Route path="/design-consultancy/brand-campaigns-design" element={<BrandCampaignsDesign />} />
+              <Route path="/design-consultancy/social-media-design" element={<SocialMediaDesign />} />
+              <Route path="/design-consultancy/digital-painting-design" element={<DigitalPaintingDesign />} />
+              <Route path="/design-consultancy/website-uiux-design" element={<WebsiteUiUxDesign />} />
+              <Route path="/design-consultancy/book-magazine-zine-design" element={<BookMagazineZineDesign />} />
+            </Routes>
 
-        {/* Main content */}
-        <main className="flex-grow">
-          <Routes>
-            
-            <Route path="/" element={<Home />} />
-            <Route path="/Customize_product" element={<CustomizationPage />}/>
-            <Route path="/customize/:id" element={<CustomizationPage />} />
-            <Route path="/About" element={<About />} />
-            <Route path="/Products" element={<Products />} />
-            <Route path="/Consultancy" element={<Service />} />
-            <Route path="/Education" element={<Work_Education />} />
-            <Route path="/ContactUs" element={<ContactUs />} />
-            <Route path="/Category_page/:categoryName" element={<Category_page />} />
-            <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/product-grid" element={<CustomizableProductGrid />} />
-            <Route path="/grid" element={<CustomizableProductGrid />} />
-            <Route path="/admin" element={<CustomizableProductGrid />} />
-            <Route path="/terms-condition" element={<TermsAndConditions />} />
-            <Route path="/privacy-policies" element={<PrivacyPolicy />} />
-            <Route path="/shipping-delivery" element={<ShippingPolicy />} />
-            <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
-            <Route path="/thank-you" element={<ThankYou />} />
-            <Route path="/design-consultancy" element={<DesignConsultancy />} />
-            <Route path="/design-consultancy/brand-identity-design" element={<BrandIdentityDesign />}/>
-            <Route path="/design-consultancy/brand-manual-design" element={<BrandManualDesign />}/>
-            <Route path="/design-consultancy/digital-illustration-design" element={<DigitalIllustrationDesign />}/>
-            <Route path="/design-consultancy/business-collateral-design" element={<BusinessCollateralDesign />}/>
-            <Route path="/design-consultancy/brand-campaigns-design" element={<BrandCampaignsDesign />}/>
-            <Route path="/design-consultancy/social-media-design" element={<SocialMediaDesign />}/>
-            <Route path="/design-consultancy/digital-painting-design" element={<DigitalPaintingDesign />}/>
-            <Route path="/design-consultancy/website-uiux-design" element={<WebsiteUiUxDesign />}/>
-            <Route path="/design-consultancy/book-magazine-zine-design" element={<BookMagazineZineDesign />}/>
+            <EnquiryModal />
+          </main>
 
+          <WhatsAppButton />
 
+          {createPortal(
+            <div
+              style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 9999,
+                pointerEvents: "none",
+              }}
+            >
+              <button
+                onClick={openEnquiry}
+                style={{ pointerEvents: "auto" }}
+                className="
+  fixed 
+  right-4 md:right-6.5 
+  bottom-23 md:bottom-25
+  bg-[#0F172A] text-white
+  px-3.5 py-3.5
+  rounded-full shadow-2xl
+  writing-vertical-rl
+  font-semibold tracking-widest
+  flex items-center gap-2
+  hover:bg-[#020617]
+  hover:scale-105
+  hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.4)]
+  active:scale-95
+  transition-all duration-300
+" >
+               <MessageCircleQuestion size={28} className="md:size-8" />
+              </button>
+            </div>,
+            document.body
+          )}
 
-
-
-
-
-          </Routes>
-             <EnquiryModal />
-        </main>
-<WhatsAppButton/>
-{createPortal(
-  <div
-    style={{
-      position: "fixed",
-      inset: 0,
-      zIndex: 9999,
-      pointerEvents: "none",
-    }}
-  >
-    <button
-      onClick={openEnquiry}
-      style={{ pointerEvents: "auto" }}
-      className="
-        fixed right-6 bottom-25
-        bg-[#0F172A] text-white
-        px-3.5 py-3.5
-        rounded-full shadow-2xl
-        writing-vertical-rl
-        font-semibold tracking-widest
-        flex items-center gap-2
-
-        /* Hover & interaction */
-        hover:bg-[#020617]
-        hover:scale-105
-        hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.4)]
-        active:scale-95
-
-        transition-all duration-300
-      "
-    >
-      <Mail size={35} />
-    </button>
-  </div>,
-  document.body
-)}
-
-        {/* Footer */}
-        <Footer />
-      </div>
+          <Footer />
+        </div>
+      )}
     </CartProvider>
   );
 }
-
 
 export default App;
