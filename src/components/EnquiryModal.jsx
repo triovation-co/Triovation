@@ -12,38 +12,44 @@ const EnquiryModal = () => {
     return () => window.removeEventListener("open-enquiry-form", openModal);
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
 
-    const form = new FormData(e.target);
+  const form = new FormData(e.target);
 
-    const data = {
-      name: form.get("name"),
-      email: form.get("email"),
-      phone: form.get("phone"),
-      message: form.get("message"),
-    };
-
-    try {
-      await fetch(
-        "https://script.google.com/macros/s/AKfycbxzU1x17yJEzyGhqKDdlbwSf81_eig3ZFLLxuyWDHNEKMie_J4C3yIeZC2psGJ3Tfgx/exec",
-        {
-          method: "POST",
-          mode: "no-cors",
-          body: JSON.stringify(data),
-        }
-      );
-
-      e.target.reset();
-      setOpen(false);
-      navigate("/thank-you");
-    } finally {
-      setLoading(false);
-    }
+  const data = {
+    name: form.get("name"),
+    email: form.get("email"),
+    phone: form.get("phone"),
+    message: form.get("message"),
   };
 
-  if (!open) return null;
+  try {
+    await fetch(
+      "https://script.google.com/macros/s/AKfycbxzU1x17yJEzyGhqKDdlbwSf81_eig3ZFLLxuyWDHNEKMie_J4C3yIeZC2psGJ3Tfgx/exec",
+      {
+        method: "POST",
+        mode: "no-cors",
+        body: JSON.stringify(data),
+      }
+    );
+
+    e.target.reset();
+
+    // 🌀 let spinner render FIRST
+    setTimeout(() => {
+      window.location.assign("/thank-you");
+    }, 400);
+
+  } catch (err) {
+    setLoading(false);
+  }
+};
+
+
+if (!open && !loading) return null;
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
