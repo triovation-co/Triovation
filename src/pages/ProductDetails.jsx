@@ -82,6 +82,7 @@ const ProductDetails = () => {
       ...educationWorkshopsProducts,
     ];
 
+
     const allProducts = [...allStaticProducts, ...sheetProducts];
     const foundProduct = allProducts.find((p) => p.id.toString() === id);
 
@@ -181,6 +182,17 @@ const ProductDetails = () => {
   }
 
   const availableImages = getAvailableImages();
+      const optimizeImage = (url, width = 900) => {
+  if (!url) return url;
+
+  // Google Drive direct image optimization
+  const match = url.match(/\/d\/([^/]+)/);
+  if (match) {
+    return `https://lh3.googleusercontent.com/d/${match[1]}=w${width}`;
+  }
+
+  return url;
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white ">
@@ -212,14 +224,19 @@ const ProductDetails = () => {
             <div className="space-y-3 sm:space-y-4">
               {/* Main Image */}
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group">
-                <img
-                  src={availableImages[selectedImage] || 'https://via.placeholder.com/500x500'}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/500x500';
-                  }}
-                />
+               <img
+  src={optimizeImage(availableImages[selectedImage], 900) || 'https://via.placeholder.com/500x500'}
+  alt={product.name}
+  loading="eager"
+  fetchpriority="high"
+  decoding="async"
+  className="w-full h-full object-cover transition duration-500 blur-sm"
+  onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+  onError={(e) => {
+    e.currentTarget.src = 'https://via.placeholder.com/500x500';
+  }}
+/>
+
                 
                 {/* Navigation Arrows - Only show if multiple images */}
                 {availableImages.length > 1 && (
@@ -263,14 +280,18 @@ const ProductDetails = () => {
                             : 'border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        <img
-                          src={img || 'https://via.placeholder.com/80x80'}
-                          alt={`${product.name} ${index + 1}`}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/80x80';
-                          }}
-                        />
+                  <img
+  src={optimizeImage(img, 200) || 'https://via.placeholder.com/80x80'}
+  alt={`${product.name} ${index + 1}`}
+  loading="lazy"
+  decoding="async"
+  className="w-full h-full object-cover transition blur-sm"
+  onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+  onError={(e) => {
+    e.currentTarget.src = 'https://via.placeholder.com/80x80';
+  }}
+/>
+
                       </button>
                     ))}
                   </div>

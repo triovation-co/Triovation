@@ -7,6 +7,8 @@ import bulkorder2 from "../assets/bulkorder2.png";
 import WhatsAppButton from "../components/whatsapp.jsx";
 import HeroBanner from "../components/HeroBanner.jsx";
 import { lazy, Suspense } from "react";
+import { useCart } from "../context/CartContext";
+
 const ProductSection = lazy(() =>
   import("../components/ProductSection.jsx")
 );
@@ -74,6 +76,8 @@ const scrollToRef = (ref) => {
 const Products = () => {
   // Use React Router's useLocation hook
   const location = useLocation();
+  const { addToCart } = useCart();
+
   
   // State
   const [showAllFestive, setShowAllFestive] = useState(false);
@@ -475,11 +479,16 @@ const clearSearch = () => {
                     >
                       <Link to={`/product/${product.id}`}>
                         <div className="relative">
-                          <img 
-                            src={product.image} 
-                            alt={product.name} 
-                            className="rounded-2xl w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover"
-                          />
+                         <img
+  src={optimizeImage(product.image, 600)}
+  alt={product.name}
+  loading={index < 4 ? "eager" : "lazy"}
+  fetchpriority={index < 4 ? "high" : "low"}
+  decoding="async"
+  className="rounded-2xl w-full h-full object-cover transition duration-500 ease-out blur-sm"
+  onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+/>
+
                           {product.savePercent && (
                             <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
                               Save {product.savePercent}
@@ -508,11 +517,23 @@ const clearSearch = () => {
                           </p>
                         </Link>
                         <div className="w-full flex justify-center mt-auto">
-                          <button
-                            className="bg-orange-500 hover:bg-orange-600 text-white px-3 lg:px-2 2xl:px-4 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-md lg:text-xs 2xl:text-lg rounded-md transition-colors w-auto"
-                          >
-                            Add to Cart
-                          </button>
+<button
+  onClick={(e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category || "Search Result"
+    });
+  }}
+  className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-md transition-colors"
+>
+  Add to Cart
+</button>
+
                         </div>
                       </div>
                     </div>
