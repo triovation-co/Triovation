@@ -22,21 +22,24 @@ const ProductSection = ({
   sectionRef,
   scrollToRef,
   shouldHighlight,
-  buttonColor = "bg-orange-500"
+  buttonColor = "bg-orange-500",
+  handleAddToCart  // ← ADD THIS PROP
 }) => {
-  const { addToCart } = useCart();
-
-  const handleAddToCart = (product, e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      category: title
-    });
-  };
+  // REMOVE the useCart hook and local handleAddToCart function
+  // const { addToCart } = useCart();  // ← DELETE THIS
+  
+  // DELETE THIS ENTIRE FUNCTION:
+  // const handleAddToCart = (product, e) => {
+  //   e.preventDefault();
+  //   e.stopPropagation();
+  //   addToCart({
+  //     id: product.id,
+  //     name: product.name,
+  //     price: product.price,
+  //     image: product.image,
+  //     category: title
+  //   });
+  // };
 
   const safeDisplayedProducts = Array.isArray(displayedProducts) ? displayedProducts : [];
   const safeProducts = Array.isArray(products) ? products : [];
@@ -111,7 +114,11 @@ const ProductSection = ({
                 <div className="mt-auto">
                   <button
                     className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-md transition"
-                    onClick={(e) => handleAddToCart(product, e)}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleAddToCart(product);  // ← USE THE PROP FUNCTION
+                    }}
                   >
                     Add to Cart
                   </button>

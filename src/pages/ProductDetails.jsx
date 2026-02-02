@@ -53,6 +53,7 @@ const CustomSpecificationDisplay = ({ customSpecifications }) => {
 };
 
 const ProductDetails = () => {
+   const [showAdded, setShowAdded] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
@@ -95,18 +96,23 @@ const ProductDetails = () => {
     setLoading(false);
   }, [id, sheetProducts, sheetLoading]);
 
-  const handleAddToCart = () => {
-    if (product) {
-      addToCart({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        quantity: quantity,
-      });
-    }
-  };
+const handleAddToCart = () => {
+  if (product) {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: quantity,
+    });
 
+    // ✅ popup trigger
+    setShowAdded(true);
+    setTimeout(() => setShowAdded(false), 2000);
+  }
+};
+
+  
   const handleCustomize = () => {
     navigate(`/customize/${product.id}`);
   };
@@ -457,6 +463,17 @@ const ProductDetails = () => {
           padding-bottom: env(safe-area-inset-bottom);
         }
       `}</style>
+{showAdded && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center mt-200 pointer-events-none">
+<div className="bg-orange-400 text-white px-8 py-3 rounded-xl shadow-xl text-md font-semibold flex items-center gap-2 animate-scale-in">
+  <span className="text-green">✔</span>
+  Added to cart
+</div>
+
+  </div>
+)}
+
+
     </div>
   );
 };

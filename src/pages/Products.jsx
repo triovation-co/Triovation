@@ -18,6 +18,19 @@ import {
   mechanicalProducts, designConsultancyProducts, educationWorkshopsProducts,
 } from "../assets/data.jsx";
 
+const optimizeImage = (url, width = 900) => {
+  if (!url) return url;
+
+  // Google Drive direct image optimization
+  const match = url.match(/\/d\/([^/]+)/);
+  if (match) {
+    return `https://lh3.googleusercontent.com/d/${match[1]}=w${width}`;
+  }
+
+  return url;
+};
+
+
 const SectionSkeleton = () => (
   <div className="px-4 mb-20">
     <div className="h-6 w-40 bg-gray-200 rounded mb-6 animate-pulse"></div>
@@ -74,6 +87,8 @@ const scrollToRef = (ref) => {
 };
 
 const Products = () => {
+
+  const [showAdded, setShowAdded] = useState(false);
   // Use React Router's useLocation hook
   const location = useLocation();
   const { addToCart } = useCart();
@@ -97,6 +112,7 @@ const Products = () => {
   
   const [sortBy, setSortBy] = useState('featured');
   const { products: sheetProducts, loading: productsLoading, refreshProducts } = useProductManager();
+
 
   // Force minimum loading time of 1.5 seconds for initial load
   useEffect(() => {
@@ -146,6 +162,21 @@ const Products = () => {
     design: designConsultancyProducts,
     education: educationWorkshopsProducts
   });
+  
+ const handleAddToCart = (product) => {
+  addToCart({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.image,
+    category: product.category || "Products",
+    quantity: 1,
+  });
+
+  setShowAdded(true);
+  setTimeout(() => setShowAdded(false), 2000);
+};
+
 
   // Update enhanced products when sheet data loads or sorting changes
   useEffect(() => {
@@ -422,7 +453,12 @@ const clearSearch = () => {
 
   return (
     <div className="min-h-screen">
-
+      {showAdded && (
+  <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] bg-green-500 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-2 transition-all duration-300 ease-in-out">
+    <span className="text-xl">✓</span>
+    Product Added to cart
+  </div>
+)}
       {/* FULL WIDTH HERO BANNER */}
       {!isSearchActive && <HeroBanner />}
 
@@ -477,25 +513,26 @@ const clearSearch = () => {
                       key={product.id}
                       className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full"
                     >
-                      <Link to={`/product/${product.id}`}>
-                        <div className="relative">
-                         <img
-  src={optimizeImage(product.image, 600)}
-  alt={product.name}
-  loading={index < 4 ? "eager" : "lazy"}
-  fetchpriority={index < 4 ? "high" : "low"}
-  decoding="async"
-  className="rounded-2xl w-full h-full object-cover transition duration-500 ease-out blur-sm"
-  onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
-/>
+<Link to={`/product/${product.id}`}>
+  <div className="relative aspect-square">
+    <img
+      src={optimizeImage(product.image, 600)}
+      alt={product.name}
+      loading="lazy"
+      fetchpriority="low"
+      decoding="async"
+      className="rounded-2xl w-full h-full object-cover transition duration-500 ease-out blur-sm"
+      onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+    />
 
-                          {product.savePercent && (
-                            <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
-                              Save {product.savePercent}
-                            </div>
-                          )}
-                        </div>
-                      </Link>
+    {product.savePercent && (
+      <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+        Save {product.savePercent}
+      </div>
+    )}
+  </div>
+</Link>
+
 
                       <div className="p-4 flex flex-col flex-grow text-center">
                         <Link to={`/product/${product.id}`}>
@@ -518,17 +555,11 @@ const clearSearch = () => {
                         </Link>
                         <div className="w-full flex justify-center mt-auto">
 <button
-  onClick={(e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      category: product.category || "Search Result"
-    });
-  }}
+onClick={(e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  handleAddToCart(product);
+}}
   className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-md transition-colors"
 >
   Add to Cart
@@ -594,6 +625,7 @@ const clearSearch = () => {
                 scrollToRef={scrollToRef}
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
+                handleAddToCart={handleAddToCart} 
               />
               </Suspense>
             )}
@@ -610,6 +642,7 @@ const clearSearch = () => {
                 scrollToRef={scrollToRef}
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
+                handleAddToCart={handleAddToCart} 
               />
               </Suspense>
             )}
@@ -626,6 +659,7 @@ const clearSearch = () => {
                 scrollToRef={scrollToRef}
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
+                handleAddToCart={handleAddToCart} 
               />
               </Suspense>
             )}
@@ -642,6 +676,7 @@ const clearSearch = () => {
                 scrollToRef={scrollToRef}
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
+                handleAddToCart={handleAddToCart} 
               />
               </Suspense>
             )}
@@ -658,6 +693,7 @@ const clearSearch = () => {
                 scrollToRef={scrollToRef}
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
+                handleAddToCart={handleAddToCart} 
               />
               </Suspense>
             )}
@@ -674,6 +710,7 @@ const clearSearch = () => {
                 scrollToRef={scrollToRef}
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
+                handleAddToCart={handleAddToCart} 
               />
               </Suspense>
             )}
@@ -690,12 +727,14 @@ const clearSearch = () => {
                 scrollToRef={scrollToRef}
                 shouldHighlight={shouldHighlight}
                 buttonColor="bg-orange-400"
+                handleAddToCart={handleAddToCart} 
               />
               </Suspense>
             )}
           </>
         )}
       </div>
+
 
       {/* Corporate Bulk Gifting Section - Only show if not searching */}
       {!isSearchActive && (
@@ -758,8 +797,12 @@ const clearSearch = () => {
         </div>
       )}
       
+      
       <WhatsAppButton />
+
+
     </div>
+    
   );
 };
 
