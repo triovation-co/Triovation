@@ -64,6 +64,8 @@ const CANONICAL = {
   "airpod engraving": "airpod engraving",
   "silver coin printing": "coin printing",
   "fabric printing": "fabric printing",
+  "katana": "katana",
+  "sword": "sword",
 
   // Home & Decor
   "clocks": "clock",
@@ -137,6 +139,8 @@ const ALIASES = new Map([
   ["t shirts", "tshirt"],
   ["t-shirt", "tshirt"],
   ["t-shirts", "tshirt"],
+  ["katana & sword", "katana"],
+  ["katana & sword", "sword"],
 ]);
 
 
@@ -204,6 +208,8 @@ const menuData = {
           "Airpod engraving",
           "Silver coin printing",
           "Fabric Printing",
+          "Katana",
+          "Sword",
         ],
       },
       {
