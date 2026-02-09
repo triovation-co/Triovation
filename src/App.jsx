@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -14,8 +14,6 @@ import Cart from "./pages/Cart";
 import Checkout from "./components/Checkout";
 import CustomizableProductGrid from "./components/CustomizableProductGrid";
 import { CartProvider } from './context/CartContext';
-// import Video from "./assets/Triovation_video.mov";
-// import Mobile from "./assets/mobile_video.mp4";
 import CustomizationPage from './pages/CustomizationPage.jsx';
 import TermsAndConditions from "./footer_pages/Terms_Condition.jsx";
 import PrivacyPolicy from "./footer_pages/Privacy_Policies.jsx";
@@ -35,118 +33,79 @@ import SocialMediaDesign from "./pages/service_pages/design_consultancy_pages/So
 import DigitalPaintingDesign from "./pages/service_pages/design_consultancy_pages/DigitalPaintingDesign";
 import WebsiteUiUxDesign from "./pages/service_pages/design_consultancy_pages/WebsiteUiUxDesign";
 import BookMagazineZineDesign from "./pages/service_pages/design_consultancy_pages/BookMagazineZineDesign";
-import { MessageCircleQuestion, Headset  } from "lucide-react";
+import { MessageCircleQuestion } from "lucide-react";
 import { createPortal } from "react-dom";
+import SitemapGenerator from './components/SitemapGenerator';
 
 function App() {
-  // const [introComplete, setIntroComplete] = useState(
-  //   sessionStorage.getItem('introWatched') === 'true'
-  // );
-  // const [fadeOut, setFadeOut] = useState(false);
-  // const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  // const videoRef = useRef(null);
-
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     setIsMobile(window.innerWidth < 768);
-  //   };
-
-  //   window.addEventListener('resize', handleResize);
-  //   return () => window.removeEventListener('resize', handleResize);
-  // }, []);
-
-  // useEffect(() => {
-  //   if (!introComplete && videoRef.current) {
-  //     videoRef.current.load();
-  //     videoRef.current.play().catch(err => {
-  //       console.log("Autoplay prevented:", err);
-  //     });
-  //   }
-  // }, [introComplete, isMobile]);
-
-  // const handleVideoEnd = () => {
-  //   setFadeOut(true);
-  //   setTimeout(() => {
-  //     setIntroComplete(true);
-  //     sessionStorage.setItem('introWatched', 'true');
-  //   }, 500);
-  // };
-
-  // const handleSkip = () => {
-  //   setFadeOut(true);
-  //   setTimeout(() => {
-  //     setIntroComplete(true);
-  //     sessionStorage.setItem('introWatched', 'true');
-  //   }, 500);
-  // };
-
   const openEnquiry = () => {
     window.dispatchEvent(new Event("open-enquiry-form"));
   };
 
+  // Add skip to main content for accessibility
+  useEffect(() => {
+    const skipLink = document.getElementById('skip-to-main');
+    if (skipLink) {
+      skipLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) {
+          mainContent.focus();
+          mainContent.scrollIntoView();
+        }
+      });
+    }
+  }, []);
+
   return (
     <CartProvider>
-      {/* ===== VIDEO INTRO (COMMENTED OUT) ===== */}
-      {/* {!introComplete && (
-        <div
-          className={`fixed inset-0 z-50 bg-black flex items-center justify-center overflow-hidden transition-opacity duration-500 ${fadeOut ? 'opacity-0' : 'opacity-100'}`}
-        >
-          {!isMobile && (
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover"
-              autoPlay
-              muted
-              playsInline
-              onEnded={handleVideoEnd}
-            >
-              <source src={Video} type="video/mp4" />
-            </video>
-          )}
+      {/* SEO: Skip to main content link for accessibility */}
+      <a 
+        id="skip-to-main"
+        href="#main-content" 
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-black focus:text-white focus:rounded focus:outline-none"
+        aria-label="Skip to main content"
+      >
+        Skip to main content
+      </a>
 
-          {isMobile && (
-            <video
-              ref={videoRef}
-              className="w-full h-full object-cover"
-              autoPlay
-              muted
-              playsInline
-              webkit-playsinline="true"
-              onEnded={handleVideoEnd}
-            >
-              <source src={Mobile} type="video/mp4" />
-            </video>
-          )}
-        </div>
-      )} */}
-
-      {/* ===== ENTIRE APP (VIDEO INTRO DISABLED) ===== */}
       <div className="flex flex-col min-h-screen w-auto">
         <Navbar />
         <ScrollToTop />
 
-        <main className="flex-grow">
+        {/* Main content with semantic HTML and accessibility */}
+        <main 
+          id="main-content"
+          className="flex-grow" 
+          role="main"
+          tabIndex={-1}
+        >
           <Routes>
+            {/* Main Pages */}
             <Route path="/" element={<Home />} />
-            <Route path="/Customize_product" element={<CustomizationPage />} />
-            <Route path="/customize/:id" element={<CustomizationPage />} />
             <Route path="/About" element={<About />} />
             <Route path="/Products" element={<Products />} />
             <Route path="/Consultancy" element={<Service />} />
             <Route path="/Education" element={<Work_Education />} />
             <Route path="/ContactUs" element={<ContactUs />} />
+
+            {/* Product Pages */}
             <Route path="/Category_page/:categoryName" element={<Category_page />} />
             <Route path="/product/:id" element={<ProductDetails />} />
+            <Route path="/Customize_product" element={<CustomizationPage />} />
+            <Route path="/customize/:id" element={<CustomizationPage />} />
+
+            {/* E-commerce Pages */}
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
+            <Route path="/thank-you" element={<ThankYou />} />
+
+            {/* Admin/Grid Pages */}
             <Route path="/product-grid" element={<CustomizableProductGrid />} />
             <Route path="/grid" element={<CustomizableProductGrid />} />
             <Route path="/admin" element={<CustomizableProductGrid />} />
-            <Route path="/terms-condition" element={<TermsAndConditions />} />
-            <Route path="/privacy-policies" element={<PrivacyPolicy />} />
-            <Route path="/shipping-delivery" element={<ShippingPolicy />} />
-            <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
-            <Route path="/thank-you" element={<ThankYou />} />
+
+            {/* Design Consultancy Pages */}
             <Route path="/design-consultancy" element={<DesignConsultancy />} />
             <Route path="/design-consultancy/brand-identity-design" element={<BrandIdentityDesign />} />
             <Route path="/design-consultancy/brand-manual-design" element={<BrandManualDesign />} />
@@ -157,13 +116,23 @@ function App() {
             <Route path="/design-consultancy/digital-painting-design" element={<DigitalPaintingDesign />} />
             <Route path="/design-consultancy/website-uiux-design" element={<WebsiteUiUxDesign />} />
             <Route path="/design-consultancy/book-magazine-zine-design" element={<BookMagazineZineDesign />} />
+
+            {/* Legal/Footer Pages */}
+            <Route path="/terms-condition" element={<TermsAndConditions />} />
+            <Route path="/privacy-policies" element={<PrivacyPolicy />} />
+            <Route path="/shipping-delivery" element={<ShippingPolicy />} />
+            <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
+
+            <Route path="/admin/sitemap" element={<SitemapGenerator />} />
           </Routes>
 
           <EnquiryModal />
         </main>
 
+        {/* WhatsApp Button */}
         <WhatsAppButton />
 
+        {/* Enquiry Button - Fixed Position */}
         {createPortal(
           <div
             style={{
@@ -172,27 +141,33 @@ function App() {
               zIndex: 9999,
               pointerEvents: "none",
             }}
+            role="complementary"
+            aria-label="Enquiry assistance"
           >
             <button
               onClick={openEnquiry}
               style={{ pointerEvents: "auto" }}
               className="
-fixed 
-right-4 md:right-6.5 
-bottom-23 md:bottom-25
-bg-[#0F172A] text-white
-px-3.5 py-3.5
-rounded-full shadow-2xl
-writing-vertical-rl
-font-semibold tracking-widest
-flex items-center gap-2
-hover:bg-[#020617]
-hover:scale-105
-hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.4)]
-active:scale-95
-transition-all duration-300
-" >
-             <MessageCircleQuestion size={28} className="md:size-8" />
+                fixed 
+                right-4 md:right-6.5 
+                bottom-23 md:bottom-25
+                bg-[#0F172A] text-white
+                px-3.5 py-3.5
+                rounded-full shadow-2xl
+                writing-vertical-rl
+                font-semibold tracking-widest
+                flex items-center gap-2
+                hover:bg-[#020617]
+                hover:scale-105
+                hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.4)]
+                active:scale-95
+                transition-all duration-300
+                focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2
+              "
+              aria-label="Open enquiry form for assistance"
+              type="button"
+            >
+              <MessageCircleQuestion size={28} className="md:size-8" aria-hidden="true" />
             </button>
           </div>,
           document.body

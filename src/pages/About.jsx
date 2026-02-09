@@ -50,11 +50,38 @@ const About = () => {
     };
   }, []);
 
+  // Structured data for About page
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "Triovation",
+      "foundingDate": "2025",
+      "description": "A creative collective bringing together design, manufacturing, gifting, and hands-on education",
+      "knowsAbout": [
+        "Product Design",
+        "Corporate Gifting",
+        "Brand Strategy",
+        "3D Fabrication",
+        "Educational Workshops"
+      ]
+    }
+  };
+
   return (
     <>
+      {/* SEO: Structured Data */}
+      <script 
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(aboutSchema)
+        }}
+      />
+
       <div className="overflow-x-hidden relative">
         {/* Animated Background Elements - Gradient Waves */}
-        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
           {/* Soft gradient orbs */}
           <div 
             className="absolute -top-1/3 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-indigo-100/30 via-purple-50/20 to-transparent rounded-full blur-3xl"
@@ -100,57 +127,63 @@ const About = () => {
         </div>
 
         {/* First Section - Our Story */}
-        <main 
+        <section 
           className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${visibleSections.story ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           data-section="story"
+          aria-labelledby="our-story-heading"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
             {/* Left Column - Image */}
-            <div className="relative flex justify-center md:justify-start group">
+            <figure className="relative flex justify-center md:justify-start group">
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
                             mx-auto relative transition-all duration-700 hover:scale-105 shadow-lg">
                 <img
                   src={Our_story}
-                  alt="Vivek and Shubhra"
+                  alt="Triovation's journey - creative workspace showcasing our story and evolution"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  width="800"
+                  height="480"
+                  loading="eager"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
               </div>
-            </div>
+            </figure>
 
             {/* Right Column - Text */}
             <div className="text-center md:text-left space-y-6">
-              <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-slide-in-right">
+              <h1 id="our-story-heading" className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-slide-in-right">
                 <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">Our Story</span>
-                <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transform origin-left scale-x-0 animate-expand-width"></div>
+                <div className="absolute -bottom-3 left-0 md:left-0 w-20 h-1 bg-gradient-to-r from-rose-500 to-pink-500 rounded-full transform origin-left scale-x-0 animate-expand-width" aria-hidden="true"></div>
               </h1>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-300 hover:text-gray-700 transition-colors duration-300">
-              It all began in 2025 with a simple conversation and a shared thought, why does turning an idea into something real feel so disconnected? Design, branding, startup guidance and gifting rarely came together the way they should.
-
-<br></br><br></br>That spark grew into a vision to build a space where ideas could truly come alive. A place where creativity meets strategy, and imagination finds direction. That’s how TRIOVATION came to life bringing together Design, Gifting, Startup Ventures, and Education under one roof.
-             
-              </p>
+              <div className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-up delay-300 hover:text-gray-700 transition-colors duration-300">
+                <p className="mb-4">
+                  It all began in 2025 with a simple conversation and a shared thought, why does turning an idea into something real feel so disconnected? Design, branding, startup guidance and gifting rarely came together the way they should.
+                </p>
+                <p>
+                  That spark grew into a vision to build a space where ideas could truly come alive. A place where creativity meets strategy, and imagination finds direction. That's how TRIOVATION came to life bringing together Design, Gifting, Startup Ventures, and Education under one roof.
+                </p>
+              </div>
             </div>
-
-          </div>
-        </main>
+          </article>
+        </section>
 
         {/* Second Section - Our Approach */}
-        <main 
+        <section 
           className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${visibleSections.approach ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           data-section="approach"
+          aria-labelledby="our-approach-heading"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
             {/* Left Column - Text */}
             <div className="order-2 md:order-1 space-y-6">
-              <h1 className="text-4xl font-bold text-gray-900 text-center md:text-left">
+              <h2 id="our-approach-heading" className="text-4xl font-bold text-gray-900 text-center md:text-left">
                 <span className="bg-gradient-to-r from-rose-600 to-pink-600 bg-clip-text text-transparent">
                   Our Approach
                 </span>
-              </h1>
-              <ol className="space-y-6">
+              </h2>
+              <ol className="space-y-6" role="list">
                 {[
                   {
                     title: "Ideation",
@@ -177,11 +210,11 @@ const About = () => {
                     key={index}
                     className="flex items-start space-x-4"
                   >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-[#f47e82] text-white flex items-center justify-center font-bold">
+                    <span className="flex-shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-rose-500 to-pink-500 text-white flex items-center justify-center font-bold text-sm" aria-hidden="true">
                       {index + 1}
-                    </div>
+                    </span>
                     <div>
-                      <h3 className="text-xl font-semibold text-gray-800">{step.title}</h3>
+                      <h3 className="font-semibold text-gray-900 text-lg mb-1">{step.title}</h3>
                       <p className="text-gray-600">{step.description}</p>
                     </div>
                   </li>
@@ -190,48 +223,55 @@ const About = () => {
             </div>
 
             {/* Right Column - Image */}
-            <div className="relative flex justify-center md:justify-end order-1 md:order-2 group">
+            <figure className="relative flex justify-center md:justify-end order-1 md:order-2 group">
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
                             mx-auto relative transition-all duration-700 hover:scale-105 shadow-lg">
                 <img
                   src={Our_approach}
-                  alt="Vivek and Shubhra"
+                  alt="Our approach to design and manufacturing - structured process from ideation to delivery"
                   className="w-full h-full object-cover scale-100 transition-transform duration-700 group-hover:scale-110"
+                  width="800"
+                  height="480"
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
               </div>
-            </div>
-          </div>
-        </main>
+            </figure>
+          </article>
+        </section>
 
         {/* Third Section - Our Craftsmanship */}
         <section 
           className={`container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center md:text-left relative z-10 transition-all duration-1000 ${visibleSections.craftsmanship ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           data-section="craftsmanship"
+          aria-labelledby="our-craftsmanship-heading"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
+          <article className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-center">
             {/* Left Column - Image */}
-            <div className="relative flex justify-center md:justify-start group">
+            <figure className="relative flex justify-center md:justify-start group">
               <div className="rounded-t-full overflow-hidden 
                             w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] 
                             h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] 
                             mx-auto relative transition-all duration-700 hover:scale-105 shadow-lg">
                 <img
                   src={Our_crasftsmenship}
-                  alt="Vivek and Shubhra"
+                  alt="Triovation's craftsmanship - detailed view of our precision manufacturing and design work"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  width="800"
+                  height="480"
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-amber-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-amber-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
               </div>
-            </div>
+            </figure>
 
             {/* Right Column - Text */}
             <div className="space-y-6">
-              <h2 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-fade-in-left">
+              <h2 id="our-craftsmanship-heading" className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 relative animate-fade-in-left">
                 Our Craftsmanship
-                <div className="absolute -bottom-3 left-0 md:left-0 w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transform origin-left scale-x-0 animate-scale-x delay-300"></div>
+                <div className="absolute -bottom-3 left-0 md:left-0 w-24 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-full transform origin-left scale-x-0 animate-scale-x delay-300" aria-hidden="true"></div>
               </h2>
               <div className="space-y-4">
                 <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed animate-fade-in-left delay-200 hover:text-gray-700 transition-colors duration-300">
@@ -242,7 +282,7 @@ const About = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </article>
         </section>
         
         <WhatsAppButton />

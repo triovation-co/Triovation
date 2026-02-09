@@ -843,7 +843,7 @@ const Navbar = () => {
         </div>
       </nav>
 
-      <style jsx>{`
+      <style jsx={true}>{`
         @keyframes fadeIn {
           from {
             opacity: 0;

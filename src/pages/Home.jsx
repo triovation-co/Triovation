@@ -12,7 +12,6 @@ import WhatsAppButton from "../components/whatsapp";
 import Triovationmain from "../assets/Triovation_main.jpg";
 import { useNavigate } from "react-router-dom";
 
-
 const Home = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
@@ -26,37 +25,83 @@ const Home = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const handleServiceClick = (serviceName) => {
-  const routes = {
-    "Corporate Gifting": "/Products",
-    "Customized Gifting": "/Products",
-    "Design Consultancy": "/Consultancy",
-    "Learn and Fabricate": "/Education",
-    "Learning Zone": "/Education",
-    "Education": "/Education",
+  const handleServiceClick = (serviceName) => {
+    const routes = {
+      "Corporate Gifting": "/Products",
+      "Customized Gifting": "/Products",
+      "Design Consultancy": "/Consultancy",
+      "Learn and Fabricate": "/Education",
+      "Learning Zone": "/Education",
+      "Education": "/Education",
+    };
+
+    if (routes[serviceName]) {
+      navigate(routes[serviceName]);
+    }
   };
 
-  if (routes[serviceName]) {
-    navigate(routes[serviceName]);
-  }
-};
-
-
   const services = [
-    { name: "Corporate Gifting", image: corporateGifting },
-    { name: "Customized Gifting", image: customizedGifting },
-    { name: "Design Consultancy", image: designConsultancy },
-    { name: "Learn and Fabricate", image: Learn_fab },
-    { name: "Learning Zone", image: learningZone },
-    { name: "Education", image: education },
+    { name: "Corporate Gifting", image: corporateGifting, description: "Premium corporate gifts and bulk gifting solutions" },
+    { name: "Customized Gifting", image: customizedGifting, description: "Personalized gifts tailored to your needs" },
+    { name: "Design Consultancy", image: designConsultancy, description: "Professional design and branding services" },
+    { name: "Learn and Fabricate", image: Learn_fab, description: "Hands-on learning and fabrication workshops" },
+    { name: "Learning Zone", image: learningZone, description: "Educational resources and learning materials" },
+    { name: "Education", image: education, description: "Comprehensive educational programs and kits" },
   ];
+
+  // Structured data for the organization
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Triovation",
+    "description": "A one stop platform where imagination takes shape as reality. Creative group transforming concepts into crafted realities through Design, Corporate Gifting, Startup Venture, and Education.",
+    "url": window.location.origin,
+    "logo": `${window.location.origin}/logo.png`,
+    "foundingDate": "2024",
+    "sameAs": [
+      // Add your social media links here
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "Customer Service",
+      "email": "Triovation.co@gmail.com"
+    }
+  };
+
+  const servicesSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": services.map((service, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "item": {
+        "@type": "Service",
+        "name": service.name,
+        "description": service.description
+      }
+    }))
+  };
 
   return (
     <div className="overflow-x-hidden relative">
+      {/* SEO: Structured Data */}
+      <script 
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(organizationSchema)
+        }}
+      />
+      <script 
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(servicesSchema)
+        }}
+      />
+
       {/* Animated Background Elements - Gradient Mesh */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         {/* Animated gradient mesh */}
         <div 
           className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-pink-50/40 via-transparent to-transparent rounded-full blur-3xl"
@@ -94,27 +139,31 @@ const handleServiceClick = (serviceName) => {
       </div>
 
       {/* Main Content Section */}
-      <main
+      <section
         className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${
           isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
+        aria-labelledby="hero-heading"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
           {/* Left Column - Image */}
-          <div className="relative flex justify-center md:justify-start group">
+          <figure className="relative flex justify-center md:justify-start group">
             <div className="rounded-t-full overflow-hidden w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] mx-auto bg-black relative transition-all duration-700 hover:scale-105 shadow-lg">
               <img
                 src={Triovationmain}
-                alt="Vivek and Shubhra"
+                alt="Triovation - Creative design and manufacturing workspace with team members working on innovative products"
                 className="w-full h-full object-cover scale-100 transition-transform duration-700 group-hover:scale-110"
+                width="800"
+                height="480"
+                loading="eager"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </div>
-          </div>
+          </figure>
 
           {/* Right Column - Text */}
-          <div className="text-center md:text-left mt-20 space-y-6">
-            <h1 className="text-3xl lg:text-4xl xl:text-[34px] font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 animate-fade-in-up">
+          <article className="text-center md:text-left mt-20 space-y-6">
+            <h1 id="hero-heading" className="text-3xl lg:text-4xl xl:text-[34px] font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 animate-fade-in-up">
               <span className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] bg-clip-text text-transparent">
                 TRIOVATION
               </span>{" "}
@@ -141,18 +190,18 @@ const handleServiceClick = (serviceName) => {
                 and a commitment to innovation.
               </p>
             </div>
-          </div>
+          </article>
         </div>
-      </main>
+      </section>
 
       {/* Second Section - Why Choose Us */}
-      <main className="container mx-auto py-2 sm:py-4 md:py-7 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-10 lg:gap-16 xl:gap-24 items-center">
+      <section className="container mx-auto py-2 sm:py-4 md:py-7 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10" aria-labelledby="why-choose-us">
+        <article className="grid grid-cols-1 md:grid-cols-1 gap-10 lg:gap-16 xl:gap-24 items-center">
           <div className="text-center md:text-left order-2 md:order-1 space-y-6">
-            <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 text-center relative">
+            <h2 id="why-choose-us" className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 text-center relative">
               Why Choose Us
-              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full"></div>
-            </h1>
+              <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full" aria-hidden="true"></div>
+            </h2>
             <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed hover:text-gray-700 transition-colors duration-300">
               <strong className="text-[#f47e82]">TRIOVATION</strong> is a
               creative collective bringing together design, manufacturing,
@@ -167,11 +216,11 @@ const handleServiceClick = (serviceName) => {
               support, or an engaging workshop.
             </p>
           </div>
-        </div>
-      </main>
+        </article>
+      </section>
 
       {/* Enhanced Cards Section */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-6 lg:px-12 mb-16">
+      <section className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6 sm:gap-8 px-4 sm:px-6 lg:px-12 mb-16" aria-label="Our key strengths">
         {[
           {
             id: 1,
@@ -189,75 +238,88 @@ const handleServiceClick = (serviceName) => {
             desc: "We teach and inspire adhering to the current trends. Through design consultancy to develop brand positioning, current technology machine workshops, and interactive learning kits, TRIOVATION blends creativity with education, empowering both professionals and kids.",
           },
         ].map((card, index) => (
-          <div
+          <article
             key={card.id}
             className="relative group bg-white rounded-2xl shadow-lg p-6 sm:p-8 flex flex-col items-center text-center transition-all duration-700 max-w-sm mx-auto w-full hover:-translate-y-6 hover:shadow-2xl hover:shadow-[#f47e82]/20 border border-transparent hover:border-[#f47e82]/30 animate-fade-in-up"
             style={{ animationDelay: `${index * 200}ms` }}
           >
             {/* Animated Background Glow */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#f47e82]/5 to-[#fca5a5]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-br from-[#f47e82]/5 to-[#fca5a5]/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
 
             {/* Circle Badge */}
-            <div className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-[#f47e82] to-[#fca5a5] flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-[#f47e82]/30 transform">
+            <div className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-[#f47e82] to-[#fca5a5] flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-[#f47e82]/30 transform" aria-label={`Feature ${card.id}`}>
               <span className="text-white text-xl sm:text-2xl font-extrabold">
                 {card.id}
               </span>
             </div>
 
             {/* Title */}
-            <span className="relative text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-800 group-hover:text-[#f47e82] transition-colors duration-500 z-10">
+            <h3 className="relative text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-800 group-hover:text-[#f47e82] transition-colors duration-500 z-10">
               {card.title}
-            </span>
+            </h3>
 
             {/* Description */}
             <p className="relative text-gray-600 text-sm sm:text-base text-justify leading-relaxed group-hover:text-gray-700 transition-colors duration-300 z-10">
               {card.desc}
             </p>
-          </div>
+          </article>
         ))}
-      </div>
+      </section>
 
       {/* Services Section */}
-      <section className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center relative z-10">
-        <div className="space-y-8 mb-16">
-          <h1 className="text-3xl lg:text-4xl xl:text-4xl font-bold text-gray-800 relative">
+      <section className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-10 sm:py-12 md:py-16 lg:py-20 xl:py-24 text-center relative z-10" aria-labelledby="our-services">
+        <header className="space-y-8 mb-16">
+          <h2 id="our-services" className="text-3xl lg:text-4xl xl:text-4xl font-bold text-gray-800 relative">
             Our Services
-            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full"></div>
-          </h1>
+            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full" aria-hidden="true"></div>
+          </h2>
           <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed max-w-4xl mx-auto hover:text-gray-700 transition-colors duration-300">
             We blend creativity with technology to deliver exceptional
             solutions. With a team of skilled professionals, we've been
             transforming ideas into reality since 2024. Our commitment to
             quality, innovation, and client satisfaction sets us apart.
           </p>
-        </div>
+        </header>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20">
-{services.map((service, index) => (
-  <div
-    key={index}
-    onClick={() => handleServiceClick(service.name)}
-    className="flex flex-col items-center group cursor-pointer animate-fade-in-up"
-    style={{ animationDelay: `${index * 150}ms` }}
-  >
-
+        <nav 
+          className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20"
+          aria-label="Available services"
+        >
+          {services.map((service, index) => (
+            <article
+              key={index}
+              onClick={() => handleServiceClick(service.name)}
+              className="flex flex-col items-center group cursor-pointer animate-fade-in-up"
+              style={{ animationDelay: `${index * 150}ms` }}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  handleServiceClick(service.name);
+                }
+              }}
+              aria-label={`Learn more about ${service.name}`}
+            >
               {/* Service Thumbnails */}
-              <div className="rounded-t-full overflow-hidden w-40 h-40 sm:w-50 sm:h-60 md:w-50 md:h-55 lg:w-60 lg:h-60 xl:w-74 xl:h-80 mb-4 relative transition-all duration-700 hover:scale-110">
+              <figure className="rounded-t-full overflow-hidden w-40 h-40 sm:w-50 sm:h-60 md:w-50 md:h-55 lg:w-60 lg:h-60 xl:w-74 xl:h-80 mb-4 relative transition-all duration-700 hover:scale-110">
                 <img
                   src={service.image}
-                  alt={service.name}
+                  alt={`${service.name} - ${service.description}`}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
+                  width="296"
+                  height="320"
+                  loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#f47e82]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#f47e82]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
+              </figure>
 
-              <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800 group-hover:text-[#f47e82] transition-all duration-300 hover:scale-105">
+              <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800 group-hover:text-[#f47e82] transition-all duration-300 hover:scale-105">
                 {service.name}
-              </p>
-            </div>
+              </h3>
+            </article>
           ))}
-        </div>
+        </nav>
       </section>
 
       {/* Custom CSS Animations */}
@@ -301,8 +363,7 @@ const handleServiceClick = (serviceName) => {
           -webkit-background-clip: text;
         }
       `}</style>
-        <WhatsAppButton />
-
+      <WhatsAppButton />
     </div>    
   );
 };
