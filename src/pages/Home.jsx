@@ -56,7 +56,7 @@ const Home = () => {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Triovation",
-    "description": "A one stop platform where imagination takes shape as reality. Creative group transforming concepts into crafted realities through Design, Corporate Gifting, Startup Venture, and Education.",
+    "description": "Triovation provides premium B2B gifting solutions and customized corporate merchandise for businesses. Elevate client and employee experiences with branded gifts.",
     "url": window.location.origin,
     "logo": `${window.location.origin}/logo.png`,
     "foundingDate": "2024",
@@ -167,7 +167,7 @@ const Home = () => {
               <span className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] bg-clip-text text-transparent">
                 TRIOVATION
               </span>{" "}
-              — Where Ideas Take Forms
+              – B2B Gifting Solutions for Modern Businesses
             </h1>
             <div className="space-y-4 text-gray-600 text-lg lg:text-xl xl:text-[19px] leading-relaxed">
               <p className="animate-fade-in-up delay-200">
