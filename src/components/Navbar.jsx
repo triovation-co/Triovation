@@ -505,7 +505,16 @@ const Navbar = () => {
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
             {["Home", "About", "Products", "Consultancy", "Education", "ContactUs"].map(
-              (item, i) => (
+              (item, i) => {
+                // Point 8: "Consultancy" in nav should go directly to /design-consultancy
+                // to avoid the headline-cut and same-page redirect issue.
+                const getHref = (navItem) => {
+                  if (navItem === "Home") return "/";
+                  if (navItem === "Consultancy") return "/design-consultancy";
+                  return `/${navItem}`;
+                };
+
+                return (
                 <div
                   key={i}
                   className="relative"
@@ -513,7 +522,7 @@ const Navbar = () => {
                   onMouseLeave={handleMenuLeave}
                 >
                   <a
-                    href={`/${item === "Home" ? "" : item}`}
+                    href={getHref(item)}
                     onClick={() => {
                       setIsOpen(false);
                       setCurrentPage(item === "Home" ? "Home" : item);
@@ -582,7 +591,8 @@ const Navbar = () => {
                     </div>
                   )}
                 </div>
-              )
+              );
+              }
             )}
 
             {/* Desktop Search */}
@@ -825,10 +835,18 @@ const Navbar = () => {
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
             {["Home", "About", "Products", "Consultancy", "Education", "ContactUs"].map(
-              (item, i) => (
+              (item, i) => {
+                // Point 8: Consultancy → /design-consultancy directly
+                const getMobileHref = (navItem) => {
+                  if (navItem === "Home") return "/";
+                  if (navItem === "Consultancy") return "/design-consultancy";
+                  return `/${navItem}`;
+                };
+
+                return (
                 <a
                   key={i}
-                  href={`/${item === "Home" ? "" : item}`}
+                  href={getMobileHref(item)}
                   onClick={() => {
                     setIsOpen(false);
                     setCurrentPage(item === "Home" ? "Home" : item);
@@ -837,13 +855,24 @@ const Navbar = () => {
                 >
              {formatMenuLabel(item)}
                 </a>
-              )
+                );
+              }
             )}
+
+            {/* Point 6: Wholesale & Corporate enquiries — proper link to ContactUs page.
+                Was previously an anchor (#) that just scrolled to the top of the same page. */}
+            <a
+              href="/ContactUs"
+              onClick={() => setIsOpen(false)}
+              className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded border-t pt-3"
+            >
+              Wholesale &amp; Corporate Enquiries
+            </a>
           </div>
         </div>
       </nav>
 
-      <style jsx={true}>{`
+      <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;

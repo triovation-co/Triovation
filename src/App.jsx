@@ -36,6 +36,9 @@ import BookMagazineZineDesign from "./pages/service_pages/design_consultancy_pag
 import { MessageCircleQuestion } from "lucide-react";
 import { createPortal } from "react-dom";
 import SitemapGenerator from './components/SitemapGenerator';
+import OrderSuccess from "./components/OrderSuccess";
+import CartToast from "./components/CartToast";
+
 
 function App() {
   const openEnquiry = () => {
@@ -99,6 +102,7 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/order-success" element={<OrderSuccess />} />
 
             {/* Admin/Grid Pages */}
             <Route path="/product-grid" element={<CustomizableProductGrid />} />
@@ -131,6 +135,9 @@ function App() {
 
         {/* WhatsApp Button */}
         <WhatsAppButton />
+
+        {/* Cart Toast Notification — fires when item added to cart (Point 3) */}
+        <CartToast />
 
         {/* Enquiry Button - Fixed Position */}
         {createPortal(

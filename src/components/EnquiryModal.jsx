@@ -35,12 +35,18 @@ const handleSubmit = async (e) => {
       }
     );
 
+    // Point 1: Reset the form fields AND close the modal BEFORE redirecting.
+    // Without this, the modal stays mounted with old data visible during the
+    // 400ms spinner delay, and if the user navigates back the form shows
+    // the previously submitted values.
     e.target.reset();
+    setOpen(false);
+    setLoading(false);
 
-    // 🌀 let spinner render FIRST
+    // Redirect to thank-you page
     setTimeout(() => {
       window.location.assign("/thank-you");
-    }, 400);
+    }, 100);
 
   } catch (err) {
     setLoading(false);

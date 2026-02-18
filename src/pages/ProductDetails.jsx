@@ -53,7 +53,7 @@ const CustomSpecificationDisplay = ({ customSpecifications }) => {
 };
 
 const ProductDetails = () => {
-   const [showAdded, setShowAdded] = useState(false);
+
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
@@ -96,23 +96,23 @@ const ProductDetails = () => {
     setLoading(false);
   }, [id, sheetProducts, sheetLoading]);
 
-const handleAddToCart = () => {
-  if (product) {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      quantity: quantity,
-    });
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantity,
+      });
+      window.dispatchEvent(new CustomEvent('cart-item-added', {
+        detail: { name: product.name, image: product.image, price: product.price }
+      }));
 
-    // ✅ popup trigger
-    setShowAdded(true);
-    setTimeout(() => setShowAdded(false), 2000);
-  }
-};
+    }
+  };
 
-  
+
   const handleCustomize = () => {
     navigate(`/customize/${product.id}`);
   };
@@ -127,6 +127,9 @@ const handleAddToCart = () => {
         image: product.image,
         quantity: quantity,
       });
+      window.dispatchEvent(new CustomEvent('cart-item-added', {
+        detail: { name: product.name, image: product.image, price: product.price }
+      }));
       // Then redirect to cart
       navigate('/cart');
     }
@@ -188,17 +191,17 @@ const handleAddToCart = () => {
   }
 
   const availableImages = getAvailableImages();
-      const optimizeImage = (url, width = 900) => {
-  if (!url) return url;
+  const optimizeImage = (url, width = 900) => {
+    if (!url) return url;
 
-  // Google Drive direct image optimization
-  const match = url.match(/\/d\/([^/]+)/);
-  if (match) {
-    return `https://lh3.googleusercontent.com/d/${match[1]}=w${width}`;
-  }
+    // Google Drive direct image optimization
+    const match = url.match(/\/d\/([^/]+)/);
+    if (match) {
+      return `https://lh3.googleusercontent.com/d/${match[1]}=w${width}`;
+    }
 
-  return url;
-};
+    return url;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white ">
@@ -230,20 +233,20 @@ const handleAddToCart = () => {
             <div className="space-y-3 sm:space-y-4">
               {/* Main Image */}
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group">
-               <img
-  src={optimizeImage(availableImages[selectedImage], 900) || 'https://via.placeholder.com/500x500'}
-  alt={product.name}
-  loading="eager"
-  fetchpriority="high"
-  decoding="async"
-  className="w-full h-full object-cover transition duration-500 blur-sm"
-  onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
-  onError={(e) => {
-    e.currentTarget.src = 'https://via.placeholder.com/500x500';
-  }}
-/>
+                <img
+                  src={optimizeImage(availableImages[selectedImage], 900) || 'https://via.placeholder.com/500x500'}
+                  alt={product.name}
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                  className="w-full h-full object-cover transition duration-500 blur-sm"
+                  onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://via.placeholder.com/500x500';
+                  }}
+                />
 
-                
+
                 {/* Navigation Arrows - Only show if multiple images */}
                 {availableImages.length > 1 && (
                   <>
@@ -257,7 +260,7 @@ const handleAddToCart = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                       </svg>
                     </button>
-                    
+
                     {/* Right Arrow */}
                     <button
                       onClick={handleNextImage}
@@ -280,23 +283,22 @@ const handleAddToCart = () => {
                       <button
                         key={index}
                         onClick={() => setSelectedImage(index)}
-                        className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all touch-manipulation ${
-                          selectedImage === index
-                            ? 'border-orange-500 scale-105'
-                            : 'border-gray-200 hover:border-gray-300'
-                        }`}
+                        className={`flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 transition-all touch-manipulation ${selectedImage === index
+                          ? 'border-orange-500 scale-105'
+                          : 'border-gray-200 hover:border-gray-300'
+                          }`}
                       >
-                  <img
-  src={optimizeImage(img, 200) || 'https://via.placeholder.com/80x80'}
-  alt={`${product.name} ${index + 1}`}
-  loading="lazy"
-  decoding="async"
-  className="w-full h-full object-cover transition blur-sm"
-  onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
-  onError={(e) => {
-    e.currentTarget.src = 'https://via.placeholder.com/80x80';
-  }}
-/>
+                        <img
+                          src={optimizeImage(img, 200) || 'https://via.placeholder.com/80x80'}
+                          alt={`${product.name} ${index + 1}`}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover transition blur-sm"
+                          onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://via.placeholder.com/80x80';
+                          }}
+                        />
 
                       </button>
                     ))}
@@ -400,7 +402,7 @@ const handleAddToCart = () => {
                   >
                     Add to Cart
                   </button>
-                  <button 
+                  <button
                     onClick={handleBuyNow}
                     className="flex-1 bg-gray-900 text-white py-3 sm:py-3.5 px-6 rounded-lg hover:bg-gray-800 active:bg-gray-950 transition-colors font-semibold text-sm sm:text-base touch-manipulation shadow-md hover:shadow-lg"
                   >
@@ -463,15 +465,7 @@ const handleAddToCart = () => {
           padding-bottom: env(safe-area-inset-bottom);
         }
       `}</style>
-{showAdded && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center mt-200 pointer-events-none">
-<div className="bg-orange-400 text-white px-8 py-3 rounded-xl shadow-xl text-md font-semibold flex items-center gap-2 animate-scale-in">
-  <span className="text-green">✔</span>
-  Added to cart
-</div>
 
-  </div>
-)}
 
 
     </div>

@@ -88,7 +88,6 @@ const scrollToRef = (ref) => {
 
 const Products = () => {
 
-  const [showAdded, setShowAdded] = useState(false);
   // Use React Router's useLocation hook
   const location = useLocation();
   const { addToCart } = useCart();
@@ -163,7 +162,7 @@ const Products = () => {
     education: educationWorkshopsProducts
   });
   
- const handleAddToCart = (product) => {
+const handleAddToCart = (product) => {
   addToCart({
     id: product.id,
     name: product.name,
@@ -172,9 +171,9 @@ const Products = () => {
     category: product.category || "Products",
     quantity: 1,
   });
-
-  setShowAdded(true);
-  setTimeout(() => setShowAdded(false), 2000);
+  window.dispatchEvent(new CustomEvent('cart-item-added', {
+    detail: { name: product.name, image: product.image, price: product.price }
+  }));
 };
 
 
@@ -453,12 +452,6 @@ const clearSearch = () => {
 
   return (
     <div className="min-h-screen">
-      {showAdded && (
-  <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] bg-green-500 text-white px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-2 transition-all duration-300 ease-in-out">
-    <span className="text-xl">✓</span>
-    Product Added to cart
-  </div>
-)}
       {/* FULL WIDTH HERO BANNER */}
       {!isSearchActive && <HeroBanner />}
 

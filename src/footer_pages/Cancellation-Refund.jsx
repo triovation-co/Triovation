@@ -1,6 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const CancellationRefundPolicy = () => {
+
+  // Point 7: Force scroll to top when this page loads.
+  // React Router re-uses the component without a full page reload,
+  // so the user stays at the scroll position of the previous page.
+  // This ensures the page always starts at the top when navigated to.
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, []);
+
   return (
     <div className="max-w-4xl mx-auto p-6 text-gray-800">
       <h1 className="text-3xl font-bold mb-6 text-center">Cancellation & Refund Policy</h1>

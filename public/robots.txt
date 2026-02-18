@@ -1,0 +1,103 @@
+# ============================================================
+# robots.txt — https://www.triovation.com/robots.txt
+# Last updated: 2026-02-17
+# Sitemap: 138 URLs (matches sitemap.xml exactly)
+# ============================================================
+
+# ── DEFAULT: allow all bots to crawl the site ────────────────
+User-agent: *
+Allow: /
+
+# ── PAGES IN SITEMAP (explicitly allowed) ────────────────────
+
+# Main pages
+Allow: /About
+Allow: /Products
+Allow: /Consultancy
+Allow: /Education
+Allow: /ContactUs
+
+# Conversion page (required for GTM tracking)
+Allow: /thank-you
+Allow: /order-success
+
+# Customization
+Allow: /Customize_product
+
+# Design Consultancy
+Allow: /design-consultancy
+Allow: /design-consultancy/brand-identity-design
+Allow: /design-consultancy/brand-manual-design
+Allow: /design-consultancy/digital-illustration-design
+Allow: /design-consultancy/business-collateral-design
+Allow: /design-consultancy/brand-campaigns-design
+Allow: /design-consultancy/social-media-design
+Allow: /design-consultancy/digital-painting-design
+Allow: /design-consultancy/website-uiux-design
+Allow: /design-consultancy/book-magazine-zine-design
+
+# Category pages
+Allow: /Category_page/FestiveSeason
+Allow: /Category_page/corporateGiftingProducts
+Allow: /Category_page/customisationProducts
+Allow: /Category_page/homeDecorProducts
+
+# Product pages (T0001–T0112)
+Allow: /product/
+
+# Legal / Footer pages
+Allow: /terms-condition
+Allow: /privacy-policies
+Allow: /shipping-delivery
+Allow: /cancellation-refund
+
+# ── PAGES NOT IN SITEMAP (block from indexing) ────────────────
+
+# Transactional / session pages — no SEO value
+Disallow: /cart
+Disallow: /checkout
+
+# Internal / admin tools
+Disallow: /admin
+Disallow: /grid
+Disallow: /product-grid
+
+# ── GOOGLE ───────────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /admin
+Disallow: /grid
+Disallow: /product-grid
+
+# ── BING ─────────────────────────────────────────────────────
+User-agent: Bingbot
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /admin
+Disallow: /grid
+Disallow: /product-grid
+
+# ── BLOCK SCRAPER / SEO TOOL BOTS ────────────────────────────
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+# ── SITEMAP REFERENCE ────────────────────────────────────────
+Sitemap: https://www.triovation.com/sitemap.xml

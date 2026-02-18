@@ -53,6 +53,35 @@ const Checkout = () => {
     setIsSubmitting(true);
     setSubmitError(null);
 
+    // ── Point 4: Validate all required billing fields before submitting ──
+    const requiredFields = [
+      { key: 'firstName', label: 'First name' },
+      { key: 'lastName', label: 'Last name' },
+      { key: 'streetAddress', label: 'Street address' },
+      { key: 'townCity', label: 'Town / City' },
+      { key: 'pinCode', label: 'PIN Code' },
+      { key: 'phone', label: 'Phone' },
+      { key: 'email', label: 'Email address' },
+    ];
+
+    const missing = requiredFields.filter(f => !formData[f.key]?.toString().trim());
+
+    if (missing.length > 0) {
+      setSubmitError(`Please fill in the following required fields: ${missing.map(f => f.label).join(', ')}`);
+      setIsSubmitting(false);
+      // Scroll to the error message
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setSubmitError('Please enter a valid email address.');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       // Prepare order data
       const orderData = {
@@ -81,10 +110,11 @@ const Checkout = () => {
       // But if no error is thrown, we assume success
       console.log('✅ Order sent successfully');
 
-      // Clear cart and show success
-      clearCart();
-      alert('Order placed successfully! We will contact you on WhatsApp for payment.');
-      navigate('/');
+      // Clear cart and redirect to dedicated order confirmation page
+      // Point 5: /order-success URL required for GTM conversion tracking
+      // Navigate first, then clear cart — avoids the empty-cart guard redirecting to /cart
+      navigate('/order-success');
+      setTimeout(() => clearCart(), 100);
 
     } catch (error) {
       console.error('❌ Error submitting order:', error);
@@ -414,7 +444,7 @@ const Checkout = () => {
               </button>
 
               <div className="mt-4 text-center">
-                <button 
+                <button
                   onClick={() => navigate('/cart')}
                   className="text-sm text-gray-600 hover:text-gray-900"
                 >
