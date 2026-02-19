@@ -510,7 +510,7 @@ const Navbar = () => {
                 // to avoid the headline-cut and same-page redirect issue.
                 const getHref = (navItem) => {
                   if (navItem === "Home") return "/";
-                  if (navItem === "Consultancy") return "/design-consultancy";
+                  if (navItem === "Consultancy") return "/Consultancy";
                   return `/${navItem}`;
                 };
 
@@ -839,7 +839,7 @@ const Navbar = () => {
                 // Point 8: Consultancy → /design-consultancy directly
                 const getMobileHref = (navItem) => {
                   if (navItem === "Home") return "/";
-                  if (navItem === "Consultancy") return "/design-consultancy";
+                  if (navItem === "Consultancy") return "/Consultancy";
                   return `/${navItem}`;
                 };
 
