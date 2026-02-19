@@ -74,6 +74,11 @@ const Footer = () => {
                   Cancellation & Refund Policy
                 </a>
               </li>
+              <li>
+                <Link to="/sitemap" className="hover:text-blue-600">
+                  Site Map
+                </Link>
+              </li>
             </ul>
             <button
               onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}

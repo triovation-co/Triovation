@@ -38,6 +38,7 @@ import { createPortal } from "react-dom";
 import SitemapGenerator from './components/SitemapGenerator';
 import OrderSuccess from "./components/OrderSuccess";
 import CartToast from "./components/CartToast";
+import SiteMap from "./pages/SiteMap";
 
 
 function App() {
@@ -63,9 +64,9 @@ function App() {
   return (
     <CartProvider>
       {/* SEO: Skip to main content link for accessibility */}
-      <a 
+      <a
         id="skip-to-main"
-        href="#main-content" 
+        href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-black focus:text-white focus:rounded focus:outline-none"
         aria-label="Skip to main content"
       >
@@ -77,9 +78,9 @@ function App() {
         <ScrollToTop />
 
         {/* Main content with semantic HTML and accessibility */}
-        <main 
+        <main
           id="main-content"
-          className="flex-grow" 
+          className="flex-grow"
           role="main"
           tabIndex={-1}
         >
@@ -128,6 +129,7 @@ function App() {
             <Route path="/cancellation-refund" element={<CancellationRefundPolicy />} />
 
             <Route path="/admin/sitemap" element={<SitemapGenerator />} />
+            <Route path="/sitemap" element={<SiteMap />} />
           </Routes>
 
           <EnquiryModal />
