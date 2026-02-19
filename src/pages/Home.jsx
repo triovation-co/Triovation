@@ -167,7 +167,7 @@ const Home = () => {
               <span className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] bg-clip-text text-transparent">
                 TRIOVATION
               </span>{" "}
-              – B2B Gifting Solutions for Modern Businesses
+              – Gifting Solutions for Modern Businesses
             </h1>
             <div className="space-y-4 text-gray-600 text-lg lg:text-xl xl:text-[19px] leading-relaxed">
               <p className="animate-fade-in-up delay-200">
