@@ -52,7 +52,7 @@ const Service = () => {
           <div className="flex flex-col items-center w-full">
             <div
               className="relative w-full aspect-square rounded-[1rem] lg:rounded-[3rem] overflow-hidden shadow-md group cursor-pointer"
-              onClick={() => scrollToSection('design-consultancy')}
+              onClick={() => navigate('/design-consultancy')}
             >
               <img
                 src={Design_Consultancy}
