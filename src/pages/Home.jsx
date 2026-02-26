@@ -167,27 +167,17 @@ const Home = () => {
               <span className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] bg-clip-text text-transparent">
                 TRIOVATION
               </span>{" "}
-              – Gifting Solutions for Modern Businesses
+              – Corporate gifting solutions and design consultancy
             </h1>
             <div className="space-y-4 text-gray-600 text-lg lg:text-xl xl:text-[19px] leading-relaxed">
               <p className="animate-fade-in-up delay-200">
-                TRIOVATION is a one stop platform where imagination takes shape
-                as reality. We are a creative group that transforms concepts
-                into crafted realities through our four core domains: Design,
-                Corporate Gifting, Startup Venture, and Education.
+TRIOVATION is a one stop consultancy platform where imagination takes shape as reality. We transform concepts into impactful creations through our expertise in corporate gifting, corporate gifting solutions, design consultancy services, and innovative design solutions. 
               </p>
               <p className="animate-fade-in-up delay-400">
-                We merge creativity with precision, offering a full suite of
-                services from custom product design and manufacturing to
-                personalized corporate hampers. Beyond a focus on physical
-                products, we also foster creativity through hands on learning
-                experiences, including engaging workshops.
+From custom product design and manufacturing to personalized corporate hampers and thoughtful gift ideas, we bring creativity and precision together under one roof. Alongside physical products, we also nurture innovation through hands on workshops and learning experiences. 
               </p>
               <p className="animate-fade-in-up delay-600">
-                Our mission is to empower brands and individuals to turn their
-                ideas into impactful, purposeful creations. We ensure every
-                concept is brought to life with meticulous attention to detail
-                and a commitment to innovation.
+Our mission is to empower brands and individuals with the right strategic direction, ensuring every idea is executed with attention to detail, purpose, and a strong commitment to innovation.
               </p>
             </div>
           </article>
