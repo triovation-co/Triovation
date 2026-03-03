@@ -2,6 +2,7 @@ import Logo from "../assets/logo_bg.png";
 import img from "../assets/image1.jpg";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { validateName, validatePhone, validateEmailOptional } from "../utils/validators";
 
 const Footer = () => {
   const [openCatalogueForm, setOpenCatalogueForm] = useState(false);
@@ -10,6 +11,7 @@ const Footer = () => {
     phone: "",
     email: "",
   });
+  const [formErrors, setFormErrors] = useState({});
 
   return (
     <>
@@ -134,17 +136,24 @@ const Footer = () => {
                 onSubmit={(e) => {
                   e.preventDefault();
 
-                  // Optional: Send to Google Sheets if you want to track catalogue requests
-                  // fetch("https://script.google.com/...", { ... });
+                  const nameResult = validateName(form.name);
+                  const phoneResult = validatePhone(form.phone);
+                  const emailResult = validateEmailOptional(form.email);
+                  const newErrors = {
+                    name: nameResult.error,
+                    phone: phoneResult.error,
+                    email: emailResult.error,
+                  };
+                  setFormErrors(newErrors);
+
+                  if (!nameResult.valid || !phoneResult.valid || !emailResult.valid) return;
 
                   console.log("Catalogue Form Data:", form);
 
-                  // ✅ Point 1 Fix: Clear form state and close modal BEFORE opening PDF
-                  // This ensures when user comes back, the form is empty
-                  setForm({ name: "", phone: "", email: "" }); // Reset state
-                  setOpenCatalogueForm(false);                  // Close modal
+                  setForm({ name: "", phone: "", email: "" });
+                  setFormErrors({});
+                  setOpenCatalogueForm(false);
 
-                  // Open PDF in new tab
                   window.open("/catalogue.pdf", "_blank", "noopener,noreferrer");
                 }}
                 className="px-6 py-6 space-y-5"
@@ -160,10 +169,15 @@ const Footer = () => {
                     required
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
+                    onBlur={() => {
+                      const r = validateName(form.name);
+                      setFormErrors(prev => ({ ...prev, name: r.error }));
+                    }}
+                    className={`w-full rounded-xl border px-4 py-3 text-sm
                                focus:border-[#ff7a7a] focus:ring-2 focus:ring-[#ff7a7a]/20
-                               outline-none transition"
+                               outline-none transition ${formErrors.name ? 'border-red-500' : 'border-gray-300'}`}
                   />
+                  {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
                 </div>
 
                 {/* Phone */}
@@ -177,10 +191,15 @@ const Footer = () => {
                     required
                     value={form.phone}
                     onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
+                    onBlur={() => {
+                      const r = validatePhone(form.phone);
+                      setFormErrors(prev => ({ ...prev, phone: r.error }));
+                    }}
+                    className={`w-full rounded-xl border px-4 py-3 text-sm
                                focus:border-[#ff7a7a] focus:ring-2 focus:ring-[#ff7a7a]/20
-                               outline-none transition"
+                               outline-none transition ${formErrors.phone ? 'border-red-500' : 'border-gray-300'}`}
                   />
+                  {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
                 </div>
 
                 {/* Email */}
@@ -193,10 +212,15 @@ const Footer = () => {
                     placeholder="you@example.com"
                     value={form.email}
                     onChange={(e) => setForm({ ...form, email: e.target.value })}
-                    className="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm
+                    onBlur={() => {
+                      const r = validateEmailOptional(form.email);
+                      setFormErrors(prev => ({ ...prev, email: r.error }));
+                    }}
+                    className={`w-full rounded-xl border px-4 py-3 text-sm
                                focus:border-[#ff7a7a] focus:ring-2 focus:ring-[#ff7a7a]/20
-                               outline-none transition"
+                               outline-none transition ${formErrors.email ? 'border-red-500' : 'border-gray-300'}`}
                   />
+                  {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
                 </div>
 
                 {/* Actions */}
@@ -204,8 +228,8 @@ const Footer = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      // Also reset when clicking Cancel
                       setForm({ name: "", phone: "", email: "" });
+                      setFormErrors({});
                       setOpenCatalogueForm(false);
                     }}
                     className="text-sm font-medium text-gray-500 hover:text-gray-700 transition"

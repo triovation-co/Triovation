@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { validateEmail, validatePhone, validateName } from "../utils/validators";
 
 const EnquiryModal = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,49 +14,83 @@ const EnquiryModal = () => {
     return () => window.removeEventListener("open-enquiry-form", openModal);
   }, []);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-
-  const form = new FormData(e.target);
-
-  const data = {
-    name: form.get("name"),
-    email: form.get("email"),
-    phone: form.get("phone"),
-    message: form.get("message"),
+  const validateField = (name, value) => {
+    let result = { valid: true, error: "" };
+    switch (name) {
+      case "name":
+        result = validateName(value);
+        if (!result.valid) result.error = result.error.replace("Name", "Full name");
+        break;
+      case "email":
+        result = validateEmail(value);
+        break;
+      case "phone":
+        result = validatePhone(value);
+        break;
+      default:
+        break;
+    }
+    setErrors((prev) => ({ ...prev, [name]: result.error }));
+    return result.valid;
   };
 
-  try {
-    await fetch(
-      "https://script.google.com/macros/s/AKfycbxzU1x17yJEzyGhqKDdlbwSf81_eig3ZFLLxuyWDHNEKMie_J4C3yIeZC2psGJ3Tfgx/exec",
-      {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify(data),
-      }
-    );
+  const validateAll = (formData) => {
+    let allValid = true;
+    ["name", "email", "phone"].forEach((field) => {
+      if (!validateField(field, formData[field])) allValid = false;
+    });
+    return allValid;
+  };
 
-    // Point 1: Reset the form fields AND close the modal BEFORE redirecting.
-    // Without this, the modal stays mounted with old data visible during the
-    // 400ms spinner delay, and if the user navigates back the form shows
-    // the previously submitted values.
-    e.target.reset();
-    setOpen(false);
-    setLoading(false);
+  const handleBlur = (e) => {
+    validateField(e.target.name, e.target.value);
+  };
 
-    // Redirect to thank-you page
-    setTimeout(() => {
-      window.location.assign("/thank-you");
-    }, 100);
+  const inputClass = (name) =>
+    `w-full mt-1 border rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-400 outline-none ${errors[name] ? "border-red-500" : "border-gray-300"
+    }`;
 
-  } catch (err) {
-    setLoading(false);
-  }
-};
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const form = new FormData(e.target);
+    const data = {
+      name: form.get("name"),
+      email: form.get("email"),
+      phone: form.get("phone"),
+      message: form.get("message"),
+    };
+
+    if (!validateAll(data)) return;
+
+    setLoading(true);
+
+    try {
+      await fetch(
+        "https://script.google.com/macros/s/AKfycbxzU1x17yJEzyGhqKDdlbwSf81_eig3ZFLLxuyWDHNEKMie_J4C3yIeZC2psGJ3Tfgx/exec",
+        {
+          method: "POST",
+          mode: "no-cors",
+          body: JSON.stringify(data),
+        }
+      );
+
+      e.target.reset();
+      setErrors({});
+      setOpen(false);
+      setLoading(false);
+
+      setTimeout(() => {
+        window.location.assign("/thank-you");
+      }, 100);
+
+    } catch (err) {
+      setLoading(false);
+    }
+  };
 
 
-if (!open && !loading) return null;
+  if (!open && !loading) return null;
 
 
   return (
@@ -63,7 +99,7 @@ if (!open && !loading) return null;
 
         {/* Close Button */}
         <button
-          onClick={() => setOpen(false)}
+          onClick={() => { setOpen(false); setErrors({}); }}
           className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 transition"
         >
           ✕
@@ -75,7 +111,7 @@ if (!open && !loading) return null;
             Get in Touch
           </h2>
           <p className="text-sm text-gray-500">
-            Share your requirements and we’ll respond shortly.
+            Share your requirements and we'll respond shortly.
           </p>
         </div>
 
@@ -87,8 +123,10 @@ if (!open && !loading) return null;
               name="name"
               required
               placeholder="Your full name"
-              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-400 outline-none"
+              onBlur={handleBlur}
+              className={inputClass("name")}
             />
+            {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
           </div>
 
           <div>
@@ -98,8 +136,10 @@ if (!open && !loading) return null;
               type="email"
               required
               placeholder="you@example.com"
-              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-400 outline-none"
+              onBlur={handleBlur}
+              className={inputClass("email")}
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
 
           <div>
@@ -108,8 +148,10 @@ if (!open && !loading) return null;
               name="phone"
               required
               placeholder="+91 XXXXX XXXXX"
-              className="w-full mt-1 border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-400 outline-none"
+              onBlur={handleBlur}
+              className={inputClass("phone")}
             />
+            {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
           </div>
 
           <div>

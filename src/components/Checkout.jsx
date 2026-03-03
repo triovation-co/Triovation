@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useNavigate } from 'react-router-dom';
+import { validateEmail, validatePhone, validatePinCode, validateName, validateRequired } from '../utils/validators';
 
 const Checkout = () => {
   const { cart, getCartTotal, clearCart } = useCart();
@@ -35,6 +36,58 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('whatsapp');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  const validateField = (name, value) => {
+    let result = { valid: true, error: '' };
+    switch (name) {
+      case 'firstName':
+        result = validateName(value);
+        if (!result.valid) result.error = result.error.replace('Name', 'First name');
+        break;
+      case 'lastName':
+        result = validateName(value);
+        if (!result.valid) result.error = result.error.replace('Name', 'Last name');
+        break;
+      case 'email':
+        result = validateEmail(value);
+        break;
+      case 'phone':
+        result = validatePhone(value);
+        break;
+      case 'pinCode':
+        result = validatePinCode(value);
+        break;
+      case 'streetAddress':
+        result = validateRequired(value, 'Street address');
+        break;
+      case 'townCity':
+        result = validateRequired(value, 'Town / City');
+        break;
+      default:
+        break;
+    }
+    setErrors(prev => ({ ...prev, [name]: result.error }));
+    return result.valid;
+  };
+
+  const validateAll = () => {
+    const fields = ['firstName', 'lastName', 'streetAddress', 'townCity', 'pinCode', 'phone', 'email'];
+    let allValid = true;
+    fields.forEach(field => {
+      if (!validateField(field, formData[field])) allValid = false;
+    });
+    return allValid;
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    validateField(name, value);
+  };
+
+  const inputClass = (name) =>
+    `w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black ${errors[name] ? 'border-red-500' : 'border-gray-300'
+    }`;
 
   const subtotal = getCartTotal();
   const shipping = 0; // Free shipping
@@ -53,32 +106,10 @@ const Checkout = () => {
     setIsSubmitting(true);
     setSubmitError(null);
 
-    // ── Point 4: Validate all required billing fields before submitting ──
-    const requiredFields = [
-      { key: 'firstName', label: 'First name' },
-      { key: 'lastName', label: 'Last name' },
-      { key: 'streetAddress', label: 'Street address' },
-      { key: 'townCity', label: 'Town / City' },
-      { key: 'pinCode', label: 'PIN Code' },
-      { key: 'phone', label: 'Phone' },
-      { key: 'email', label: 'Email address' },
-    ];
-
-    const missing = requiredFields.filter(f => !formData[f.key]?.toString().trim());
-
-    if (missing.length > 0) {
-      setSubmitError(`Please fill in the following required fields: ${missing.map(f => f.label).join(', ')}`);
+    if (!validateAll()) {
+      setSubmitError('Please fix the highlighted errors before submitting.');
       setIsSubmitting(false);
-      // Scroll to the error message
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setSubmitError('Please enter a valid email address.');
-      setIsSubmitting(false);
       return;
     }
 
@@ -196,8 +227,10 @@ const Checkout = () => {
                       required
                       value={formData.firstName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      onBlur={handleBlur}
+                      className={inputClass('firstName')}
                     />
+                    {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
                   </div>
 
                   <div>
@@ -210,8 +243,10 @@ const Checkout = () => {
                       required
                       value={formData.lastName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                      onBlur={handleBlur}
+                      className={inputClass('lastName')}
                     />
+                    {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
                   </div>
                 </div>
 
@@ -253,8 +288,10 @@ const Checkout = () => {
                     placeholder="House number and street name"
                     value={formData.streetAddress}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                    onBlur={handleBlur}
+                    className={inputClass('streetAddress')}
                   />
+                  {errors.streetAddress && <p className="text-red-500 text-xs mt-1">{errors.streetAddress}</p>}
                 </div>
 
                 <div>
@@ -278,8 +315,10 @@ const Checkout = () => {
                     required
                     value={formData.townCity}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                    onBlur={handleBlur}
+                    className={inputClass('townCity')}
                   />
+                  {errors.townCity && <p className="text-red-500 text-xs mt-1">{errors.townCity}</p>}
                 </div>
 
                 <div>
@@ -309,8 +348,10 @@ const Checkout = () => {
                     required
                     value={formData.pinCode}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                    onBlur={handleBlur}
+                    className={inputClass('pinCode')}
                   />
+                  {errors.pinCode && <p className="text-red-500 text-xs mt-1">{errors.pinCode}</p>}
                 </div>
 
                 <div>
@@ -323,8 +364,10 @@ const Checkout = () => {
                     required
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                    onBlur={handleBlur}
+                    className={inputClass('phone')}
                   />
+                  {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
                 </div>
 
                 <div>
@@ -337,8 +380,10 @@ const Checkout = () => {
                     required
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:border-black"
+                    onBlur={handleBlur}
+                    className={inputClass('email')}
                   />
+                  {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
                 </div>
 
                 <div>
