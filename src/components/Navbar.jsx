@@ -171,84 +171,101 @@ const menuData = {
     categories: [
       {
         title: "Corporate Gifting",
-        defaultItems: ["Acrylic lamps", "Lithophane", "Water Bottle", "Organising Desk"],
+        defaultItems: ["Acrylic lamps", "Lithophane", "Water Bottle", /* "Organising Desk" */],
         allItems: [
           "Acrylic lamps",
           "Lithophane",
           "Water Bottle",
-          "Organising Desk",
-          "Coasters",
+          // "Organising Desk",
+          // "Coasters",
           "Trophy",
           "Keychain",
-          "Phone stand holder",
+          // "Phone stand holder",
           "Planters",
           "Notebooks",
-          "Pen stands",
-          "Badges",
+          // "Pen stands",
+          // "Badges",
           "Pop sockets",
-          "Scented Candles",
+          // "Scented Candles",
         ],
       },
       {
         title: "Customisation & <br />Merchandising",
-        defaultItems: ["Ceramic Cups", "Keychains", "Lithophane Frame", "T-shirts"],
+        defaultItems: ["Ceramic Cups", "Keychains", "Lithophane Frame", /* "T-shirts" */],
         allItems: [
           "Ceramic Cups",
           "Keychains",
           "Lithophane Frame",
-          "T-shirts",
+          // "T-shirts",
           "Bottle",
           "Characters",
           "Cap",
           "Tote bags",
           "Phone cover",
-          "Name Plates",
-          "Stickers",
-          "Spotify playlist on product",
-          "Airpod engraving",
-          "Silver coin printing",
-          "Fabric Printing",
+          // "Name Plates",
+          // "Stickers",
+          // "Spotify playlist on product",
+          // "Airpod engraving",
+          // "Silver coin printing",
+          // "Fabric Printing",
           "Katana",
           "Sword",
         ],
       },
       {
         title: "Home & Decor",
-        defaultItems: ["Clocks", "Characters", "Mandala/Abstract Boards", "Puzzle frame"],
+        defaultItems: [/* "Clocks", */ "Characters" /* , "Mandala/Abstract Boards", "Puzzle frame" */],
         allItems: [
-          "Clocks",
+          // "Clocks",
           "Characters",
-          "Mandala/Abstract Boards",
-          "Puzzle frame",
-          "Gods Frame/idol",
-          "Ac/Charger Stand",
+          // "Mandala/Abstract Boards",
+          // "Puzzle frame",
+          // "Gods Frame/idol",
+          // "Ac/Charger Stand",
         ],
       },
-      {
-        title: "Mechanical Products",
-        defaultItems: ["Kinetic Clock", "Sanitiser Dispenser"],
-        allItems: ["Kinetic Clock", "Sanitiser Dispenser", "Small Furniture", "Touch Lamps"],
-      },
+      // {
+      //   title: "Mechanical Products",
+      //   defaultItems: ["Kinetic Clock", "Sanitiser Dispenser"],
+      //   allItems: ["Kinetic Clock", "Sanitiser Dispenser", "Small Furniture", "Touch Lamps"],
+      // },
       {
         title: "Design, Prototyping <br />& Consultancy",
-        defaultItems: ["Design Consultancy", "Branding", "UI/UX", "Zine"],
+        defaultItems: [
+          { label: "Design Consultancy", link: "/design-consultancy" },
+          { label: "Branding", link: "/design-consultancy/brand-identity-design" },
+          { label: "UI/UX", link: "/design-consultancy/website-uiux-design" },
+          { label: "Zine", link: "/design-consultancy/book-magazine-zine-design" },
+        ],
         allItems: [
-          "Design Consultancy",
-          "Branding",
-          "UI/UX",
-          "Zine",
-          "Books",
-          "Poster & Infographics",
-          "Social media posts",
-          "Illustration",
-          "Mockups",
-          "Business Cards",
+          { label: "Design Consultancy", link: "/design-consultancy" },
+          { label: "Branding", link: "/design-consultancy/brand-identity-design" },
+          { label: "UI/UX", link: "/design-consultancy/website-uiux-design" },
+          { label: "Zine", link: "/design-consultancy/book-magazine-zine-design" },
+          { label: "Books", link: "/design-consultancy/book-magazine-zine-design" },
+          // "Poster & Infographics",
+          { label: "Social media posts", link: "/design-consultancy/social-media-design" },
+          { label: "Illustration", link: "/design-consultancy/digital-illustration-design" },
+          // "Mockups",
+          { label: "Business Cards", link: "/design-consultancy/business-collateral-design" },
         ],
       },
       {
         title: "Education &<br />  Workshops",
-        defaultItems: ["Design Consultancy", "Branding", "UI/UX", "Zine"],
-        allItems: ["Design Consultancy", "Branding", "UI/UX", "Zine", "Books", "Poster & Graphics"],
+        defaultItems: [
+          { label: "Design Consultancy", link: "/design-consultancy" },
+          { label: "Branding", link: "/design-consultancy/brand-identity-design" },
+          { label: "UI/UX", link: "/design-consultancy/website-uiux-design" },
+          { label: "Zine", link: "/design-consultancy/book-magazine-zine-design" },
+        ],
+        allItems: [
+          { label: "Design Consultancy", link: "/design-consultancy" },
+          { label: "Branding", link: "/design-consultancy/brand-identity-design" },
+          { label: "UI/UX", link: "/design-consultancy/website-uiux-design" },
+          { label: "Zine", link: "/design-consultancy/book-magazine-zine-design" },
+          { label: "Books", link: "/design-consultancy/book-magazine-zine-design" },
+          // "Poster & Graphics",
+        ],
       },
     ],
   },
@@ -289,7 +306,7 @@ const Navbar = () => {
     const params = new URLSearchParams(location.search);
     const searchParam = params.get("search");
     const highlightParam = params.get("highlight");
-    
+
     const isMenuSearch = sessionStorage.getItem("menuSearch") === "true";
     const wasCleared = sessionStorage.getItem("searchCleared") === "true";
 
@@ -332,7 +349,8 @@ const Navbar = () => {
     // Get static items from menuData
     menuData.Products.categories.forEach((category) => {
       category.allItems.forEach((item) => {
-        if (!staticItems.includes(item)) staticItems.push(item);
+        const label = typeof item === "object" && item !== null ? item.label : item;
+        if (!staticItems.includes(label)) staticItems.push(label);
       });
     });
 
@@ -365,7 +383,7 @@ const Navbar = () => {
     const page = pathname === "/" ? "Home" : pathname.substring(1);
     setCurrentPage(page);
   }, []);
-  
+
   useEffect(() => {
     const handlePageShow = (e) => {
       if (e.persisted) {
@@ -385,7 +403,7 @@ const Navbar = () => {
 
     window.addEventListener("pageshow", handlePageShow);
     window.addEventListener("clearSearch", handleClearSearch);
-    
+
     return () => {
       window.removeEventListener("pageshow", handlePageShow);
       window.removeEventListener("clearSearch", handleClearSearch);
@@ -468,8 +486,8 @@ const Navbar = () => {
 
   const filteredSuggestions = searchTerm
     ? suggestions
-        .filter((item) => item.toLowerCase().includes(searchTerm.toLowerCase()))
-        .slice(0, 8)
+      .filter((item) => item.toLowerCase().includes(searchTerm.toLowerCase()))
+      .slice(0, 8)
     : [];
 
   const clearSearch = () => {
@@ -484,9 +502,8 @@ const Navbar = () => {
 
   return (
     <header
-      className={`w-full sticky top-0 z-50 transition-transform duration-300 ${
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      }`}
+      className={`w-full sticky top-0 z-50 transition-transform duration-300 ${showNavbar ? "translate-y-0" : "-translate-y-full"
+        }`}
     >
       {/* Top Bar */}
       <div className="w-full bg-[#f47e82] text-white text-xs sm:text-sm md:text-base text-center py-2 md:py-4"></div>
@@ -504,7 +521,7 @@ const Navbar = () => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
-            {["Home", "About", "Products", "Consultancy","ContactUs"].map(
+            {["Home", "About", "Products", "Consultancy", "ContactUs"].map(
               (item, i) => {
                 // Point 8: "Consultancy" in nav should go directly to /design-consultancy
                 // to avoid the headline-cut and same-page redirect issue.
@@ -515,83 +532,92 @@ const Navbar = () => {
                 };
 
                 return (
-                <div
-                  key={i}
-                  className="relative"
-                  onMouseEnter={() => handleMenuHover(item)}
-                  onMouseLeave={handleMenuLeave}
-                >
-                  <a
-                    href={getHref(item)}
-                    onClick={() => {
-                      setIsOpen(false);
-                      setCurrentPage(item === "Home" ? "Home" : item);
-                    }}
-                    className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-sm lg:text-[17px] relative group"
+                  <div
+                    key={i}
+                    className="relative"
+                    onMouseEnter={() => handleMenuHover(item)}
+                    onMouseLeave={handleMenuLeave}
                   >
-                    {formatMenuLabel(item)}
-
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
-                  </a>
-
-                  {/* Dropdown */}
-                  {item === "Products" && activeDropdown === item && (
-                    <div
-                      className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
-                      style={{ animation: "fadeIn 0.3s ease-out forwards" }}
-                      onMouseEnter={() => timeoutRef.current && clearTimeout(timeoutRef.current)}
-                      onMouseLeave={handleMenuLeave}
+                    <a
+                      href={getHref(item)}
+                      onClick={() => {
+                        setIsOpen(false);
+                        setCurrentPage(item === "Home" ? "Home" : item);
+                      }}
+                      className="text-gray-700 font-medium hover:text-red-500 transition-all duration-300 text-sm lg:text-[17px] relative group"
                     >
-                      <div className="p-8 sm:p-10 flex justify-center">
-                        <div className="w-full max-w-7xl px-4">
-                          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-10">
-                            {menuData.Products.categories.map((category, idx) => {
-                              const isExpanded = expandedCategories.has(category.title);
-                              const itemsToShow = isExpanded
-                                ? category.allItems
-                                : category.defaultItems;
+                      {formatMenuLabel(item)}
 
-                              return (
-                                <div key={idx} className="space-y-4">
-                                  <h3
-                                    className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide text-left leading-tight whitespace-normal min-h-[48px] flex items-start"
-                                    dangerouslySetInnerHTML={{ __html: category.title }}
-                                  />
-                                  <ul className="space-y-2">
-                                    {itemsToShow.map((subItem, subIdx) => (
-                                      <li key={subIdx}>
-                                        <button
-                                          onClick={() => {
-                                            sessionStorage.setItem("menuSearch", "true");
-                                            navigate(`/Products?highlight=${encodeURIComponent(toCanonical(subItem))}`);
-                                            setActiveDropdown(null);
-                                            setExpandedCategories(new Set());
-                                          }}
-                                          className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
-                                        >
-                                          {subItem}
-                                        </button>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                  {category.allItems.length > category.defaultItems.length && (
-                                    <button
-                                      onClick={() => toggleCategoryExpansion(category.title)}
-                                      className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
-                                    >
-                                      {isExpanded ? "View Less ↑" : "View All →"}
-                                    </button>
-                                  )}
-                                </div>
-                              );
-                            })}
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
+                    </a>
+
+                    {/* Dropdown */}
+                    {item === "Products" && activeDropdown === item && (
+                      <div
+                        className="fixed top-full left-0 right-0 bg-white shadow-2xl rounded-lg border border-gray-100 opacity-0 animate-fadeIn z-50"
+                        style={{ animation: "fadeIn 0.3s ease-out forwards" }}
+                        onMouseEnter={() => timeoutRef.current && clearTimeout(timeoutRef.current)}
+                        onMouseLeave={handleMenuLeave}
+                      >
+                        <div className="p-8 sm:p-10 flex justify-center">
+                          <div className="w-full max-w-7xl px-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-10">
+                              {menuData.Products.categories.map((category, idx) => {
+                                const isExpanded = expandedCategories.has(category.title);
+                                const itemsToShow = isExpanded
+                                  ? category.allItems
+                                  : category.defaultItems;
+
+                                return (
+                                  <div key={idx} className="space-y-4">
+                                    <h3
+                                      className="font-semibold text-gray-900 text-xs sm:text-sm uppercase tracking-wide text-left leading-tight whitespace-normal min-h-[48px] flex items-start"
+                                      dangerouslySetInnerHTML={{ __html: category.title }}
+                                    />
+                                    <ul className="space-y-2">
+                                      {itemsToShow.map((subItem, subIdx) => {
+                                        const isObj = typeof subItem === "object" && subItem !== null;
+                                        const label = isObj ? subItem.label : subItem;
+                                        const link = isObj ? subItem.link : null;
+                                        return (
+                                          <li key={subIdx}>
+                                            <button
+                                              onClick={() => {
+                                                if (link) {
+                                                  navigate(link);
+                                                } else {
+                                                  sessionStorage.setItem("menuSearch", "true");
+                                                  navigate(`/Products?highlight=${encodeURIComponent(toCanonical(label))}`);
+                                                }
+                                                setActiveDropdown(null);
+                                                setExpandedCategories(new Set());
+                                              }}
+                                              className="text-gray-600 hover:text-red-500 duration-200 text-xs sm:text-sm block w-full text-left hover:translate-x-1 transform transition-transform"
+                                            >
+                                              {label}
+                                            </button>
+                                          </li>
+                                        );
+                                      })}
+                                    </ul>
+                                    {category.allItems.length > category.defaultItems.length && (
+                                      <button
+                                        onClick={() => toggleCategoryExpansion(category.title)}
+                                        className="text-red-500 text-xs sm:text-sm font-medium hover:text-red-600 transition-colors"
+                                      >
+                                        {isExpanded ? "View Less ↑" : "View All →"}
+                                      </button>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              );
+                    )}
+                  </div>
+                );
               }
             )}
 
@@ -716,15 +742,13 @@ const Navbar = () => {
               <div className="relative">
                 <Menu
                   size={28}
-                  className={`transition-all duration-300 ${
-                    isOpen ? "opacity-0 rotate-180 scale-0" : "opacity-100 rotate-0 scale-100"
-                  }`}
+                  className={`transition-all duration-300 ${isOpen ? "opacity-0 rotate-180 scale-0" : "opacity-100 rotate-0 scale-100"
+                    }`}
                 />
                 <X
                   size={28}
-                  className={`absolute top-0 left-0 transition-all duration-500 ${
-                    isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-180 scale-0"
-                  }`}
+                  className={`absolute top-0 left-0 transition-all duration-500 ${isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-180 scale-0"
+                    }`}
                 />
               </div>
             </button>
@@ -829,12 +853,11 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${
-            isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-          }`}
+          className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+            }`}
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
-            {["Home", "About", "Products", "Consultancy","ContactUs"].map(
+            {["Home", "About", "Products", "Consultancy", "ContactUs"].map(
               (item, i) => {
                 // Point 8: Consultancy → /design-consultancy directly
                 const getMobileHref = (navItem) => {
@@ -844,17 +867,17 @@ const Navbar = () => {
                 };
 
                 return (
-                <a
-                  key={i}
-                  href={getMobileHref(item)}
-                  onClick={() => {
-                    setIsOpen(false);
-                    setCurrentPage(item === "Home" ? "Home" : item);
-                  }}
-                  className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
-                >
-             {formatMenuLabel(item)}
-                </a>
+                  <a
+                    key={i}
+                    href={getMobileHref(item)}
+                    onClick={() => {
+                      setIsOpen(false);
+                      setCurrentPage(item === "Home" ? "Home" : item);
+                    }}
+                    className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
+                  >
+                    {formatMenuLabel(item)}
+                  </a>
                 );
               }
             )}
