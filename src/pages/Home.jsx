@@ -9,7 +9,7 @@ import learningZone from "../assets/learning-zone.png";
 import Learn_fab from "../assets/Learn_fab.png";
 import education from "../assets/education.png";
 import WhatsAppButton from "../components/whatsapp";
-import Triovationmain from "../assets/Triovation_main.jpg";
+import corporateGiftHero from "../assets/corporate-gift-hero.png";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -87,13 +87,13 @@ const Home = () => {
   return (
     <div className="overflow-x-hidden relative">
       {/* SEO: Structured Data */}
-      <script 
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(organizationSchema)
         }}
       />
-      <script 
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(servicesSchema)
@@ -103,28 +103,28 @@ const Home = () => {
       {/* Animated Background Elements - Gradient Mesh */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         {/* Animated gradient mesh */}
-        <div 
+        <div
           className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-pink-50/40 via-transparent to-transparent rounded-full blur-3xl"
-          style={{ 
+          style={{
             transform: `translate(${scrollY * 0.05}px, ${scrollY * 0.08}px) scale(1.5)`,
             transition: 'transform 0.1s ease-out'
           }}
         ></div>
-        <div 
+        <div
           className="absolute -top-1/4 -right-1/2 w-full h-full bg-gradient-to-bl from-orange-50/30 via-transparent to-transparent rounded-full blur-3xl"
-          style={{ 
+          style={{
             transform: `translate(${scrollY * -0.03}px, ${scrollY * 0.1}px) scale(1.5)`,
             transition: 'transform 0.1s ease-out'
           }}
         ></div>
-        <div 
+        <div
           className="absolute top-1/2 left-1/3 w-96 h-96 bg-gradient-to-tr from-pink-100/20 via-orange-50/20 to-transparent rounded-full blur-2xl"
-          style={{ 
+          style={{
             transform: `translate(${scrollY * 0.04}px, ${scrollY * -0.06}px)`,
             transition: 'transform 0.1s ease-out'
           }}
         ></div>
-        
+
         {/* Subtle floating lines */}
         <svg className="absolute inset-0 w-full h-full opacity-10" style={{ transform: `translateY(${scrollY * -0.02}px)` }}>
           <line x1="10%" y1="20%" x2="90%" y2="25%" stroke="#f47e82" strokeWidth="1" strokeDasharray="5,5">
@@ -140,9 +140,8 @@ const Home = () => {
 
       {/* Main Content Section */}
       <section
-        className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
         aria-labelledby="hero-heading"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
@@ -150,8 +149,8 @@ const Home = () => {
           <figure className="relative flex justify-center md:justify-start group">
             <div className="rounded-t-full overflow-hidden w-[300px] sm:w-[400px] md:w-[500px] lg:w-[600px] xl:w-[800px] h-[250px] sm:h-[300px] md:h-[340px] lg:h-[420px] xl:h-[480px] mx-auto bg-black relative transition-all duration-700 hover:scale-105 shadow-lg">
               <img
-                src={Triovationmain}
-                alt="Triovation - Creative design and manufacturing workspace with team members working on innovative products"
+                src={corporateGiftHero}
+                alt="Triovation - Premium corporate gifting solutions with elegant gift packaging"
                 className="w-full h-full object-cover scale-100 transition-transform duration-700 group-hover:scale-110"
                 width="800"
                 height="480"
@@ -171,13 +170,13 @@ const Home = () => {
             </h1>
             <div className="space-y-4 text-gray-600 text-lg lg:text-xl xl:text-[19px] leading-relaxed">
               <p className="animate-fade-in-up delay-200">
-TRIOVATION is a one stop consultancy platform where imagination takes shape as reality. We transform concepts into impactful creations through our expertise in corporate gifting, corporate gifting solutions, design consultancy services, and innovative design solutions. 
+                TRIOVATION is a one stop consultancy platform where imagination takes shape as reality. We transform concepts into impactful creations through our expertise in corporate gifting, corporate gifting solutions, design consultancy services, and innovative design solutions.
               </p>
               <p className="animate-fade-in-up delay-400">
-From custom product design and manufacturing to personalized corporate hampers and thoughtful gift ideas, we bring creativity and precision together under one roof. Alongside physical products, we also nurture innovation through hands on workshops and learning experiences. 
+                From custom product design and manufacturing to personalized corporate hampers and thoughtful gift ideas, we bring creativity and precision together under one roof. Alongside physical products, we also nurture innovation through hands on workshops and learning experiences.
               </p>
               <p className="animate-fade-in-up delay-600">
-Our mission is to empower brands and individuals with the right strategic direction, ensuring every idea is executed with attention to detail, purpose, and a strong commitment to innovation.
+                Our mission is to empower brands and individuals with the right strategic direction, ensuring every idea is executed with attention to detail, purpose, and a strong commitment to innovation.
               </p>
             </div>
           </article>
@@ -272,7 +271,7 @@ Our mission is to empower brands and individuals with the right strategic direct
         </header>
 
         {/* Services Grid */}
-        <nav 
+        <nav
           className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20"
           aria-label="Available services"
         >
@@ -354,7 +353,7 @@ Our mission is to empower brands and individuals with the right strategic direct
         }
       `}</style>
       <WhatsAppButton />
-    </div>    
+    </div>
   );
 };
 
