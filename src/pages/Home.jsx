@@ -56,7 +56,7 @@ const Home = () => {
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "Triovation",
-    "description": "Triovation provides premium B2B gifting solutions and customized corporate merchandise for businesses. Elevate client and employee experiences with branded gifts.",
+    "description": "Triovation - Corporate gifting solutions and design consultancy",
     "url": window.location.origin,
     "logo": `${window.location.origin}/logo.png`,
     "foundingDate": "2024",
