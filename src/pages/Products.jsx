@@ -92,7 +92,7 @@ const Products = () => {
   const location = useLocation();
   const { addToCart } = useCart();
 
-  
+
   // State
   const [showAllFestive, setShowAllFestive] = useState(false);
   const [showAllCorporate, setShowAllCorporate] = useState(false);
@@ -108,7 +108,7 @@ const Products = () => {
   const [pageReady, setPageReady] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchSource, setSearchSource] = useState('search');
-  
+
   const [sortBy, setSortBy] = useState('featured');
   const { products: sheetProducts, loading: productsLoading, refreshProducts } = useProductManager();
 
@@ -118,14 +118,14 @@ const Products = () => {
     const timer = setTimeout(() => {
       setPageReady(true);
     }, 1500);
-    
+
     return () => clearTimeout(timer);
   }, []);
 
   // Function to sort products locally
   const sortProductsLocally = (products, sortOption) => {
     const productsCopy = [...products];
-    
+
     switch (sortOption) {
       case 'price-low-high':
         return productsCopy.sort((a, b) => {
@@ -161,20 +161,20 @@ const Products = () => {
     design: designConsultancyProducts,
     education: educationWorkshopsProducts
   });
-  
-const handleAddToCart = (product) => {
-  addToCart({
-    id: product.id,
-    name: product.name,
-    price: product.price,
-    image: product.image,
-    category: product.category || "Products",
-    quantity: 1,
-  });
-  window.dispatchEvent(new CustomEvent('cart-item-added', {
-    detail: { name: product.name, image: product.image, price: product.price }
-  }));
-};
+
+  const handleAddToCart = (product) => {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      category: product.category || "Products",
+      quantity: 1,
+    });
+    window.dispatchEvent(new CustomEvent('cart-item-added', {
+      detail: { name: product.name, image: product.image, price: product.price }
+    }));
+  };
 
 
   // Update enhanced products when sheet data loads or sorting changes
@@ -229,67 +229,67 @@ const handleAddToCart = (product) => {
     }
   }, [sheetProducts, sortBy]);
 
- const normalizeTitle = (str = "") =>
-  str
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+  const normalizeTitle = (str = "") =>
+    str
+      .toLowerCase()
+      .replace(/[^a-z0-9\s]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
 
-const singularize = (word) => {
-  if (word.endsWith("ies")) return word.slice(0, -3) + "y";   // batteries → battery
-  if (word.endsWith("es")) return word.slice(0, -2);         // boxes → box
-  if (word.endsWith("s") && word.length > 3) return word.slice(0, -1); // planters → planter
-  return word;
-};
+  const singularize = (word) => {
+    if (word.endsWith("ies")) return word.slice(0, -3) + "y";   // batteries → battery
+    if (word.endsWith("es")) return word.slice(0, -2);         // boxes → box
+    if (word.endsWith("s") && word.length > 3) return word.slice(0, -1); // planters → planter
+    return word;
+  };
 
-const strictTitleMatch = (title, search) => {
-  const t = normalizeTitle(title);
-  const q = normalizeTitle(search);
+  const strictTitleMatch = (title, search) => {
+    const t = normalizeTitle(title);
+    const q = normalizeTitle(search);
 
-  if (!q) return false;
+    if (!q) return false;
 
-  const titleWords = t.split(" ").map(singularize);
-  const queryWords = q.split(" ").map(singularize);
+    const titleWords = t.split(" ").map(singularize);
+    const queryWords = q.split(" ").map(singularize);
 
-  return queryWords.every(qw =>
-    titleWords.some(tw => tw.includes(qw) || qw.includes(tw))
-  );
-};
+    return queryWords.every(qw =>
+      titleWords.some(tw => tw.includes(qw) || qw.includes(tw))
+    );
+  };
 
 
 
-const performSearch = async (query) => {
-  if (!query || !query.trim()) {
-    setSearchResults([]);
-    setIsSearchActive(false);
+  const performSearch = async (query) => {
+    if (!query || !query.trim()) {
+      setSearchResults([]);
+      setIsSearchActive(false);
+      setIsSearching(false);
+      return;
+    }
+
+    setIsSearching(true);
+
+    const allProducts = [
+      ...enhancedProducts.festive,
+      ...enhancedProducts.corporate,
+      ...enhancedProducts.customisation,
+      ...enhancedProducts.homeDecor,
+      ...enhancedProducts.mechanical,
+      ...enhancedProducts.design,
+      ...enhancedProducts.education
+    ];
+
+    const results = allProducts.filter(product =>
+      strictTitleMatch(product.name || "", query)
+    );
+
+    const finalResults =
+      sortBy === "featured" ? results : sortProductsLocally(results, sortBy);
+
+    setSearchResults(finalResults);
     setIsSearching(false);
-    return;
-  }
-
-  setIsSearching(true);
-
-  const allProducts = [
-    ...enhancedProducts.festive,
-    ...enhancedProducts.corporate,
-    ...enhancedProducts.customisation,
-    ...enhancedProducts.homeDecor,
-    ...enhancedProducts.mechanical,
-    ...enhancedProducts.design,
-    ...enhancedProducts.education
-  ];
-
-  const results = allProducts.filter(product =>
-    strictTitleMatch(product.name || "", query)
-  );
-
-  const finalResults =
-    sortBy === "featured" ? results : sortProductsLocally(results, sortBy);
-
-  setSearchResults(finalResults);
-  setIsSearching(false);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
 
   useEffect(() => {
@@ -300,7 +300,7 @@ const performSearch = async (query) => {
     const params = new URLSearchParams(location.search);
     const search = params.get('search');
     const highlight = params.get('highlight');
-    
+
     if (highlight) {
       setSearchQuery(highlight);
       setSearchSource('dropdown');
@@ -318,21 +318,21 @@ const performSearch = async (query) => {
     }
   }, [location.search, enhancedProducts, pageReady]);
 
-const clearSearch = () => {
-  setSearchQuery('');
-  setIsSearchActive(false);
-  setSearchResults([]);
-  setIsSearching(false);
-  sessionStorage.setItem("searchCleared", "true");
-  window.history.replaceState({}, document.title, window.location.pathname);
-  
-  // Dispatch custom event to notify navbar
-  window.dispatchEvent(new CustomEvent('clearSearch'));
-};
+  const clearSearch = () => {
+    setSearchQuery('');
+    setIsSearchActive(false);
+    setSearchResults([]);
+    setIsSearching(false);
+    sessionStorage.setItem("searchCleared", "true");
+    window.history.replaceState({}, document.title, window.location.pathname);
+
+    // Dispatch custom event to notify navbar
+    window.dispatchEvent(new CustomEvent('clearSearch'));
+  };
 
   const handleSortChange = async (newSortBy) => {
     setSortBy(newSortBy);
-    
+
     if (refreshProducts) {
       await refreshProducts(newSortBy);
     }
@@ -372,7 +372,7 @@ const clearSearch = () => {
     ];
 
     for (const section of sections) {
-      const found = section.products.find(product => 
+      const found = section.products.find(product =>
         product.name.toLowerCase().includes(productName.toLowerCase()) ||
         productName.toLowerCase().includes(product.name.toLowerCase())
       );
@@ -384,7 +384,7 @@ const clearSearch = () => {
   };
 
   const expandRelevantSection = (sectionName) => {
-    switch(sectionName) {
+    switch (sectionName) {
       case 'festive': setShowAllFestive(true); break;
       case 'corporate': setShowAllCorporate(true); break;
       case 'customisation': setShowAllCustomisation(true); break;
@@ -396,7 +396,7 @@ const clearSearch = () => {
   };
 
   const getSectionRef = (sectionName) => {
-    switch(sectionName) {
+    switch (sectionName) {
       case 'festive': return festiveRef;
       case 'corporate': return corporateRef;
       case 'customisation': return customisationRef;
@@ -451,12 +451,12 @@ const clearSearch = () => {
   const displayedEducationProducts = showAllEducation ? enhancedProducts.education : enhancedProducts.education.slice(0, 8);
 
   return (
-    <div className="min-h-screen">
+    <div className="overflow-x-hidden min-h-screen">
       {/* FULL WIDTH HERO BANNER */}
       {!isSearchActive && <HeroBanner />}
 
       {isSearching && <SearchLoadingOverlay />}
-      
+
       <div className="w-full px-4 sm:px-6 lg:px-4 py-8">
         {/* Sort Controls */}
         <div className="w-full px-2 py-4 lg:ml-6 2xl:ml-10">
@@ -479,7 +479,7 @@ const clearSearch = () => {
         </div>
 
         {/* Category Banners - Show only when not searching */}
-        
+
 
         {/* Search Results Section */}
         {isSearchActive && (
@@ -502,29 +502,29 @@ const clearSearch = () => {
                 <p className="text-gray-600 mb-6">Found {searchResults.length} product{searchResults.length !== 1 ? 's' : ''}</p>
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-20">
                   {searchResults.map((product) => (
-                    <div 
+                    <div
                       key={product.id}
                       className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full"
                     >
-<Link to={`/product/${product.id}`}>
-  <div className="relative aspect-square">
-    <img
-      src={optimizeImage(product.image, 600)}
-      alt={product.name}
-      loading="lazy"
-      fetchpriority="low"
-      decoding="async"
-      className="rounded-2xl w-full h-full object-cover transition duration-500 ease-out blur-sm"
-      onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
-    />
+                      <Link to={`/product/${product.id}`}>
+                        <div className="relative aspect-square">
+                          <img
+                            src={optimizeImage(product.image, 600)}
+                            alt={product.name}
+                            loading="lazy"
+                            fetchpriority="low"
+                            decoding="async"
+                            className="rounded-2xl w-full h-full object-cover transition duration-500 ease-out blur-sm"
+                            onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+                          />
 
-    {product.savePercent && (
-      <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
-        Save {product.savePercent}
-      </div>
-    )}
-  </div>
-</Link>
+                          {product.savePercent && (
+                            <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                              Save {product.savePercent}
+                            </div>
+                          )}
+                        </div>
+                      </Link>
 
 
                       <div className="p-4 flex flex-col flex-grow text-center">
@@ -547,16 +547,16 @@ const clearSearch = () => {
                           </p>
                         </Link>
                         <div className="w-full flex justify-center mt-auto">
-<button
-onClick={(e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  handleAddToCart(product);
-}}
-  className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-md transition-colors"
->
-  Add to Cart
-</button>
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleAddToCart(product);
+                            }}
+                            className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-md transition-colors"
+                          >
+                            Add to Cart
+                          </button>
 
                         </div>
                       </div>
@@ -608,120 +608,120 @@ onClick={(e) => {
           <>
             {hasFestiveProducts && (
               <Suspense fallback={<SectionSkeleton />}>
-              <ProductSection
-                title="Festive Season"
-                products={enhancedProducts.festive}
-                displayedProducts={displayedFestiveProducts}
-                showAll={showAllFestive}
-                setShowAll={setShowAllFestive}
-                sectionRef={festiveRef}
-                scrollToRef={scrollToRef}
-                shouldHighlight={shouldHighlight}
-                buttonColor="bg-orange-400"
-                handleAddToCart={handleAddToCart} 
-              />
+                <ProductSection
+                  title="Festive Season"
+                  products={enhancedProducts.festive}
+                  displayedProducts={displayedFestiveProducts}
+                  showAll={showAllFestive}
+                  setShowAll={setShowAllFestive}
+                  sectionRef={festiveRef}
+                  scrollToRef={scrollToRef}
+                  shouldHighlight={shouldHighlight}
+                  buttonColor="bg-orange-400"
+                  handleAddToCart={handleAddToCart}
+                />
               </Suspense>
             )}
 
             {hasCorporateProducts && (
               <Suspense fallback={<SectionSkeleton />}>
-              <ProductSection
-                title="Corporate Gifting"
-                products={enhancedProducts.corporate}
-                displayedProducts={displayedCorporateProducts}
-                showAll={showAllCorporate}
-                setShowAll={setShowAllCorporate}
-                sectionRef={corporateRef}
-                scrollToRef={scrollToRef}
-                shouldHighlight={shouldHighlight}
-                buttonColor="bg-orange-400"
-                handleAddToCart={handleAddToCart} 
-              />
+                <ProductSection
+                  title="Corporate Gifting"
+                  products={enhancedProducts.corporate}
+                  displayedProducts={displayedCorporateProducts}
+                  showAll={showAllCorporate}
+                  setShowAll={setShowAllCorporate}
+                  sectionRef={corporateRef}
+                  scrollToRef={scrollToRef}
+                  shouldHighlight={shouldHighlight}
+                  buttonColor="bg-orange-400"
+                  handleAddToCart={handleAddToCart}
+                />
               </Suspense>
             )}
 
             {hasCustomisationProducts && (
-               <Suspense fallback={<SectionSkeleton />}>
-              <ProductSection
-                title="Customisation & Merchandising"
-                products={enhancedProducts.customisation}
-                displayedProducts={displayedCustomisationProducts}
-                showAll={showAllCustomisation}
-                setShowAll={setShowAllCustomisation}
-                sectionRef={customisationRef}
-                scrollToRef={scrollToRef}
-                shouldHighlight={shouldHighlight}
-                buttonColor="bg-orange-400"
-                handleAddToCart={handleAddToCart} 
-              />
+              <Suspense fallback={<SectionSkeleton />}>
+                <ProductSection
+                  title="Customisation & Merchandising"
+                  products={enhancedProducts.customisation}
+                  displayedProducts={displayedCustomisationProducts}
+                  showAll={showAllCustomisation}
+                  setShowAll={setShowAllCustomisation}
+                  sectionRef={customisationRef}
+                  scrollToRef={scrollToRef}
+                  shouldHighlight={shouldHighlight}
+                  buttonColor="bg-orange-400"
+                  handleAddToCart={handleAddToCart}
+                />
               </Suspense>
             )}
 
             {hasHomeDecorProducts && (
               <Suspense fallback={<SectionSkeleton />}>
-              <ProductSection
-                title="Home Decor"
-                products={enhancedProducts.homeDecor}
-                displayedProducts={displayedHomeDecorProducts}
-                showAll={showAllHomeDecor}
-                setShowAll={setShowAllHomeDecor}
-                sectionRef={homeDecorRef}
-                scrollToRef={scrollToRef}
-                shouldHighlight={shouldHighlight}
-                buttonColor="bg-orange-400"
-                handleAddToCart={handleAddToCart} 
-              />
+                <ProductSection
+                  title="Home Decor"
+                  products={enhancedProducts.homeDecor}
+                  displayedProducts={displayedHomeDecorProducts}
+                  showAll={showAllHomeDecor}
+                  setShowAll={setShowAllHomeDecor}
+                  sectionRef={homeDecorRef}
+                  scrollToRef={scrollToRef}
+                  shouldHighlight={shouldHighlight}
+                  buttonColor="bg-orange-400"
+                  handleAddToCart={handleAddToCart}
+                />
               </Suspense>
             )}
 
             {hasMechanicalProducts && (
-               <Suspense fallback={<SectionSkeleton />}>
-              <ProductSection
-                title="Mechanical Products"
-                products={enhancedProducts.mechanical}
-                displayedProducts={displayedMechanicalProducts}
-                showAll={showAllMechanical}
-                setShowAll={setShowAllMechanical}
-                sectionRef={mechanicalRef}
-                scrollToRef={scrollToRef}
-                shouldHighlight={shouldHighlight}
-                buttonColor="bg-orange-400"
-                handleAddToCart={handleAddToCart} 
-              />
+              <Suspense fallback={<SectionSkeleton />}>
+                <ProductSection
+                  title="Mechanical Products"
+                  products={enhancedProducts.mechanical}
+                  displayedProducts={displayedMechanicalProducts}
+                  showAll={showAllMechanical}
+                  setShowAll={setShowAllMechanical}
+                  sectionRef={mechanicalRef}
+                  scrollToRef={scrollToRef}
+                  shouldHighlight={shouldHighlight}
+                  buttonColor="bg-orange-400"
+                  handleAddToCart={handleAddToCart}
+                />
               </Suspense>
             )}
 
             {hasDesignProducts && (
-               <Suspense fallback={<SectionSkeleton />}>
-              <ProductSection
-                title="Design Consultancy"
-                products={enhancedProducts.design}
-                displayedProducts={displayedDesignProducts}
-                showAll={showAllDesign}
-                setShowAll={setShowAllDesign}
-                sectionRef={designRef}
-                scrollToRef={scrollToRef}
-                shouldHighlight={shouldHighlight}
-                buttonColor="bg-orange-400"
-                handleAddToCart={handleAddToCart} 
-              />
+              <Suspense fallback={<SectionSkeleton />}>
+                <ProductSection
+                  title="Design Consultancy"
+                  products={enhancedProducts.design}
+                  displayedProducts={displayedDesignProducts}
+                  showAll={showAllDesign}
+                  setShowAll={setShowAllDesign}
+                  sectionRef={designRef}
+                  scrollToRef={scrollToRef}
+                  shouldHighlight={shouldHighlight}
+                  buttonColor="bg-orange-400"
+                  handleAddToCart={handleAddToCart}
+                />
               </Suspense>
             )}
 
             {hasEducationProducts && (
               <Suspense fallback={<SectionSkeleton />}>
-              <ProductSection
-                title="Education & Workshops"
-                products={enhancedProducts.education}
-                displayedProducts={displayedEducationProducts}
-                showAll={showAllEducation}
-                setShowAll={setShowAllEducation}
-                sectionRef={educationRef}
-                scrollToRef={scrollToRef}
-                shouldHighlight={shouldHighlight}
-                buttonColor="bg-orange-400"
-                handleAddToCart={handleAddToCart} 
-              />
+                <ProductSection
+                  title="Education & Workshops"
+                  products={enhancedProducts.education}
+                  displayedProducts={displayedEducationProducts}
+                  showAll={showAllEducation}
+                  setShowAll={setShowAllEducation}
+                  sectionRef={educationRef}
+                  scrollToRef={scrollToRef}
+                  shouldHighlight={shouldHighlight}
+                  buttonColor="bg-orange-400"
+                  handleAddToCart={handleAddToCart}
+                />
               </Suspense>
             )}
           </>
@@ -733,8 +733,8 @@ onClick={(e) => {
       {!isSearchActive && (
         <div className="mt-20">
           <main className="container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
-              
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
+
               <div className="relative flex items-center justify-center w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] 2xl:min-h-[600px]">
                 <div
                   className="absolute 
@@ -777,25 +777,25 @@ onClick={(e) => {
                 <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
                   Email at <span className="font-semibold">Triovation.co@gmail.com</span> for any B2B gifting requirement!
                 </p>
-<button
-  onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}
-  className="group relative overflow-hidden px-7 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-blue-400 text-white font-semibold tracking-wide shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
->
-  <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition"></span>
-  Contact Us
-</button>
+                <button
+                  onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}
+                  className="group relative overflow-hidden px-7 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-blue-400 text-white font-semibold tracking-wide shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
+                >
+                  <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition"></span>
+                  Contact Us
+                </button>
               </div>
             </div>
           </main>
         </div>
       )}
-      
-      
+
+
       <WhatsAppButton />
 
 
     </div>
-    
+
   );
 };
 

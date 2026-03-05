@@ -45,8 +45,8 @@ const Service = () => {
 
   return (
     <>
-      <div className="mx-auto flex justify-center from-red-50 via-pink-50 to-white py-5 mb-25 -mt-10">
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-10 xl:gap-20 mt-20 mx-4 sm:mx-10 lg:mx-20">
+      <div className="overflow-x-hidden mx-auto flex justify-center from-red-50 via-pink-50 to-white py-5 mb-25 -mt-10">
+        <div className="grid grid-cols-3 md:grid-cols-3 gap-3 sm:gap-6 md:gap-10 xl:gap-20 mt-20 mx-4 sm:mx-10 lg:mx-20">
 
           {/* Card 1 - Design Consultancy */}
           <div className="flex flex-col items-center w-full">
@@ -81,10 +81,10 @@ const Service = () => {
                 alt="Service 2"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-                <p className="text-white text-center text-2xl font-semibold px-2">
+                <p className="text-white text-center text-[10px] sm:text-base lg:text-2xl font-semibold px-1 sm:px-2">
                   Manufacturing Support
                 </p>
-                <span className="mt-2 bg-white/90 text-gray-700 text-xs sm:text-sm font-bold px-4 py-1 rounded-full tracking-wider uppercase">
+                <span className="mt-1 sm:mt-2 bg-white/90 text-gray-700 text-[8px] sm:text-xs font-bold px-2 sm:px-4 py-0.5 sm:py-1 rounded-full tracking-wider uppercase">
                   Coming Soon
                 </span>
               </div>
@@ -105,10 +105,10 @@ const Service = () => {
                 alt="Service 3"
               />
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
-                <p className="text-white text-center text-2xl font-semibold px-2">
+                <p className="text-white text-center text-[10px] sm:text-base lg:text-2xl font-semibold px-1 sm:px-2">
                   Startup Venture Support
                 </p>
-                <span className="mt-2 bg-white/90 text-gray-700 text-xs sm:text-sm font-bold px-4 py-1 rounded-full tracking-wider uppercase">
+                <span className="mt-1 sm:mt-2 bg-white/90 text-gray-700 text-[8px] sm:text-xs font-bold px-2 sm:px-4 py-0.5 sm:py-1 rounded-full tracking-wider uppercase">
                   Coming Soon
                 </span>
               </div>

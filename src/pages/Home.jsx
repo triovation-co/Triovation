@@ -161,7 +161,7 @@ const Home = () => {
           </figure>
 
           {/* Right Column - Text */}
-          <article className="text-center md:text-left mt-20 space-y-6">
+          <article className="text-center md:text-left mt-6 md:mt-20 space-y-6">
             <h1 id="hero-heading" className="text-3xl lg:text-4xl xl:text-[34px] font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 animate-fade-in-up">
               <span className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] bg-clip-text text-transparent">
                 TRIOVATION

@@ -64,7 +64,7 @@ const ContactUs = () => {
   return (
     <>
       {/* SEO: Structured Data */}
-      <script 
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(contactSchema)
@@ -74,7 +74,7 @@ const ContactUs = () => {
       <main className="mt-20">
         <article className="container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 bg-white">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
-            
+
             {/* Left Column: Images */}
             <figure className="relative flex items-center justify-center w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] 2xl:min-h-[600px]" aria-label="Corporate gifting showcase">
               <div className="absolute 
@@ -86,8 +86,8 @@ const ContactUs = () => {
                 lg:w-[335px] lg:h-[370px] 
                 xl:w-[425px] xl:h-[500px]
                 overflow-hidden shadow-lg rounded-t-full">
-                <img 
-                  src={bulkorder1} 
+                <img
+                  src={bulkorder1}
                   alt="Premium corporate gift boxes and bulk order packages"
                   className="w-full h-full object-cover"
                   width="425"
@@ -107,8 +107,8 @@ const ContactUs = () => {
                 lg:w-[275px] lg:h-[300px] 
                 xl:w-[375px] xl:h-[400px]
                 mx-auto">
-                <img 
-                  src={bulkorder2} 
+                <img
+                  src={bulkorder2}
                   alt="Customized corporate gifts and event giveaways collection"
                   className="w-full h-full object-cover"
                   width="375"
@@ -129,8 +129,8 @@ const ContactUs = () => {
               </h1>
 
               <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
-                Email at <a 
-                  href="mailto:Triovation.co@gmail.com" 
+                Email at <a
+                  href="mailto:Triovation.co@gmail.com"
                   className="font-semibold hover:text-sky-500 transition-colors focus:outline-none focus:underline"
                 >
                   Triovation.co@gmail.com

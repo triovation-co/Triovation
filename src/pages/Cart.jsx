@@ -2,12 +2,12 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
-import { useEffect } from 'react'; 
+import { useEffect } from 'react';
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
@@ -55,8 +55,8 @@ const Cart = () => {
           <article className="text-center py-16">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Your cart is empty</h1>
             <p className="text-gray-600 mb-8">Looks like you haven't added anything to your cart yet.</p>
-            <Link 
-              to="/products" 
+            <Link
+              to="/products"
               className="bg-black text-white px-6 py-3 rounded hover:bg-gray-800 transition-colors focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               aria-label="Continue shopping and browse products"
             >
@@ -71,7 +71,7 @@ const Cart = () => {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* SEO: Structured Data */}
-      <script 
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(cartSchema)
@@ -86,7 +86,7 @@ const Cart = () => {
           {/* Progress Steps */}
           <nav className="flex items-center justify-center mt-8 space-x-4" aria-label="Checkout progress">
             <div className="flex items-center">
-              <div 
+              <div
                 className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center text-sm font-semibold"
                 aria-current="step"
               >
@@ -134,12 +134,13 @@ const Cart = () => {
               <ul className="divide-y divide-gray-200" role="list">
                 {cart.items.map((item) => (
                   <li key={item.id} className="px-6 py-6">
-                    <article className="flex flex-col sm:grid sm:grid-cols-12 gap-4 items-center sm:items-start">
+                    <article className="flex flex-col sm:grid sm:grid-cols-12 gap-4 items-start relative">
                       {/* Product Info */}
-                      <div className="flex items-start sm:col-span-5 space-x-4 w-full">
+                      <div className="flex items-start sm:col-span-5 space-x-4 w-full relative pt-6 sm:pt-0">
+                        {/* Absolute remove button on mobile, normal flow on desktop */}
                         <button
                           onClick={() => removeFromCart(item.id)}
-                          className="text-gray-400 hover:text-red-500 transition-colors mt-1 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
+                          className="absolute sm:relative top-0 right-0 sm:top-auto sm:right-auto text-gray-400 hover:text-red-500 transition-colors sm:mt-1 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
                           aria-label={`Remove ${item.name} from cart`}
                           type="button"
                         >
@@ -148,7 +149,7 @@ const Cart = () => {
                         <img
                           src={item.image || '/api/placeholder/100/100'}
                           alt={`${item.name} product image`}
-                          className="w-24 h-24 object-cover rounded flex-shrink-0"
+                          className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded flex-shrink-0"
                           width="96"
                           height="96"
                           loading="lazy"
@@ -156,53 +157,56 @@ const Cart = () => {
                             e.target.src = '/api/placeholder/100/100';
                           }}
                         />
-                        <div className="flex-1 min-w-0">
-                          <h2 className="font-medium text-gray-900 text-base">{item.name}</h2>
-                          <p className="text-sm text-gray-500 mt-1">{item.category || 'Custom Product'}</p>
-                          
+                        <div className="flex-1 min-w-0 pr-6 sm:pr-0">
+                          <h2 className="font-medium text-gray-900 text-sm sm:text-base">{item.name}</h2>
+                          <p className="text-xs sm:text-sm text-gray-500 mt-1">{item.category || 'Custom Product'}</p>
+
                           {/* Customization Details */}
                           {item.customization && (
-                            <div className="mt-3 bg-orange-50 border border-orange-200 rounded p-3">
-                              <p className="text-xs font-semibold text-orange-800 mb-1">Customization:</p>
-                              <p className="text-sm text-gray-700 leading-relaxed">{item.customization}</p>
+                            <div className="mt-2 sm:mt-3 bg-orange-50 border border-orange-200 rounded p-2 sm:p-3">
+                              <p className="text-[10px] sm:text-xs font-semibold text-orange-800 mb-1">Customization:</p>
+                              <p className="text-xs sm:text-sm text-gray-700 leading-relaxed truncate">{item.customization}</p>
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {/* Price */}
-                      <div className="text-gray-900 font-medium text-base mt-2 sm:mt-0 sm:col-span-2">
-                        <span className="sr-only">Price: </span>
-                        ₹{item.price?.toLocaleString('en-IN') || '0'}
-                      </div>
+                      {/* wrapper for Price, Quantity, Subtotal on mobile to align horizontally */}
+                      <div className="w-full sm:col-span-7 flex flex-row items-center justify-between sm:grid sm:grid-cols-7 sm:gap-4 mt-2 sm:mt-0 pt-2 border-t sm:border-0 border-gray-100">
+                        {/* Price */}
+                        <div className="text-gray-900 font-medium text-sm sm:text-base sm:col-span-2">
+                          <span className="sr-only">Price: </span>
+                          ₹{item.price?.toLocaleString('en-IN') || '0'}
+                        </div>
 
-                      {/* Quantity Controls */}
-                      <div className="flex items-center space-x-3 mt-2 sm:mt-0 sm:col-span-3" role="group" aria-label="Quantity controls">
-                        <button
-                          onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-50 text-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                          aria-label={`Decrease quantity of ${item.name}`}
-                          type="button"
-                        >
-                          −
-                        </button>
-                        <span className="w-12 text-center text-gray-900 font-medium text-base" aria-label={`Quantity: ${item.quantity}`}>
-                          {item.quantity}
-                        </span>
-                        <button
-                          onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                          className="w-10 h-10 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-50 text-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-                          aria-label={`Increase quantity of ${item.name}`}
-                          type="button"
-                        >
-                          +
-                        </button>
-                      </div>
+                        {/* Quantity Controls */}
+                        <div className="flex items-center space-x-2 sm:space-x-3 sm:col-span-3" role="group" aria-label="Quantity controls">
+                          <button
+                            onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-50 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                            aria-label={`Decrease quantity of ${item.name}`}
+                            type="button"
+                          >
+                            −
+                          </button>
+                          <span className="w-8 sm:w-12 text-center text-gray-900 font-medium text-sm sm:text-base" aria-label={`Quantity: ${item.quantity}`}>
+                            {item.quantity}
+                          </span>
+                          <button
+                            onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                            className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border border-gray-300 rounded text-gray-600 hover:bg-gray-50 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                            aria-label={`Increase quantity of ${item.name}`}
+                            type="button"
+                          >
+                            +
+                          </button>
+                        </div>
 
-                      {/* Subtotal */}
-                      <div className="text-gray-900 font-semibold text-base mt-2 sm:mt-0 sm:col-span-2">
-                        <span className="sr-only">Subtotal: </span>
-                        ₹{((item.price || 0) * item.quantity).toLocaleString('en-IN')}
+                        {/* Subtotal */}
+                        <div className="text-gray-900 font-semibold text-sm sm:text-base sm:col-span-2 text-right sm:text-left">
+                          <span className="sr-only">Subtotal: </span>
+                          ₹{((item.price || 0) * item.quantity).toLocaleString('en-IN')}
+                        </div>
                       </div>
                     </article>
                   </li>
@@ -212,7 +216,7 @@ const Cart = () => {
           </section>
 
           {/* Cart Summary */}
-          <aside className="lg:flex-1" aria-label="Order summary">
+          <aside className="lg:flex-1 pb-24 lg:pb-8" aria-label="Order summary">
             <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Cart totals</h2>
 
@@ -247,7 +251,7 @@ const Cart = () => {
               </button>
 
               <div className="mt-4 text-center">
-                <Link 
+                <Link
                   to="/products"
                   className="text-sm text-gray-600 hover:text-gray-900 focus:outline-none focus:underline"
                 >

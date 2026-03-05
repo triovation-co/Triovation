@@ -4,6 +4,7 @@ body {
   font-family: 'Inter', sans-serif;
   line-height: 150%;
   letter-spacing: -0.023em;
+  overflow-x: hidden;
 }
 
 /* Line clamp utilities */
@@ -86,6 +87,7 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -96,6 +98,7 @@ body {
     transform: scale(0.9);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -111,6 +114,7 @@ body {
     transform: translateY(100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;

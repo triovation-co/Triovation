@@ -19,7 +19,7 @@ const Footer = () => {
       <footer className="bg-gray-50 text-gray-700 mt-20">
         <div className="
             container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 py-10
-            grid grid-cols-2 gap-10
+            grid grid-cols-2 gap-4 sm:gap-10
             lg:flex lg:flex-row lg:justify-evenly lg:gap-25 2xl:gap-40
           ">
 

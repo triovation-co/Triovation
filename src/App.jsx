@@ -73,7 +73,7 @@ function App() {
         Skip to main content
       </a>
 
-      <div className="flex flex-col min-h-screen w-auto">
+      <div className="flex flex-col min-h-screen w-auto overflow-x-hidden">
         <Navbar />
         <ScrollToTop />
 
