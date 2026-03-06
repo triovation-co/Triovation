@@ -1,8 +1,8 @@
 import React from "react";
 
 import f1 from "../../../assets/design_consultancy/Social_Media/Frame 13.png";
-import f2 from "../../../assets/design_consultancy/Social_Media/Frame 14.png";
-import f3 from "../../../assets/design_consultancy/Social_Media/Frame 15.png";
+import f2 from "../../../assets/design_consultancy/Social_Media/Frame 14.jpg";
+import f3 from "../../../assets/design_consultancy/Social_Media/Frame 15.jpg";
 import f4 from "../../../assets/design_consultancy/Social_Media/Frame 16.png";
 import f5 from "../../../assets/design_consultancy/Social_Media/Frame 17 (1).png";
 import f6 from "../../../assets/design_consultancy/Social_Media/Frame 24 (3).png";
