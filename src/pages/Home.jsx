@@ -278,16 +278,16 @@ const Home = () => {
           {services.map((service, index) => (
             <article
               key={index}
-              onClick={() => handleServiceClick(service.name)}
-              className="flex flex-col items-center group cursor-pointer animate-fade-in-up"
+              // onClick={() => handleServiceClick(service.name)}
+              className="flex flex-col items-center group animate-fade-in-up"
               style={{ animationDelay: `${index * 150}ms` }}
-              role="button"
-              tabIndex={0}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleServiceClick(service.name);
-                }
-              }}
+              // role="button"
+              // tabIndex={0}
+              // onKeyPress={(e) => {
+              //   if (e.key === 'Enter' || e.key === ' ') {
+              //     handleServiceClick(service.name);
+              //   }
+              // }}
               aria-label={`Learn more about ${service.name}`}
             >
               {/* Service Thumbnails */}

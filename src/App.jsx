@@ -1,5 +1,7 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
+import { ShoppingCart } from "lucide-react";
+import { useCart } from './context/CartContext';
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -40,8 +42,43 @@ import OrderSuccess from "./components/OrderSuccess";
 import CartToast from "./components/CartToast";
 import SiteMap from "./pages/SiteMap";
 
+const FloatingCartButton = () => {
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount();
+
+  return (
+    <Link
+      to="/cart"
+      style={{ pointerEvents: "auto" }}
+      className="
+        fixed
+        right-4 md:right-6
+        bottom-[9.5rem] md:bottom-[11rem]
+        bg-[#f47e82] text-white
+        w-14 h-14 md:w-16 md:h-16
+        rounded-full shadow-2xl
+        flex items-center justify-center
+        hover:bg-[#e06a6e]
+        hover:scale-105
+        hover:shadow-[0_10px_25px_-5px_rgba(244,126,130,0.4)]
+        active:scale-95
+        transition-all duration-300
+        focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2
+      "
+      aria-label="View cart"
+    >
+      <ShoppingCart size={28} className="md:w-8 md:h-8" />
+      {cartCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold shadow-md">
+          {cartCount}
+        </span>
+      )}
+    </Link>
+  );
+};
 
 function App() {
+
   const openEnquiry = () => {
     window.dispatchEvent(new Event("open-enquiry-form"));
   };
@@ -141,7 +178,7 @@ function App() {
         {/* Cart Toast Notification — fires when item added to cart (Point 3) */}
         <CartToast />
 
-        {/* Enquiry Button - Fixed Position */}
+        {/* Sticky Floating Buttons - Cart + Enquiry */}
         {createPortal(
           <div
             style={{
@@ -151,21 +188,23 @@ function App() {
               pointerEvents: "none",
             }}
             role="complementary"
-            aria-label="Enquiry assistance"
+            aria-label="Floating action buttons"
           >
+            {/* Sticky Cart Button — just above Enquiry */}
+            <FloatingCartButton />
+
+            {/* Enquiry Button */}
             <button
               onClick={openEnquiry}
               style={{ pointerEvents: "auto" }}
               className="
                 fixed 
-                right-4 md:right-6.5 
-                bottom-23 md:bottom-25
+                right-4 md:right-6 
+                bottom-[5.25rem] md:bottom-[6.25rem]
                 bg-[#0F172A] text-white
-                px-3.5 py-3.5
+                w-14 h-14 md:w-16 md:h-16
                 rounded-full shadow-2xl
-                writing-vertical-rl
-                font-semibold tracking-widest
-                flex items-center gap-2
+                flex items-center justify-center
                 hover:bg-[#020617]
                 hover:scale-105
                 hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.4)]
