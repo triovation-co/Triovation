@@ -1,7 +1,5 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
-import { ShoppingCart } from "lucide-react";
-import { useCart } from './context/CartContext';
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -42,40 +40,6 @@ import OrderSuccess from "./components/OrderSuccess";
 import CartToast from "./components/CartToast";
 import SiteMap from "./pages/SiteMap";
 
-const FloatingCartButton = () => {
-  const { getCartCount } = useCart();
-  const cartCount = getCartCount();
-
-  return (
-    <Link
-      to="/cart"
-      style={{ pointerEvents: "auto" }}
-      className="
-        fixed
-        right-4 md:right-6
-        bottom-[9.5rem] md:bottom-[11rem]
-        bg-[#f47e82] text-white
-        w-14 h-14 md:w-16 md:h-16
-        rounded-full shadow-2xl
-        flex items-center justify-center
-        hover:bg-[#e06a6e]
-        hover:scale-105
-        hover:shadow-[0_10px_25px_-5px_rgba(244,126,130,0.4)]
-        active:scale-95
-        transition-all duration-300
-        focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2
-      "
-      aria-label="View cart"
-    >
-      <ShoppingCart size={28} className="md:w-8 md:h-8" />
-      {cartCount > 0 && (
-        <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-semibold shadow-md">
-          {cartCount}
-        </span>
-      )}
-    </Link>
-  );
-};
 
 function App() {
 
@@ -110,7 +74,7 @@ function App() {
         Skip to main content
       </a>
 
-      <div className="flex flex-col min-h-screen w-auto overflow-x-hidden">
+      <div className="flex flex-col min-h-screen w-auto overflow-x-hidden pt-20 md:pt-24">
         <Navbar />
         <ScrollToTop />
 
@@ -190,8 +154,6 @@ function App() {
             role="complementary"
             aria-label="Floating action buttons"
           >
-            {/* Sticky Cart Button — just above Enquiry */}
-            <FloatingCartButton />
 
             {/* Enquiry Button */}
             <button
