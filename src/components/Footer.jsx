@@ -32,10 +32,10 @@ const Footer = () => {
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <a
-              href="tel:+918828293426"
+              href="tel:+919082056827"
               className="text-sm 2xl:text-base hover:text-blue-600"
             >
-              +91-8828293426
+              +91-9082056827
             </a>
             <br />
             <a
