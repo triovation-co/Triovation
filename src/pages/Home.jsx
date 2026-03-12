@@ -42,6 +42,8 @@ const Home = () => {
     }
   };
 
+  const nonClickableServices = ["Learn and Fabricate", "Learning Zone", "Education"];
+
   const services = [
     { name: "Corporate Gifting", image: corporateGifting, description: "Premium corporate gifts and bulk gifting solutions" },
     { name: "Customized Gifting", image: customizedGifting, description: "Personalized gifts tailored to your needs" },
@@ -275,21 +277,23 @@ const Home = () => {
           className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:mt-20"
           aria-label="Available services"
         >
-          {services.map((service, index) => (
-            <article
-              key={index}
-              // onClick={() => handleServiceClick(service.name)}
-              className="flex flex-col items-center group animate-fade-in-up"
-              style={{ animationDelay: `${index * 150}ms` }}
-              // role="button"
-              // tabIndex={0}
-              // onKeyPress={(e) => {
-              //   if (e.key === 'Enter' || e.key === ' ') {
-              //     handleServiceClick(service.name);
-              //   }
-              // }}
-              aria-label={`Learn more about ${service.name}`}
-            >
+          {services.map((service, index) => {
+            const isClickable = !nonClickableServices.includes(service.name);
+            return (
+              <article
+                key={index}
+                onClick={isClickable ? () => handleServiceClick(service.name) : undefined}
+                className={`flex flex-col items-center group animate-fade-in-up ${isClickable ? "cursor-pointer" : "cursor-default"}`}
+                style={{ animationDelay: `${index * 150}ms` }}
+                role={isClickable ? "button" : "article"}
+                tabIndex={isClickable ? 0 : undefined}
+                onKeyDown={isClickable ? (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    handleServiceClick(service.name);
+                  }
+                } : undefined}
+                aria-label={isClickable ? `Learn more about ${service.name}` : service.name}
+              >
               {/* Service Thumbnails */}
               <figure className="rounded-t-full overflow-hidden w-40 h-40 sm:w-50 sm:h-60 md:w-50 md:h-55 lg:w-60 lg:h-60 xl:w-74 xl:h-80 mb-4 relative transition-all duration-700 hover:scale-110">
                 <img
@@ -303,11 +307,12 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#f47e82]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
               </figure>
 
-              <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800 group-hover:text-[#f47e82] transition-all duration-300 hover:scale-105">
-                {service.name}
-              </h3>
-            </article>
-          ))}
+                <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800 group-hover:text-[#f47e82] transition-all duration-300 hover:scale-105">
+                  {service.name}
+                </h3>
+              </article>
+            );
+          })}
         </nav>
       </section>
 
