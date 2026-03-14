@@ -48,9 +48,9 @@ const Home = () => {
     { name: "Corporate Gifting", image: corporateGifting, description: "Premium corporate gifts and bulk gifting solutions" },
     { name: "Customized Gifting", image: customizedGifting, description: "Personalized gifts tailored to your needs" },
     { name: "Design Consultancy", image: designConsultancy, description: "Professional design and branding services" },
-    { name: "Learn and Fabricate", image: Learn_fab, description: "Hands-on learning and fabrication workshops" },
-    { name: "Learning Zone", image: learningZone, description: "Educational resources and learning materials" },
-    { name: "Education", image: education, description: "Comprehensive educational programs and kits" },
+    // { name: "Learn and Fabricate", image: Learn_fab, description: "Hands-on learning and fabrication workshops" },
+    // { name: "Learning Zone", image: learningZone, description: "Educational resources and learning materials" },
+    // { name: "Education", image: education, description: "Comprehensive educational programs and kits" },
   ];
 
   // Structured data for the organization
