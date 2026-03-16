@@ -51,8 +51,8 @@ const DesignConsultancy = () => {
               alt={item.title}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-black/35 flex items-end p-6">
-              <p className="text-white text-2xl font-semibold leading-snug">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex items-end p-6 transition-colors duration-500 group-hover:from-black/90 group-hover:via-black/40">
+              <p className="text-white text-2xl font-semibold leading-snug" style={{ textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}>
                 {item.title}
               </p>
             </div>

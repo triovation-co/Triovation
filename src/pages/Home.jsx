@@ -168,7 +168,7 @@ const Home = () => {
               <span className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] bg-clip-text text-transparent">
                 TRIOVATION
               </span>{" "}
-              – Corporate gifting solutions and design consultancy
+              – CORPORATE GIFTING SOLUTIONS & DESIGN CONSULTANCY
             </h1>
             <div className="space-y-4 text-gray-600 text-lg lg:text-xl xl:text-[19px] leading-relaxed">
               <p className="animate-fade-in-up delay-200">
@@ -294,18 +294,18 @@ const Home = () => {
                 } : undefined}
                 aria-label={isClickable ? `Learn more about ${service.name}` : service.name}
               >
-              {/* Service Thumbnails */}
-              <figure className="rounded-t-full overflow-hidden w-40 h-40 sm:w-50 sm:h-60 md:w-50 md:h-55 lg:w-60 lg:h-60 xl:w-74 xl:h-80 mb-4 relative transition-all duration-700 hover:scale-110">
-                <img
-                  src={service.image}
-                  alt={`${service.name} - ${service.description}`}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
-                  width="296"
-                  height="320"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#f47e82]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
-              </figure>
+                {/* Service Thumbnails */}
+                <figure className="rounded-t-full overflow-hidden w-40 h-40 sm:w-50 sm:h-60 md:w-50 md:h-55 lg:w-60 lg:h-60 xl:w-74 xl:h-80 mb-4 relative transition-all duration-700 hover:scale-110">
+                  <img
+                    src={service.image}
+                    alt={`${service.name} - ${service.description}`}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-125"
+                    width="296"
+                    height="320"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#f47e82]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" aria-hidden="true"></div>
+                </figure>
 
                 <h3 className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-semibold text-gray-800 group-hover:text-[#f47e82] transition-all duration-300 hover:scale-105">
                   {service.name}

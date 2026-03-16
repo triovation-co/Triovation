@@ -514,20 +514,20 @@ const Navbar = () => {
           {/* Logo */}
           <div
             className="flex items-center cursor-pointer transition-transform hover:scale-105"
-            onClick={() => (window.location.href = "/")}
+            onClick={() => navigate("/")}
           >
             <img src={Logo} alt="Logo" className="h-10 sm:h-12 md:h-16 w-auto" />
           </div>
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
-            {["Home", "About", "Products", "Consultancy", "ContactUs"].map(
+            {["Home", "About", "Products", "Design Consultancy", "ContactUs"].map(
               (item, i) => {
                 // Point 8: "Consultancy" in nav should go directly to /design-consultancy
                 // to avoid the headline-cut and same-page redirect issue.
                 const getHref = (navItem) => {
                   if (navItem === "Home") return "/";
-                  if (navItem === "Consultancy") return "/Consultancy";
+                  if (navItem === "Design Consultancy") return "/Consultancy";
                   return `/${navItem}`;
                 };
 
@@ -538,8 +538,8 @@ const Navbar = () => {
                     onMouseEnter={() => handleMenuHover(item)}
                     onMouseLeave={handleMenuLeave}
                   >
-                    <a
-                      href={getHref(item)}
+                    <Link
+                      to={getHref(item)}
                       onClick={() => {
                         setIsOpen(false);
                         setCurrentPage(item === "Home" ? "Home" : item);
@@ -549,7 +549,7 @@ const Navbar = () => {
                       {formatMenuLabel(item)}
 
                       <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-500 transition-all duration-300 group-hover:w-full"></span>
-                    </a>
+                    </Link>
 
                     {/* Dropdown */}
                     {item === "Products" && activeDropdown === item && (
@@ -857,19 +857,19 @@ const Navbar = () => {
             }`}
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
-            {["Home", "About", "Products", "Consultancy", "ContactUs"].map(
+            {["Home", "About", "Products", "Design Consultancy", "ContactUs"].map(
               (item, i) => {
                 // Point 8: Consultancy → /design-consultancy directly
                 const getMobileHref = (navItem) => {
                   if (navItem === "Home") return "/";
-                  if (navItem === "Consultancy") return "/Consultancy";
+                  if (navItem === "Design Consultancy") return "/Consultancy";
                   return `/${navItem}`;
                 };
 
                 return (
-                  <a
+                  <Link
                     key={i}
-                    href={getMobileHref(item)}
+                    to={getMobileHref(item)}
                     onClick={() => {
                       setIsOpen(false);
                       setCurrentPage(item === "Home" ? "Home" : item);
@@ -877,20 +877,20 @@ const Navbar = () => {
                     className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded"
                   >
                     {formatMenuLabel(item)}
-                  </a>
+                  </Link>
                 );
               }
             )}
 
             {/* Point 6: Wholesale & Corporate enquiries — proper link to ContactUs page.
                 Was previously an anchor (#) that just scrolled to the top of the same page. */}
-            <a
-              href="/ContactUs"
+            <Link
+              to="/ContactUs"
               onClick={() => setIsOpen(false)}
               className="text-gray-700 font-medium hover:text-red-500 transition-all duration-500 hover:translate-x-2 hover:bg-gray-50 py-2 px-2 rounded border-t pt-3"
             >
               Wholesale &amp; Corporate Enquiries
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
