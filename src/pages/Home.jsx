@@ -172,7 +172,7 @@ const Home = () => {
             </h1>
             <div className="space-y-4 text-gray-600 text-lg lg:text-xl xl:text-[19px] leading-relaxed">
               <p className="animate-fade-in-up delay-200">
-                TRIOVATION is a one stop consultancy platform where imagination takes shape as reality. We transform concepts into impactful creations through our expertise in corporate gifting, corporate gifting solutions, design consultancy services, and innovative design solutions.
+                TRIOVATION is a platform where imagination takes shape as reality. We transform concepts into impactful creations through our expertise in corporate gifting, corporate gifting solutions, design consultancy services, and innovative design solutions.
               </p>
               <p className="animate-fade-in-up delay-400">
                 From custom product design and manufacturing to personalized corporate hampers and thoughtful gift ideas, we bring creativity and precision together under one roof. Alongside physical products, we also nurture innovation through hands on workshops and learning experiences.
