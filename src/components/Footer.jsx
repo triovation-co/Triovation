@@ -64,20 +64,21 @@ const Footer = () => {
                 </button>
               </li>
               <li>
-                <Link to="/ContactUs" className="hover:text-blue-600">
+                <Link to="/ContactUs" reloadDocument className="hover:text-blue-600">
                   Wholesale & Corporate enquiries
                 </Link>
               </li>
               <li>
                 <Link
                   to="/cancellation-refund"
+                  reloadDocument
                   className="hover:text-blue-600"
                 >
                   Cancellation & Refund Policy
                 </Link>
               </li>
               <li>
-                <Link to="/sitemap" className="hover:text-blue-600">
+                <Link to="/sitemap" reloadDocument className="hover:text-blue-600">
                   Site Map
                 </Link>
               </li>
@@ -94,9 +95,9 @@ const Footer = () => {
           <div className="mt-1 lg:mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">Our Company</h2>
             <ul className="space-y-2 text-sm 2xl:text-base">
-              <li><Link to="/" className="hover:text-blue-600">Home</Link></li>
-              <li><Link to="/About" className="hover:text-blue-600">About Us</Link></li>
-              <li><Link to="/ContactUs" className="hover:text-blue-600">Contact Us</Link></li>
+              <li><Link to="/" reloadDocument className="hover:text-blue-600">Home</Link></li>
+              <li><Link to="/About" reloadDocument className="hover:text-blue-600">About Us</Link></li>
+              <li><Link to="/ContactUs" reloadDocument className="hover:text-blue-600">Contact Us</Link></li>
             </ul>
           </div>
 
@@ -107,14 +108,15 @@ const Footer = () => {
               <li>
                 <Link
                   to="/cancellation-refund"
+                  reloadDocument
                   className="hover:text-blue-600"
                 >
                   Cancellation & Refund
                 </Link>
               </li>
-              <li><Link to="/shipping-delivery" className="hover:text-blue-600">Shipping & Delivery</Link></li>
-              <li><Link to="/terms-condition" className="hover:text-blue-600">Terms & Conditions</Link></li>
-              <li><Link to="/privacy-policies" className="hover:text-blue-600">Privacy Policy</Link></li>
+              <li><Link to="/shipping-delivery" reloadDocument className="hover:text-blue-600">Shipping & Delivery</Link></li>
+              <li><Link to="/terms-condition" reloadDocument className="hover:text-blue-600">Terms & Conditions</Link></li>
+              <li><Link to="/privacy-policies" reloadDocument className="hover:text-blue-600">Privacy Policy</Link></li>
             </ul>
           </div>
         </div>
