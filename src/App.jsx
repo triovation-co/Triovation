@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from 'react';
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
@@ -43,6 +43,9 @@ import BulkOrder from "./pages/BulkOrder";
 
 
 function App() {
+
+  const location = useLocation();
+  const isBulkOrder = location.pathname.toLowerCase() === "/bulkorder";
 
   const openEnquiry = () => {
     window.dispatchEvent(new Event("open-enquiry-form"));
@@ -139,7 +142,7 @@ function App() {
         </main>
 
         {/* WhatsApp Button */}
-        <WhatsAppButton />
+        <WhatsAppButton bottomOffset={isBulkOrder} />
 
         {/* Cart Toast Notification — fires when item added to cart (Point 3) */}
         <CartToast />
@@ -161,10 +164,10 @@ function App() {
             <button
               onClick={openEnquiry}
               style={{ pointerEvents: "auto" }}
-              className="
+              className={`
                 fixed 
                 right-4 md:right-6 
-                bottom-[5.25rem] md:bottom-[6.25rem]
+                ${isBulkOrder ? "bottom-[8.75rem] md:bottom-[10rem]" : "bottom-[5.25rem] md:bottom-[6.25rem]"}
                 bg-[#0F172A] text-white
                 w-14 h-14 md:w-16 md:h-16
                 rounded-full shadow-2xl
@@ -175,7 +178,7 @@ function App() {
                 active:scale-95
                 transition-all duration-300
                 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2
-              "
+              `}
               aria-label="Open enquiry form for assistance"
               type="button"
             >

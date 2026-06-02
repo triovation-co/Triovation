@@ -716,7 +716,7 @@ const BulkOrder = () => {
 
       {/* ═══════════════ CTA ═══════════════ */}
       <div className="pb-20 sm:pb-32"></div>
-      <div className="fixed bottom-0 left-0 w-full z-50 py-2 sm:py-5 bg-white/60 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] flex justify-center gap-2 sm:gap-6 px-3 sm:px-4">
+      <div className="fixed bottom-0 left-0 w-full z-50 py-1.5 sm:py-3 bg-white/60 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] flex justify-center gap-2 sm:gap-6 px-3 sm:px-4">
         <button 
           onClick={() => setOpenQuoteForm(true)}
           className="bg-red-600 hover:bg-red-700 text-white font-bold text-[8px] sm:text-sm md:text-base px-4 sm:px-10 py-2 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(220,38,38,0.5)] hover:shadow-[0_15px_30px_rgba(220,38,38,0.7)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border-2 border-white/20">
