@@ -291,8 +291,8 @@ const BulkOrder = () => {
 
       {/* ═══════════════ THREE FEATURES — flat, no cards ═══════════════ */}
       <section className="w-full bg-gray-50 border-t border-b border-gray-200">
-        <div className="w-full px-6 sm:px-10 lg:px-20 xl:px-32 py-14 sm:py-20">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-8 lg:gap-16">
+        <div className="w-full px-6 sm:px-10 lg:px-20 xl:px-32 py-8 sm:py-20">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 lg:gap-16">
 
             {/* Feature 1 */}
             <div className="text-center">
@@ -300,7 +300,7 @@ const BulkOrder = () => {
               <h3 className="font-bold text-gray-800 text-base sm:text-lg mt-6 mb-2">
                 Need Gifting Solutions?
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-12 max-w-[260px] mx-auto">
+              <p className="text-gray-500 text-sm leading-relaxed mb-4 sm:mb-12 max-w-[260px] mx-auto">
                 Refer to our Product Catalogue for gifting options.
               </p>
               <button
@@ -313,7 +313,7 @@ const BulkOrder = () => {
 
             {/* Feature 2 */}
             <div className="text-center">
-              <img src={consultNowImg} alt="Personalized Solutions" className="w-48 h-48 sm:w-[280px] sm:h-[280px] mx-auto -mb-4 mt-8 sm:-mb-10 object-contain relative z-10" />
+              <img src={consultNowImg} alt="Personalized Solutions" className="w-48 h-48 sm:w-[280px] sm:h-[280px] mx-auto -mb-4 mt-0 sm:mt-8 sm:-mb-10 object-contain relative z-10" />
               <h3 className="font-bold text-gray-800 text-base sm:text-lg -mt-2 -pt-2 mb-2">
                 Personalized Solutions
               </h3>
@@ -330,11 +330,11 @@ const BulkOrder = () => {
 
             {/* Feature 3 */}
             <div className="text-center">
-              <img src={qualityImg} alt="Superior Quality" className="w-48 h-48 sm:w-[280px] sm:h-[280px] mx-auto -mb-4 mt-10 sm:-mb-15 object-contain relative z-10" />
+              <img src={qualityImg} alt="Superior Quality" className="w-48 h-48 sm:w-[280px] sm:h-[280px] mx-auto -mb-4 mt-0 sm:mt-10 sm:-mb-15 object-contain relative z-10" />
               <h3 className="font-bold text-gray-800 text-base sm:text-lg mt-4 mb-2">
                 Superior Quality
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-11 max-w-[280px] mx-auto">
+              <p className="text-gray-500 text-sm leading-relaxed mb-4 sm:mb-11 max-w-[280px] mx-auto">
                 From small MOQs to large-scale production, we maintain uncompromising quality
               </p>
               <button
