@@ -39,6 +39,7 @@ import SitemapGenerator from './components/SitemapGenerator';
 import OrderSuccess from "./components/OrderSuccess";
 import CartToast from "./components/CartToast";
 import SiteMap from "./pages/SiteMap";
+import BulkOrder from "./pages/BulkOrder";
 
 
 function App() {
@@ -131,6 +132,7 @@ function App() {
 
             <Route path="/admin/sitemap" element={<SitemapGenerator />} />
             <Route path="/sitemap" element={<SiteMap />} />
+            <Route path="/bulkorder" element={<BulkOrder />} />
           </Routes>
 
           <EnquiryModal />

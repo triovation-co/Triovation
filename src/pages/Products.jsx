@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useProductManager } from "../hooks/useProductManager.jsx";
 import bulkorder1 from "../assets/bulkorder1.png";
 import bulkorder2 from "../assets/bulkorder2.png";
@@ -87,6 +87,7 @@ const scrollToRef = (ref) => {
 };
 
 const Products = () => {
+  const navigate = useNavigate();
 
   // Use React Router's useLocation hook
   const location = useLocation();
@@ -359,6 +360,15 @@ const Products = () => {
   const mechanicalRef = useRef(null);
   const designRef = useRef(null);
   const educationRef = useRef(null);
+  const productTypeScrollRef = useRef(null);
+
+  const scrollProductTypes = (direction) => {
+    const container = productTypeScrollRef.current;
+    if (!container) return;
+    const cardWidth = container.querySelector('button')?.offsetWidth || 300;
+    const scrollAmount = cardWidth + 32; // card width + gap
+    container.scrollBy({ left: direction === 'right' ? scrollAmount : -scrollAmount, behavior: 'smooth' });
+  };
 
   const findProductInSections = (productName) => {
     const sections = [
@@ -437,6 +447,165 @@ const Products = () => {
   const hasDesignProducts = enhancedProducts.design && enhancedProducts.design.length > 0;
   const hasEducationProducts = enhancedProducts.education && enhancedProducts.education.length > 0;
 
+  // ── Product Type Cards Data ──
+  const productTypeCards = React.useMemo(() => {
+    const types = [
+      { name: "Keychains", image: "https://images.unsplash.com/photo-1670540805686-a73a025c0dd1?q=80&w=600&auto=format&fit=crop" },
+      { name: "Bottles", image: "https://images.unsplash.com/photo-1625708458528-802ec79b1ed8?q=80&w=600&auto=format&fit=crop" },
+      { name: "Lamps", image: "https://images.unsplash.com/photo-1475783006851-1d68dd683eff?q=80&w=600&auto=format&fit=crop" },
+      { name: "Caps", image: "https://images.unsplash.com/photo-1653704841996-c2ed854aedd8?q=80&w=600&auto=format&fit=crop" },
+      { name: "Trophy", image: "https://images.unsplash.com/photo-1757365225211-1515ecc8a109?q=80&w=600&auto=format&fit=crop" },
+      { name: "Bags", image: "https://plus.unsplash.com/premium_photo-1683746792239-6ce8cdd3ac78?q=80&w=600&auto=format&fit=crop" },
+      { name: "Planters", image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=600&q=80" },
+      { name: "Books", image: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?q=80&w=600&auto=format&fit=crop" },
+      { name: "Clocks", image: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?q=80&w=600&auto=format&fit=crop" },
+      { name: "Stickers", image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=600&auto=format&fit=crop" },
+      { name: "T-shirts", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=600&auto=format&fit=crop" },
+      { name: "Frames", image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?q=80&w=600&auto=format&fit=crop" },
+    ];
+
+    // Count matching products for each type
+    const allProducts = [
+      ...enhancedProducts.festive,
+      ...enhancedProducts.corporate,
+      ...enhancedProducts.customisation,
+      ...enhancedProducts.homeDecor,
+      ...enhancedProducts.mechanical,
+      ...enhancedProducts.design,
+      ...enhancedProducts.education,
+    ];
+
+    return types.map(type => {
+      const keyword = type.name.toLowerCase().replace(/s$/, '');
+      const count = allProducts.filter(p =>
+        (p.name || '').toLowerCase().includes(keyword)
+      ).length;
+      return { ...type, count };
+    });
+  }, [enhancedProducts]);
+
+  // ── Category Browse Sections Data ──
+  const categoryBrowseData = React.useMemo(() => {
+    const allProducts = [
+      ...enhancedProducts.festive,
+      ...enhancedProducts.corporate,
+      ...enhancedProducts.customisation,
+      ...enhancedProducts.homeDecor,
+      ...enhancedProducts.mechanical,
+      ...enhancedProducts.design,
+      ...enhancedProducts.education,
+    ];
+
+    // Find matching products for a keyword — returns { count, image (first match thumbnail) }
+    const findProducts = (keyword) => {
+      const kw = keyword.toLowerCase().replace(/s$/, '');
+      const matches = allProducts.filter(p =>
+        (p.name || '').toLowerCase().includes(kw)
+      );
+      return {
+        count: matches.length,
+        image: matches.length > 0 ? matches[0].image : null,
+      };
+    };
+
+    // Build a category item only if products exist
+    const makeItem = (name, keyword) => {
+      const { count, image } = findProducts(keyword || name);
+      if (count === 0 || !image) return null;
+      return { name, image, count };
+    };
+
+    // Link-based items are always shown (services, not products)
+    const makeLinkItem = (name, link) => {
+      // Try to find a product thumbnail that matches the name
+      const { image } = findProducts(name);
+      return { name, link, image: image || null };
+    };
+
+    const rawCategories = [
+      {
+        title: "Corporate Gifting",
+        gradient: "from-amber-500 to-orange-600",
+        items: [
+          makeItem("Acrylic Lamps", "acrylic lamp"),
+          makeItem("Lithophane", "lithophane"),
+          makeItem("Water Bottle", "bottle"),
+          makeItem("Trophy", "trophy"),
+          makeItem("Keychain", "keychain"),
+          makeItem("Planters", "planter"),
+          makeItem("Notebooks", "book"),
+          makeItem("Pop Sockets", "pop socket"),
+        ],
+      },
+      {
+        title: "Customisation & Merchandising",
+        gradient: "from-pink-500 to-rose-600",
+        items: [
+          makeItem("Ceramic Cups", "ceramic cup"),
+          makeItem("Keychains", "keychain"),
+          makeItem("Lithophane Frame", "lithophane frame"),
+          makeItem("Bottle", "bottle"),
+          makeItem("Characters", "character"),
+          makeItem("Cap", "cap"),
+          makeItem("Tote Bags", "tote bag"),
+          makeItem("Phone Cover", "phone cover"),
+          makeItem("Katana", "katana"),
+          makeItem("Sword", "sword"),
+        ],
+      },
+      {
+        title: "Home & Decor",
+        gradient: "from-emerald-500 to-teal-600",
+        items: [
+          makeItem("Characters", "character"),
+          makeItem("Clocks", "clock"),
+          makeItem("Mandala Boards", "mandala"),
+          makeItem("Puzzle Frame", "puzzle frame"),
+          makeItem("Gods Frame", "god frame"),
+          makeItem("Charger Stand", "charger stand"),
+        ],
+      },
+      {
+        title: "Design, Prototyping & Consultancy",
+        gradient: "from-violet-500 to-purple-600",
+        isLinkBased: true,
+        items: [
+          makeLinkItem("Design Consultancy", "/design-consultancy"),
+          makeLinkItem("Branding", "/design-consultancy/brand-identity-design"),
+          makeLinkItem("UI/UX", "/design-consultancy/website-uiux-design"),
+          makeLinkItem("Zine", "/design-consultancy/book-magazine-zine-design"),
+          makeItem("Books", "book"),
+          makeLinkItem("Social Media Posts", "/design-consultancy/social-media-design"),
+          makeLinkItem("Illustration", "/design-consultancy/digital-illustration-design"),
+          makeLinkItem("Business Cards", "/design-consultancy/business-collateral-design"),
+        ],
+      },
+      {
+        title: "Education & Workshops",
+        gradient: "from-sky-500 to-blue-600",
+        isLinkBased: true,
+        items: [
+          makeLinkItem("Design Consultancy", "/design-consultancy"),
+          makeLinkItem("Branding", "/design-consultancy/brand-identity-design"),
+          makeLinkItem("UI/UX", "/design-consultancy/website-uiux-design"),
+          makeLinkItem("Zine", "/design-consultancy/book-magazine-zine-design"),
+          makeItem("Books", "book"),
+        ],
+      },
+    ];
+
+    // Filter out null items and hide categories with no items
+    return rawCategories
+      .map(cat => ({
+        ...cat,
+        items: cat.items.filter(item => item !== null && item.image !== null),
+      }))
+      .filter(cat => cat.items.length > 0);
+  }, [enhancedProducts]);
+
+  // Refs for category scroll containers
+  const categoryScrollRefs = useRef({});
+
   // Show loading screen until page is ready
   if (!pageReady || productsLoading) {
     return <LoadingScreen />;
@@ -450,6 +619,7 @@ const Products = () => {
   const displayedDesignProducts = showAllDesign ? enhancedProducts.design : enhancedProducts.design.slice(0, 8);
   const displayedEducationProducts = showAllEducation ? enhancedProducts.education : enhancedProducts.education.slice(0, 8);
 
+
   return (
     <div className="overflow-x-hidden min-h-screen">
       {/* FULL WIDTH HERO BANNER */}
@@ -458,6 +628,143 @@ const Products = () => {
       {isSearching && <SearchLoadingOverlay />}
 
       <div className="w-full px-4 sm:px-6 lg:px-4 py-8">
+
+        {/* ═══════════════ SHOP BY PRODUCT TYPE ═══════════════ */}
+        {!isSearchActive && (
+          <section className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+                Shop by Product Type
+              </h2>
+              <div className="hidden sm:flex items-center gap-2">
+                <button
+                  onClick={() => scrollProductTypes('left')}
+                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  onClick={() => scrollProductTypes('right')}
+                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight size={22} />
+                </button>
+              </div>
+            </div>
+            <div className="relative">
+              {/* Fade edge indicators */}
+              <div className="hidden sm:block absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none opacity-0" id="product-type-fade-left" />
+              <div className="hidden sm:block absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+              <div
+                ref={productTypeScrollRef}
+                className="flex gap-3 sm:gap-6 lg:gap-8 overflow-x-auto pb-4 scroll-smooth"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {productTypeCards.map((type) => (
+                  <button
+                    key={type.name}
+                    onClick={() => handleCategoryClick(type.name)}
+                    className="group flex-shrink-0 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col"
+                    style={{ width: 'calc((100% - 3 * 2rem) / 4)', minWidth: '220px' }}
+                  >
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={type.image}
+                        alt={type.name}
+                        loading="lazy"
+                        className="w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+                    </div>
+                    <div className="p-3 sm:p-4 text-center">
+                      <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+                        {type.name}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════ SHOP BY CATEGORY ═══════════════ */}
+        {!isSearchActive && categoryBrowseData.map((category, catIdx) => {
+          return (
+            <section key={catIdx} className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+              {/* Category Header - same style as ProductSection */}
+              <header className="flex items-center my-10">
+                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
+                <h2 className="mx-4 text-gray-800 font-semibold lg:text-xl">
+                  {category.title}
+                </h2>
+                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
+              </header>
+
+              {/* Category Grid */}
+              <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8" role="list">
+                {category.items.map((item, itemIdx) => {
+                  // Link-based items navigate to a route
+                  if (item.link) {
+                    return (
+                      <li key={itemIdx} className="w-full flex">
+                        <Link
+                          to={item.link}
+                          className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
+                        >
+                          <div className="relative overflow-hidden w-full aspect-square">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              loading="lazy"
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                          </div>
+                          <div className="p-3 sm:p-4 text-center mt-auto">
+                            <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+                              {item.name}
+                            </p>
+                          </div>
+                        </Link>
+                      </li>
+                    );
+                  }
+
+                  // Product-based items trigger search
+                  return (
+                    <li key={itemIdx} className="w-full flex">
+                      <button
+                        onClick={() => handleCategoryClick(item.name)}
+                        className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
+                      >
+                        <div className="relative overflow-hidden w-full aspect-square">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+                        </div>
+                        <div className="p-3 sm:p-4 text-center mt-auto">
+                          <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+                            {item.name}
+                          </p>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          );
+        })}
+
         {/* Sort Controls */}
         <div className="w-full px-2 py-4 lg:ml-6 2xl:ml-10">
           <div className="flex items-center gap-2 w-full">

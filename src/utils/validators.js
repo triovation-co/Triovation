@@ -34,6 +34,13 @@ export const validatePhone = (value) => {
     return { valid: true, error: "" };
 };
 
+export const validatePhoneOptional = (value) => {
+    if (!value || !value.trim()) {
+        return { valid: true, error: "" };
+    }
+    return validatePhone(value);
+};
+
 export const validatePinCode = (value) => {
     if (!value || !value.trim()) {
         return { valid: false, error: "PIN code is required" };

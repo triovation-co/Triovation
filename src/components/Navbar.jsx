@@ -521,13 +521,14 @@ const Navbar = () => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
-            {["Home", "About", "Products", "Design Consultancy", "ContactUs"].map(
+            {["Home", "About", "Products", "Design Consultancy", "Bulk Order", "ContactUs"].map(
               (item, i) => {
                 // Point 8: "Consultancy" in nav should go directly to /design-consultancy
                 // to avoid the headline-cut and same-page redirect issue.
                 const getHref = (navItem) => {
                   if (navItem === "Home") return "/";
                   if (navItem === "Design Consultancy") return "/Consultancy";
+                  if (navItem === "Bulk Order") return "/bulkorder";
                   return `/${navItem}`;
                 };
 
@@ -857,12 +858,13 @@ const Navbar = () => {
             }`}
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
-            {["Home", "About", "Products", "Design Consultancy", "ContactUs"].map(
+            {["Home", "About", "Products", "Design Consultancy", "Bulk Order", "ContactUs"].map(
               (item, i) => {
                 // Point 8: Consultancy → /design-consultancy directly
                 const getMobileHref = (navItem) => {
                   if (navItem === "Home") return "/";
                   if (navItem === "Design Consultancy") return "/Consultancy";
+                  if (navItem === "Bulk Order") return "/bulkorder";
                   return `/${navItem}`;
                 };
 
