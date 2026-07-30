@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useProductManager } from '../hooks/useProductManager.jsx';
 import {
@@ -141,9 +141,18 @@ const ProductDetails = () => {
     return `₹${numPrice.toLocaleString('en-IN')}`;
   };
 
+  // Sanitize HTML — strip dangerous tags while preserving safe formatting
   const parseHtmlContent = (htmlContent) => {
     if (!htmlContent) return '';
-    return htmlContent;
+    // Remove script, iframe, object, embed, form, and event handlers
+    return htmlContent
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
+      .replace(/<iframe[^>]*>[\s\S]*?<\/iframe>/gi, '')
+      .replace(/<object[^>]*>[\s\S]*?<\/object>/gi, '')
+      .replace(/<embed[^>]*>/gi, '')
+      .replace(/<form[^>]*>[\s\S]*?<\/form>/gi, '')
+      .replace(/\bon\w+\s*=\s*(["'])[\s\S]*?\1/gi, '')
+      .replace(/javascript\s*:/gi, '');
   };
 
   const getAvailableImages = () => {
@@ -162,6 +171,50 @@ const ProductDetails = () => {
   const handleNextImage = () => {
     setSelectedImage((prev) => (prev === availableImages.length - 1 ? 0 : prev + 1));
   };
+
+  // Touch swipe support for mobile image gallery
+  const touchStartX = useRef(null);
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    const threshold = 50; // min swipe distance in px
+    if (Math.abs(diff) > threshold) {
+      if (diff > 0) handleNextImage();
+      else handlePreviousImage();
+    }
+    touchStartX.current = null;
+  };
+
+  // Related Products — up to 4 from the same category
+  const relatedProducts = useMemo(() => {
+    if (!product) return [];
+    const allStaticProducts = [
+      ...FestiveSeason,
+      ...corporateGiftingProducts,
+      ...customisationProducts,
+      ...homeDecorProducts,
+      ...mechanicalProducts,
+      ...designConsultancyProducts,
+      ...educationWorkshopsProducts,
+      ...sheetProducts,
+    ];
+    const category = product.category?.toLowerCase() || '';
+    return allStaticProducts
+      .filter(p => {
+        if (p.id.toString() === id) return false; // exclude current
+        const pCat = p.category?.toLowerCase() || '';
+        // Match by category or by name keyword similarity
+        if (category && pCat && pCat.includes(category.split(' ')[0])) return true;
+        // Fallback: match first word of product name
+        const nameKeyword = product.name?.split(' ')[0]?.toLowerCase();
+        if (nameKeyword && (p.name || '').toLowerCase().includes(nameKeyword)) return true;
+        return false;
+      })
+      .slice(0, 4);
+  }, [product, id, sheetProducts]);
 
   if (loading || sheetLoading) {
     return (
@@ -194,6 +247,9 @@ const ProductDetails = () => {
   const optimizeImage = (url, width = 900) => {
     if (!url) return url;
 
+    // Local images don't need optimization
+    if (url.startsWith('/products/')) return url;
+
     // Google Drive direct image optimization
     const match = url.match(/\/d\/([^/]+)/);
     if (match) {
@@ -206,33 +262,36 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white ">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
-        {/* Back Button */}
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-4 sm:mb-6 flex items-center text-orange-600 hover:text-orange-700 transition-colors touch-manipulation"
-        >
-          <svg
-            className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-          <span className="text-sm sm:text-base">Back</span>
-        </button>
+        {/* Breadcrumb Navigation */}
+        <nav className="mb-4 sm:mb-6 flex items-center text-xs sm:text-sm text-gray-500 overflow-x-auto" aria-label="Breadcrumb">
+          <Link to="/" className="hover:text-orange-600 transition-colors whitespace-nowrap">Home</Link>
+          <span className="mx-2">/</span>
+          <Link to="/products" className="hover:text-orange-600 transition-colors whitespace-nowrap">Products</Link>
+          {product.category && (
+            <>
+              <span className="mx-2">/</span>
+              <Link
+                to={`/products?search=${encodeURIComponent(product.category)}`}
+                className="hover:text-orange-600 transition-colors whitespace-nowrap"
+              >
+                {product.category}
+              </Link>
+            </>
+          )}
+          <span className="mx-2">/</span>
+          <span className="text-gray-800 font-medium truncate max-w-[200px]">{product.name}</span>
+        </nav>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-3 sm:p-4 lg:p-6">
             {/* Product Images */}
             <div className="space-y-3 sm:space-y-4">
               {/* Main Image */}
-              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group">
+              <div
+                className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group"
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
+              >
                 <img
                   src={optimizeImage(availableImages[selectedImage], 900) || 'https://via.placeholder.com/500x500'}
                   alt={product.name}
@@ -247,13 +306,13 @@ const ProductDetails = () => {
                 />
 
 
-                {/* Navigation Arrows - Only show if multiple images */}
+                {/* Navigation Arrows - Always visible on mobile, hover on desktop */}
                 {availableImages.length > 1 && (
                   <>
                     {/* Left Arrow */}
                     <button
                       onClick={handlePreviousImage}
-                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity touch-manipulation"
+                      className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity touch-manipulation"
                       aria-label="Previous image"
                     >
                       <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -264,7 +323,7 @@ const ProductDetails = () => {
                     {/* Right Arrow */}
                     <button
                       onClick={handleNextImage}
-                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity touch-manipulation"
+                      className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 sm:p-3 rounded-full shadow-lg opacity-70 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity touch-manipulation"
                       aria-label="Next image"
                     >
                       <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -466,7 +525,43 @@ const ProductDetails = () => {
         }
       `}</style>
 
-
+      {/* Related Products Section */}
+      {relatedProducts.length > 0 && (
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-10">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">You May Also Like</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+            {relatedProducts.map((relProduct) => (
+              <Link
+                key={relProduct.id}
+                to={`/product/${relProduct.id}`}
+                className="group rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+              >
+                <div className="aspect-square overflow-hidden">
+                  <img
+                    src={optimizeImage(relProduct.image, 400)}
+                    alt={relProduct.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 blur-sm"
+                    onLoad={(e) => e.currentTarget.classList.remove('blur-sm')}
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://via.placeholder.com/300x300';
+                    }}
+                  />
+                </div>
+                <div className="p-3 sm:p-4 text-center">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-800 group-hover:text-orange-600 transition-colors line-clamp-2">
+                    {relProduct.name}
+                  </h3>
+                  <p className="text-orange-600 font-bold mt-1 text-sm sm:text-base">
+                    {formatPrice(relProduct.price)}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
     </div>
   );

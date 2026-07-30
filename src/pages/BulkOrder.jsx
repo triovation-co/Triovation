@@ -260,32 +260,23 @@ const BulkOrder = () => {
           />
         ))}
 
-        {/* Persistent overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/55 flex flex-col items-center justify-center text-center px-4 z-10">
-          <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-wide drop-shadow-lg mb-4">
-            BULK ORDER
+        {/* Stronger overlay for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 flex flex-col items-center justify-center text-center px-6 z-10" style={{ fontFamily: "'Outfit', sans-serif" }}>
+          <h1
+            className="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-wide mb-5 sm:mb-6"
+            style={{ fontFamily: "'Great Vibes', cursive", textShadow: '0 2px 16px rgba(0,0,0,0.7), 0 6px 30px rgba(0,0,0,0.4)', fontWeight: 400 }}
+          >
+            Bulk Order
           </h1>
-          <p className="text-white/85 text-xs sm:text-sm md:text-base max-w-2xl leading-relaxed">
+
+          <p
+            className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-3xl leading-relaxed tracking-wide"
+            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}
+          >
             Custom-designed gifting solutions with seamless
             production, competitive pricing, and scalable delivery for
             corporate and marketing needs.
           </p>
-        </div>
-
-        {/* Dot indicators */}
-        <div className="absolute bottom-3 sm:bottom-5 w-full flex justify-center gap-2 z-20">
-          {heroImages.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                setHeroIndex(i);
-                clearInterval(heroTimer.current);
-                heroTimer.current = setInterval(() => setHeroIndex(p => (p + 1) % heroImages.length), 4000);
-              }}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === heroIndex ? "bg-white scale-125" : "bg-white/50 hover:bg-white/70"
-                }`}
-            />
-          ))}
         </div>
       </section>
 
@@ -295,46 +286,46 @@ const BulkOrder = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 lg:gap-16">
 
             {/* Feature 1 */}
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center">
               <img src={productCatalogueImg} alt="Need Gifting Solutions" className="w-48 h-48 sm:w-[280px] sm:h-[280px] mx-auto -mb-4 sm:-mb-10 object-contain relative z-10" />
               <h3 className="font-bold text-gray-800 text-base sm:text-lg mt-6 mb-2">
                 Need Gifting Solutions?
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-4 sm:mb-12 max-w-[260px] mx-auto">
+              <p className="text-gray-800 text-sm font-semibold leading-relaxed mb-4 sm:mb-6 max-w-[260px] mx-auto flex-grow">
                 Refer to our Product Catalogue for gifting options.
               </p>
               <button
                 onClick={() => setOpenCatalogueForm(true)}
-                className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
+                className="mt-auto bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
               >
                 Product Catalogue
               </button>
             </div>
 
             {/* Feature 2 */}
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center">
               <img src={consultNowImg} alt="Personalized Solutions" className="w-48 h-48 sm:w-[280px] sm:h-[280px] mx-auto -mb-4 mt-0 sm:mt-8 sm:-mb-10 object-contain relative z-10" />
               <h3 className="font-bold text-gray-800 text-base sm:text-lg -mt-2 -pt-2 mb-2">
                 Personalized Solutions
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-5 max-w-[280px] mx-auto">
+              <p className="text-gray-800 text-sm font-semibold leading-relaxed mb-4 sm:mb-6 max-w-[280px] mx-auto flex-grow">
                 Need something unique? We're not limited to the catalogue. For customized gifting solutions
               </p>
               <Link
                 to="/ContactUs"
-                className="inline-block bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
+                className="mt-auto inline-block bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
               >
                 Consult Now
               </Link>
             </div>
 
             {/* Feature 3 */}
-            <div className="text-center">
+            <div className="text-center flex flex-col items-center">
               <img src={qualityImg} alt="Superior Quality" className="w-48 h-48 sm:w-[280px] sm:h-[280px] mx-auto -mb-4 mt-0 sm:mt-10 sm:-mb-15 object-contain relative z-10" />
               <h3 className="font-bold text-gray-800 text-base sm:text-lg mt-4 mb-2">
                 Superior Quality
               </h3>
-              <p className="text-gray-500 text-sm leading-relaxed mb-4 sm:mb-11 max-w-[280px] mx-auto">
+              <p className="text-gray-800 text-sm font-semibold leading-relaxed mb-4 sm:mb-6 max-w-[280px] mx-auto flex-grow">
                 From small MOQs to large-scale production, we maintain uncompromising quality
               </p>
               <button
@@ -345,7 +336,7 @@ const BulkOrder = () => {
                     window.scrollTo({ top, behavior: 'smooth' });
                   }
                 }}
-                className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
+                className="mt-auto bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
               >
                 Learn more
               </button>
@@ -548,7 +539,7 @@ const BulkOrder = () => {
               <h4 className="font-bold text-gray-800 text-sm sm:text-base mb-1 group-hover:text-[#f47e82] transition">
                 {item.title}
               </h4>
-              <p className="text-gray-500 text-xs sm:text-sm leading-relaxed max-w-[200px] mx-auto">
+              <p className="text-gray-800 text-xs sm:text-sm font-semibold leading-relaxed max-w-[200px] mx-auto">
                 {item.desc}
               </p>
             </div>
@@ -568,7 +559,7 @@ const BulkOrder = () => {
             Our Success Stories
             <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full"></span>
           </h2>
-          <p className="text-center text-gray-400 text-sm mt-4">Scroll to explore our journey →</p>
+          <p className="text-center text-gray-600 text-sm font-semibold mt-4">Scroll to explore our journey →</p>
         </div>
 
         {/* ── Desktop: Horizontal storytelling timeline ── */}
@@ -643,13 +634,13 @@ const BulkOrder = () => {
                           />
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent flex flex-col justify-end p-6 rounded-[2rem]">
-                          <h3 className="text-white text-xl font-bold mb-2 group-hover:translate-x-2 transition-transform duration-300 drop-shadow-md">
+                          <h3 className="text-white text-2xl font-bold mb-2 group-hover:translate-x-2 transition-transform duration-300 drop-shadow-md">
                             {story.title}
                           </h3>
-                          <p className="text-white/80 text-xs sm:text-sm leading-snug mb-3">{story.desc}</p>
+                          <p className="text-white text-sm sm:text-base leading-snug mb-3 font-medium drop-shadow-md">{story.desc}</p>
                           <div className="flex items-center gap-2">
-                            <span className="text-[#fca5a5] text-lg font-extrabold">{story.stat}</span>
-                            <span className="text-white/50 text-[10px] uppercase tracking-widest font-bold">Delivered</span>
+                            <span className="text-[#fca5a5] text-xl font-extrabold">{story.stat}</span>
+                            <span className="text-white/70 text-xs uppercase tracking-widest font-bold">Delivered</span>
                           </div>
                           <div className="w-12 h-1 bg-[#f47e82] rounded-full mt-3 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                         </div>
@@ -695,11 +686,11 @@ const BulkOrder = () => {
                     <img src={story.img} alt={story.title} className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500" />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-end p-4">
-                    <h3 className="text-white text-sm font-bold mb-0.5">{story.title}</h3>
-                    <p className="text-white/70 text-[11px] leading-snug mb-2">{story.desc}</p>
+                    <h3 className="text-white text-base font-bold mb-0.5">{story.title}</h3>
+                    <p className="text-white text-sm leading-snug mb-2 font-medium drop-shadow-md">{story.desc}</p>
                     <div className="flex items-center gap-2">
-                      <span className="text-[#fca5a5] text-xs font-extrabold">{story.stat}</span>
-                      <span className="text-white/40 text-[9px] uppercase tracking-wider">Delivered</span>
+                      <span className="text-[#fca5a5] text-sm font-extrabold">{story.stat}</span>
+                      <span className="text-white/70 text-[10px] uppercase tracking-wider font-bold">Delivered</span>
                     </div>
                     <div className="w-8 h-0.5 bg-[#f47e82] rounded-full mt-2 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
                   </div>

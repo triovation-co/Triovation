@@ -26,25 +26,25 @@ const Footer = () => {
           {/* Column 1 - Logo & Contact */}
           <div>
             <img src={Logo} alt="Logo" className="h-12 w-auto mb-4 -ml-1" />
-            <p className="text-sm 2xl:text-base mb-6">
+            <p className="text-sm 2xl:text-base mb-6 font-semibold">
               Turn your imagination into reality with Triovation.<br></br>
               From custom gifts to creative solutions! let's build<br></br> something extraordinary together.
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <a
               href="tel:+919082056827"
-              className="text-sm 2xl:text-base hover:text-blue-600"
+              className="text-sm 2xl:text-base font-semibold hover:text-blue-600"
             >
               +91-9082056827
             </a>
             <br />
             <a
               href="mailto:triovation.co@gmail.com"
-              className="text-sm 2xl:text-base text-blue-600 hover:underline"
+              className="text-sm 2xl:text-base font-semibold text-blue-600 hover:underline"
             >
               triovation.co@gmail.com
             </a>
-            <p className="text-sm 2xl:text-base">India </p>
+            <p className="text-sm 2xl:text-base font-semibold mt-2">Mumbai-400014, India</p>
             <div className="flex gap-3 mt-4">
               <a href="#" className="text-pink-600 text-2xl"><i className="fab fa-instagram"></i></a>
               <a href="#" className="text-blue-700 text-2xl"><i className="fab fa-linkedin"></i></a>
@@ -54,7 +54,7 @@ const Footer = () => {
           {/* Column 2 - Helpful Links */}
           <div className="mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">HELPFUL LINKS</h2>
-            <ul className="space-y-2 text-sm 2xl:text-base">
+            <ul className="space-y-2 text-sm 2xl:text-base font-semibold">
               <li>
                 <button
                   onClick={() => setOpenCatalogueForm(true)}
@@ -94,7 +94,7 @@ const Footer = () => {
           {/* Column 3 - Our Company */}
           <div className="mt-1 lg:mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">Our Company</h2>
-            <ul className="space-y-2 text-sm 2xl:text-base">
+            <ul className="space-y-2 text-sm 2xl:text-base font-semibold">
               <li><Link to="/" reloadDocument className="hover:text-blue-600">Home</Link></li>
               <li><Link to="/About" reloadDocument className="hover:text-blue-600">About Us</Link></li>
               <li><Link to="/ContactUs" reloadDocument className="hover:text-blue-600">Contact Us</Link></li>
@@ -104,7 +104,7 @@ const Footer = () => {
           {/* Column 4 - Help */}
           <div className="mt-1 lg:mt-15">
             <h2 className="font-bold text-base 2xl:text-lg mb-3">Help</h2>
-            <ul className="space-y-2 text-sm 2xl:text-base">
+            <ul className="space-y-2 text-sm 2xl:text-base font-semibold">
               <li>
                 <Link
                   to="/cancellation-refund"

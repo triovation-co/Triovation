@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useProductManager } from "../hooks/useProductManager.jsx";
@@ -20,6 +20,9 @@ import {
 
 const optimizeImage = (url, width = 900) => {
   if (!url) return url;
+
+  // Local images don't need optimization
+  if (url.startsWith('/products/')) return url;
 
   // Google Drive direct image optimization
   const match = url.match(/\/d\/([^/]+)/);
@@ -94,34 +97,29 @@ const Products = () => {
   const { addToCart } = useCart();
 
 
-  // State
-  const [showAllFestive, setShowAllFestive] = useState(false);
-  const [showAllCorporate, setShowAllCorporate] = useState(false);
-  const [showAllCustomisation, setShowAllCustomisation] = useState(false);
-  const [showAllHomeDecor, setShowAllHomeDecor] = useState(false);
-  const [showAllMechanical, setShowAllMechanical] = useState(false);
-  const [showAllDesign, setShowAllDesign] = useState(false);
-  const [showAllEducation, setShowAllEducation] = useState(false);
+  // State — single object replaces 7 separate showAll* hooks
+  const [showAllSections, setShowAllSections] = useState({
+    festive: false,
+    corporate: false,
+    customisation: false,
+    homeDecor: false,
+    mechanical: false,
+    design: false,
+    education: false,
+  });
+  const toggleShowAll = useCallback((section, value) => {
+    setShowAllSections(prev => ({ ...prev, [section]: value }));
+  }, []);
+
   const [highlightedProduct, setHighlightedProduct] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearchActive, setIsSearchActive] = useState(false);
-  const [pageReady, setPageReady] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchSource, setSearchSource] = useState('search');
 
   const [sortBy, setSortBy] = useState('featured');
-  const { products: sheetProducts, loading: productsLoading, refreshProducts } = useProductManager();
-
-
-  // Force minimum loading time of 1.5 seconds for initial load
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setPageReady(true);
-    }, 1500);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const { products: sheetProducts, loading: productsLoading } = useProductManager();
 
   // Function to sort products locally
   const sortProductsLocally = (products, sortOption) => {
@@ -260,7 +258,18 @@ const Products = () => {
 
 
 
-  const performSearch = async (query) => {
+  // Single memoized array of all products — used by search, type cards, category browse
+  const allProducts = useMemo(() => [
+    ...enhancedProducts.festive,
+    ...enhancedProducts.corporate,
+    ...enhancedProducts.customisation,
+    ...enhancedProducts.homeDecor,
+    ...enhancedProducts.mechanical,
+    ...enhancedProducts.design,
+    ...enhancedProducts.education
+  ], [enhancedProducts]);
+
+  const performSearch = useCallback((query) => {
     if (!query || !query.trim()) {
       setSearchResults([]);
       setIsSearchActive(false);
@@ -269,16 +278,6 @@ const Products = () => {
     }
 
     setIsSearching(true);
-
-    const allProducts = [
-      ...enhancedProducts.festive,
-      ...enhancedProducts.corporate,
-      ...enhancedProducts.customisation,
-      ...enhancedProducts.homeDecor,
-      ...enhancedProducts.mechanical,
-      ...enhancedProducts.design,
-      ...enhancedProducts.education
-    ];
 
     const results = allProducts.filter(product =>
       strictTitleMatch(product.name || "", query)
@@ -290,14 +289,10 @@ const Products = () => {
     setSearchResults(finalResults);
     setIsSearching(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, [allProducts, sortBy]);
 
 
   useEffect(() => {
-    if (!pageReady) {
-      return;
-    }
-
     const params = new URLSearchParams(location.search);
     const search = params.get('search');
     const highlight = params.get('highlight');
@@ -317,7 +312,7 @@ const Products = () => {
       setIsSearchActive(false);
       setSearchResults([]);
     }
-  }, [location.search, enhancedProducts, pageReady]);
+  }, [location.search, performSearch]);
 
   const clearSearch = () => {
     setSearchQuery('');
@@ -331,16 +326,10 @@ const Products = () => {
     window.dispatchEvent(new CustomEvent('clearSearch'));
   };
 
-  const handleSortChange = async (newSortBy) => {
+  const handleSortChange = (newSortBy) => {
     setSortBy(newSortBy);
-
-    if (refreshProducts) {
-      await refreshProducts(newSortBy);
-    }
-
-    if (isSearchActive && searchQuery) {
-      performSearch(searchQuery);
-    }
+    // Sort is applied client-side via the useEffect that depends on sortBy.
+    // No need to re-fetch from Google Sheets.
   };
 
   // Handler for category banner clicks
@@ -394,15 +383,7 @@ const Products = () => {
   };
 
   const expandRelevantSection = (sectionName) => {
-    switch (sectionName) {
-      case 'festive': setShowAllFestive(true); break;
-      case 'corporate': setShowAllCorporate(true); break;
-      case 'customisation': setShowAllCustomisation(true); break;
-      case 'homeDecor': setShowAllHomeDecor(true); break;
-      case 'mechanical': setShowAllMechanical(true); break;
-      case 'design': setShowAllDesign(true); break;
-      case 'education': setShowAllEducation(true); break;
-    }
+    toggleShowAll(sectionName, true);
   };
 
   const getSectionRef = (sectionName) => {
@@ -464,17 +445,7 @@ const Products = () => {
       { name: "Frames", image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?q=80&w=600&auto=format&fit=crop" },
     ];
 
-    // Count matching products for each type
-    const allProducts = [
-      ...enhancedProducts.festive,
-      ...enhancedProducts.corporate,
-      ...enhancedProducts.customisation,
-      ...enhancedProducts.homeDecor,
-      ...enhancedProducts.mechanical,
-      ...enhancedProducts.design,
-      ...enhancedProducts.education,
-    ];
-
+    // Count matching products for each type — uses memoized allProducts
     return types.map(type => {
       const keyword = type.name.toLowerCase().replace(/s$/, '');
       const count = allProducts.filter(p =>
@@ -482,21 +453,11 @@ const Products = () => {
       ).length;
       return { ...type, count };
     });
-  }, [enhancedProducts]);
+  }, [allProducts]);
 
   // ── Category Browse Sections Data ──
   const categoryBrowseData = React.useMemo(() => {
-    const allProducts = [
-      ...enhancedProducts.festive,
-      ...enhancedProducts.corporate,
-      ...enhancedProducts.customisation,
-      ...enhancedProducts.homeDecor,
-      ...enhancedProducts.mechanical,
-      ...enhancedProducts.design,
-      ...enhancedProducts.education,
-    ];
-
-    // Find matching products for a keyword — returns { count, image (first match thumbnail) }
+    // Find matching products for a keyword — uses memoized allProducts
     const findProducts = (keyword) => {
       const kw = keyword.toLowerCase().replace(/s$/, '');
       const matches = allProducts.filter(p =>
@@ -601,23 +562,23 @@ const Products = () => {
         items: cat.items.filter(item => item !== null && item.image !== null),
       }))
       .filter(cat => cat.items.length > 0);
-  }, [enhancedProducts]);
+  }, [allProducts]);
 
   // Refs for category scroll containers
   const categoryScrollRefs = useRef({});
 
-  // Show loading screen until page is ready
-  if (!pageReady || productsLoading) {
+  // Show loading screen while products are loading
+  if (productsLoading) {
     return <LoadingScreen />;
   }
 
-  const displayedFestiveProducts = showAllFestive ? enhancedProducts.festive : enhancedProducts.festive.slice(0, 8);
-  const displayedCorporateProducts = showAllCorporate ? enhancedProducts.corporate : enhancedProducts.corporate.slice(0, 8);
-  const displayedCustomisationProducts = showAllCustomisation ? enhancedProducts.customisation : enhancedProducts.customisation.slice(0, 8);
-  const displayedHomeDecorProducts = showAllHomeDecor ? enhancedProducts.homeDecor : enhancedProducts.homeDecor.slice(0, 8);
-  const displayedMechanicalProducts = showAllMechanical ? enhancedProducts.mechanical : enhancedProducts.mechanical.slice(0, 8);
-  const displayedDesignProducts = showAllDesign ? enhancedProducts.design : enhancedProducts.design.slice(0, 8);
-  const displayedEducationProducts = showAllEducation ? enhancedProducts.education : enhancedProducts.education.slice(0, 8);
+  const displayedFestiveProducts = showAllSections.festive ? enhancedProducts.festive : enhancedProducts.festive.slice(0, 8);
+  const displayedCorporateProducts = showAllSections.corporate ? enhancedProducts.corporate : enhancedProducts.corporate.slice(0, 8);
+  const displayedCustomisationProducts = showAllSections.customisation ? enhancedProducts.customisation : enhancedProducts.customisation.slice(0, 8);
+  const displayedHomeDecorProducts = showAllSections.homeDecor ? enhancedProducts.homeDecor : enhancedProducts.homeDecor.slice(0, 8);
+  const displayedMechanicalProducts = showAllSections.mechanical ? enhancedProducts.mechanical : enhancedProducts.mechanical.slice(0, 8);
+  const displayedDesignProducts = showAllSections.design ? enhancedProducts.design : enhancedProducts.design.slice(0, 8);
+  const displayedEducationProducts = showAllSections.education ? enhancedProducts.education : enhancedProducts.education.slice(0, 8);
 
 
   return (
@@ -919,8 +880,8 @@ const Products = () => {
                   title="Festive Season"
                   products={enhancedProducts.festive}
                   displayedProducts={displayedFestiveProducts}
-                  showAll={showAllFestive}
-                  setShowAll={setShowAllFestive}
+                  showAll={showAllSections.festive}
+                  setShowAll={(val) => toggleShowAll('festive', val)}
                   sectionRef={festiveRef}
                   scrollToRef={scrollToRef}
                   shouldHighlight={shouldHighlight}
@@ -936,8 +897,8 @@ const Products = () => {
                   title="Corporate Gifting"
                   products={enhancedProducts.corporate}
                   displayedProducts={displayedCorporateProducts}
-                  showAll={showAllCorporate}
-                  setShowAll={setShowAllCorporate}
+                  showAll={showAllSections.corporate}
+                  setShowAll={(val) => toggleShowAll('corporate', val)}
                   sectionRef={corporateRef}
                   scrollToRef={scrollToRef}
                   shouldHighlight={shouldHighlight}
@@ -953,8 +914,8 @@ const Products = () => {
                   title="Customisation & Merchandising"
                   products={enhancedProducts.customisation}
                   displayedProducts={displayedCustomisationProducts}
-                  showAll={showAllCustomisation}
-                  setShowAll={setShowAllCustomisation}
+                  showAll={showAllSections.customisation}
+                  setShowAll={(val) => toggleShowAll('customisation', val)}
                   sectionRef={customisationRef}
                   scrollToRef={scrollToRef}
                   shouldHighlight={shouldHighlight}
@@ -970,8 +931,8 @@ const Products = () => {
                   title="Home Decor"
                   products={enhancedProducts.homeDecor}
                   displayedProducts={displayedHomeDecorProducts}
-                  showAll={showAllHomeDecor}
-                  setShowAll={setShowAllHomeDecor}
+                  showAll={showAllSections.homeDecor}
+                  setShowAll={(val) => toggleShowAll('homeDecor', val)}
                   sectionRef={homeDecorRef}
                   scrollToRef={scrollToRef}
                   shouldHighlight={shouldHighlight}
@@ -987,8 +948,8 @@ const Products = () => {
                   title="Mechanical Products"
                   products={enhancedProducts.mechanical}
                   displayedProducts={displayedMechanicalProducts}
-                  showAll={showAllMechanical}
-                  setShowAll={setShowAllMechanical}
+                  showAll={showAllSections.mechanical}
+                  setShowAll={(val) => toggleShowAll('mechanical', val)}
                   sectionRef={mechanicalRef}
                   scrollToRef={scrollToRef}
                   shouldHighlight={shouldHighlight}
@@ -1004,8 +965,8 @@ const Products = () => {
                   title="Design Consultancy"
                   products={enhancedProducts.design}
                   displayedProducts={displayedDesignProducts}
-                  showAll={showAllDesign}
-                  setShowAll={setShowAllDesign}
+                  showAll={showAllSections.design}
+                  setShowAll={(val) => toggleShowAll('design', val)}
                   sectionRef={designRef}
                   scrollToRef={scrollToRef}
                   shouldHighlight={shouldHighlight}
@@ -1021,8 +982,8 @@ const Products = () => {
                   title="Education & Workshops"
                   products={enhancedProducts.education}
                   displayedProducts={displayedEducationProducts}
-                  showAll={showAllEducation}
-                  setShowAll={setShowAllEducation}
+                  showAll={showAllSections.education}
+                  setShowAll={(val) => toggleShowAll('education', val)}
                   sectionRef={educationRef}
                   scrollToRef={scrollToRef}
                   shouldHighlight={shouldHighlight}
@@ -1061,7 +1022,7 @@ const Products = () => {
                   className="absolute
                             left-[8%] md:left-[10%] lg:left-[12%]
                             top-[55%] sm:top-[15%] md:top-[62.7%] lg:top-[57%] xl:top-[60.2%]
-                            top-1/2 -translate-y-1/2
+                            -translate-y-1/2
                             rounded-t-full overflow-hidden
                             w-[180px] h-[230px] 
                             sm:w-[225px] sm:h-[250px]  

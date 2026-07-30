@@ -4,30 +4,35 @@ const CartContext = createContext();
 
 const cartReducer = (state, action) => {
   switch (action.type) {
+    case 'INIT_CART':
+      return {
+        ...state,
+        items: Array.isArray(action.payload) ? action.payload : []
+      };
+
     case 'ADD_TO_CART': {
-  const incomingQty = action.payload.quantity ?? 1;
-  const existingItem = state.items.find(item => item.id === action.payload.id);
+      const incomingQty = action.payload.quantity ?? 1;
+      const existingItem = state.items.find(item => item.id === action.payload.id);
 
-  if (existingItem) {
-    return {
-      ...state,
-      items: state.items.map(item =>
-        item.id === action.payload.id
-          ? { ...item, quantity: item.quantity + incomingQty }
-          : item
-      )
-    };
-  }
+      if (existingItem) {
+        return {
+          ...state,
+          items: state.items.map(item =>
+            item.id === action.payload.id
+              ? { ...item, quantity: item.quantity + incomingQty }
+              : item
+          )
+        };
+      }
 
-  return {
-    ...state,
-    items: [
-      ...state.items,
-      { ...action.payload, quantity: incomingQty }
-    ]
-  };
-}
-
+      return {
+        ...state,
+        items: [
+          ...state.items,
+          { ...action.payload, quantity: incomingQty }
+        ]
+      };
+    }
 
     case 'REMOVE_FROM_CART':
       return {
@@ -65,13 +70,16 @@ export const CartProvider = ({ children }) => {
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('bombay-cart');
-    if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      parsedCart.items.forEach(item => {
-        dispatch({ type: 'ADD_TO_CART', payload: { ...item, quantity: 0 } });
-        dispatch({ type: 'UPDATE_QUANTITY', payload: { id: item.id, quantity: item.quantity } });
-      });
+    try {
+      const savedCart = localStorage.getItem('bombay-cart');
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        if (parsedCart?.items?.length > 0) {
+          dispatch({ type: 'INIT_CART', payload: parsedCart.items });
+        }
+      }
+    } catch {
+      // Corrupted localStorage — start fresh
     }
   }, []);
 

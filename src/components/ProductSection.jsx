@@ -13,6 +13,17 @@ const stripHtml = (html = '') => {
   }
 };
 
+// Helper: optimize Google Drive image URLs
+const optimizeImage = (url, width = 600) => {
+  if (!url) return url;
+  if (url.startsWith('/products/')) return url;
+  const match = url.match(/\/d\/([^/]+)/);
+  if (match) {
+    return `https://lh3.googleusercontent.com/d/${match[1]}=w${width}`;
+  }
+  return url;
+};
+
 // Helper: Generate structured data for product
 const generateProductSchema = (product, category) => {
   return {
@@ -94,18 +105,19 @@ const ProductSection = ({
                 >
                   <div className="relative">
                     <img
-                      src={product.image}
+                      src={optimizeImage(product.image, 600)}
                       alt={`${product.name} - ${productDescription.substring(0, 100)}`}
                       loading="lazy"
                       decoding="async"
                       width="300"
                       height="300"
                       itemProp="image"
-                      className={`rounded-2xl w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover transition-all duration-500 ${
+                      className={`rounded-2xl w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover transition-all duration-500 blur-sm ${
                         shouldHighlight && shouldHighlight(product)
                           ? 'brightness-110 contrast-105 shadow-lg'
                           : ''
                       }`}
+                      onLoad={(e) => e.currentTarget.classList.remove('blur-sm')}
                     />
                     {product.savePercent && (
                       <div 

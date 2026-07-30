@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import GoogleSheetsAPI from '../services/googleSheetsAPI.js';
+import { transformAllProductImages } from '../utils/productImages.js';
 
 /* =========================================================
    CACHE CONFIG (ONLY FOR PRODUCTS)
@@ -123,10 +124,12 @@ export const useProductManager = () => {
         }
 
         if (Array.isArray(result)) {
+          // Transform remote image URLs to local paths
+          const localizedProducts = transformAllProductImages(result);
           const finalProducts =
             sortBy === 'featured'
-              ? result
-              : sortProductsLocally(result, sortBy);
+              ? localizedProducts
+              : sortProductsLocally(localizedProducts, sortBy);
 
           setProducts(finalProducts);
           setCachedProducts(sortBy, finalProducts);
