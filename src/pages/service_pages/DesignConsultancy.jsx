@@ -224,8 +224,7 @@ const DesignConsultancy = () => {
         .dc-modal-content img {
           width: 100%;
           height: auto;
-          max-height: 60vh;
-          object-fit: cover;
+          display: block;
         }
         .dc-modal-close {
           position: absolute;

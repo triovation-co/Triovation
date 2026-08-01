@@ -6,6 +6,10 @@ import customizedGifting from "../assets/customized-gifting.jpg";
 import storyImg1 from "../assets/bulkorder-page/Story/15.jpg";
 import storyImg2 from "../assets/bulkorder-page/Story/Frame 6.png";
 import storyImg3 from "../assets/bulkorder-page/Story/Gemini_Generated_Image_cap0omcap0omcap0.png";
+import storyImg4 from "../assets/bulkorder-page/Story/3d-prototype.jpg";
+import serviceBgProductDesign from "../assets/service-bg-product-design.jpg";
+import serviceBgBranding from "../assets/service-bg-branding.jpg";
+import serviceBgCorporateGifting from "../assets/service-bg-corporate-gifting.png";
 import WhatsAppButton from "../components/whatsapp";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +32,12 @@ const successStories = [
     title: "Tote Illustration Series Bulk Merch Production",
     desc: "Designed and produced a series of geometric, art-inspired tote bag illustrations, executed at scale for an art event",
     stat: "100+ Custom Illustrated Pieces",
+  },
+  {
+    img: storyImg4,
+    title: "3D Prototype Development",
+    desc: "Designed and 3D printed a high-precision prototype for rapid product validation and functional testing.",
+    stat: "50+ 3D Printed Prototypes",
   },
 ];
 
@@ -59,7 +69,7 @@ const OurStorySection = ({ vis, navigate }) => {
           className="text-center text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 relative inline-block w-full"
         >
           <span className="bg-gradient-to-r from-[#f47e82] to-[#fca5a5] bg-clip-text text-transparent">
-            Our Story
+            Our Work
           </span>
           <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full" />
         </h2>
@@ -170,11 +180,10 @@ const OurStorySection = ({ vis, navigate }) => {
 
                     {/* Arrow pointing to stem */}
                     <div
-                      className={`absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-[#f47e82] rotate-45 shadow-sm ${
-                        isAbove
+                      className={`absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-[#f47e82] rotate-45 shadow-sm ${isAbove
                           ? "bottom-[-8px] border-r-[3px] border-b-[3px]"
                           : "top-[-8px] border-l-[3px] border-t-[3px]"
-                      }`}
+                        }`}
                     />
                   </div>
                 </div>
@@ -193,16 +202,14 @@ const OurStorySection = ({ vis, navigate }) => {
             <div key={idx} className="relative flex items-start gap-4">
               <div className="relative z-10 flex-shrink-0 mt-8">
                 <div
-                  className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${
-                    idx % 2 === 0
+                  className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${idx % 2 === 0
                       ? "bg-gradient-to-br from-[#f47e82] to-[#e05a5e] border-2 border-white"
                       : "bg-white border-[3px] border-[#f47e82]"
-                  }`}
+                    }`}
                 >
                   <span
-                    className={`text-[8px] font-bold ${
-                      idx % 2 === 0 ? "text-white" : "text-[#f47e82]"
-                    }`}
+                    className={`text-[8px] font-bold ${idx % 2 === 0 ? "text-white" : "text-[#f47e82]"
+                      }`}
                   >
                     0{idx + 1}
                   </span>
@@ -233,6 +240,126 @@ const OurStorySection = ({ vis, navigate }) => {
             </div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+};
+
+/* ────────────── Animated Counter Hook (easeOut) ────────────── */
+const useCountUp = (end, duration = 2000, trigger = false) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!trigger) return;
+    const startTime = performance.now();
+
+    const tick = (now) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOutQuart for smooth deceleration
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setCount(Math.round(eased * end));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+
+    requestAnimationFrame(tick);
+  }, [trigger, end, duration]);
+
+  return count;
+};
+
+/* ────────────── Stats Banner ────────────── */
+const adStats = [
+  { value: 500, suffix: "+", label: "Custom Packaging Delivered" },
+  { value: 50, suffix: "+", label: "3D Prototypes Developed" },
+  { value: 10, suffix: "+", label: "Brand Strategy & Identity Projects" },
+  { value: 300, suffix: "+", label: "Merchandise Designs Created" },
+];
+
+const AdBannerSection = () => {
+  const sectionRef = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setInView(true); },
+      { threshold: 0.15 }
+    );
+    if (sectionRef.current) obs.observe(sectionRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const counts = [
+    useCountUp(500, 2200, inView),
+    useCountUp(50, 1800, inView),
+    useCountUp(10, 1400, inView),
+    useCountUp(300, 2200, inView),
+  ];
+
+  /* The marquee item rendered once */
+  const StatItem = ({ idx }) => (
+    <div className="flex items-center gap-6 sm:gap-10 shrink-0 px-4 sm:px-8">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <span className="text-[48px] sm:text-[64px] md:text-[80px] font-black text-gray-800 tabular-nums leading-none" style={{ WebkitTextStroke: "1px rgba(244,126,130,0.15)" }}>
+          {counts[idx]}
+        </span>
+        <span className="text-[28px] sm:text-[36px] md:text-[44px] font-black text-[#f47e82]">
+          {adStats[idx].suffix}
+        </span>
+      </div>
+      <span className="text-sm sm:text-base md:text-lg font-semibold text-gray-500 max-w-[160px] sm:max-w-[200px] leading-snug">
+        {adStats[idx].label}
+      </span>
+    </div>
+  );
+
+  /* Diamond separator */
+  const Sep = () => (
+    <div className="shrink-0 flex items-center px-2 sm:px-4">
+      <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#f47e82] rotate-45 opacity-40" />
+    </div>
+  );
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative z-20 py-10 sm:py-14 overflow-hidden"
+      aria-label="Triovation achievements"
+    >
+      <style>{`
+        @keyframes marqueeScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+
+      {/* Edge fade masks */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" aria-hidden="true" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" aria-hidden="true" />
+
+      {/* Marquee track — duplicate content for seamless loop */}
+      <div
+        className="flex items-center w-max hover:[animation-play-state:paused]"
+        style={{
+          animation: inView ? "marqueeScroll 25s linear infinite" : "none",
+          opacity: inView ? 1 : 0,
+          transition: "opacity 0.8s ease",
+        }}
+      >
+        {/* First set */}
+        {adStats.map((_, idx) => (
+          <React.Fragment key={`a-${idx}`}>
+            <StatItem idx={idx} />
+            <Sep />
+          </React.Fragment>
+        ))}
+        {/* Duplicate for seamless loop */}
+        {adStats.map((_, idx) => (
+          <React.Fragment key={`b-${idx}`}>
+            <StatItem idx={idx} />
+            <Sep />
+          </React.Fragment>
+        ))}
       </div>
     </section>
   );
@@ -285,6 +412,7 @@ const Home = () => {
       external: true,
       accentColor: "#f47e82",
       gradient: "from-[#f47e82] to-[#fca5a5]",
+      bgImage: serviceBgProductDesign,
     },
     {
       title: "Branding & Digital Design",
@@ -301,6 +429,7 @@ const Home = () => {
       external: false,
       accentColor: "#f47e82",
       gradient: "from-[#f47e82] to-[#fca5a5]",
+      bgImage: serviceBgBranding,
     },
     {
       title: "Corporate Gifting",
@@ -315,6 +444,7 @@ const Home = () => {
       external: false,
       accentColor: "#f47e82",
       gradient: "from-[#f47e82] to-[#fca5a5]",
+      bgImage: serviceBgCorporateGifting,
     },
   ];
 
@@ -409,9 +539,8 @@ const Home = () => {
           SECTION 1 — HERO
       ═══════════════════════════════════════════════════════ */}
       <section
-        className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
+        className={`container mx-auto py-8 sm:py-5 md:py-10 lg:py-10 xl:py-20 px-4 sm:px-6 md:px-8 lg:px-10 relative z-10 transition-all duration-1000 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
         aria-labelledby="hero-heading"
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 2xl:gap-32 items-center">
@@ -436,17 +565,19 @@ const Home = () => {
               <span>Brand Experiences</span>
             </div>
 
-            <div className="space-y-4 text-gray-800 text-lg lg:text-xl xl:text-[19px] leading-relaxed font-bold">
-              <p className="italic text-gray-800 animate-fade-in-up delay-400">
-                From concept to creation, we help brands design, prototype, manufacture, and
-                deliver custom products that make a lasting impact.
+            <div className="space-y-4 text-gray-700 text-base md:text-lg leading-relaxed">
+              <p className="animate-fade-in-up delay-400 font-medium">
+                From concept to delivery, Triovation designs and manufactures custom corporate gifts, branded merchandise, packaging, and promotional products that help businesses create lasting brand experiences.
               </p>
-              <p className="animate-fade-in-up delay-600">
-                TRIOVATION combines creativity, technology, and manufacturing expertise to transform
-                ideas into tangible products and engaging brand experiences. From custom merchandise
-                and packaging to 3D prototyping and digital design, we provide end-to-end solutions
-                under one roof.
-              </p>
+            </div>
+
+            <div className="pt-2 animate-fade-in-up delay-600 flex justify-center md:justify-start">
+              <button
+                onClick={() => navigate('/ContactUs')}
+                className="bg-[#e43e39] text-white px-8 py-3.5 font-bold rounded shadow-lg hover:bg-[#d03531] transition-all hover:-translate-y-1 hover:shadow-xl tracking-wider text-sm"
+              >
+                CONSULT NOW
+              </button>
             </div>
           </article>
 
@@ -468,6 +599,11 @@ const Home = () => {
       </section>
 
       {/* ═══════════════════════════════════════════════════════
+          SECTION 1.5 — ADVERTISEMENT STATS BANNER
+      ═══════════════════════════════════════════════════════ */}
+      <AdBannerSection />
+
+      {/* ═══════════════════════════════════════════════════════
           SECTION 2 — OUR SERVICES (Premium Card Grid)
       ═══════════════════════════════════════════════════════ */}
       <section
@@ -477,168 +613,85 @@ const Home = () => {
       >
         {/* Section Background with decorative elements */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/80 via-white to-gray-50/80 pointer-events-none" aria-hidden="true" />
-        
-        {/* Floating decorative orbs */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-[#f47e82]/10 to-[#fca5a5]/5 rounded-full blur-3xl pointer-events-none animate-pulse" aria-hidden="true" style={{ animationDuration: '6s' }} />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-gradient-to-tl from-[#f47e82]/10 to-[#fca5a5]/5 rounded-full blur-3xl pointer-events-none animate-pulse" aria-hidden="true" style={{ animationDuration: '8s' }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gradient-to-br from-[#fca5a5]/10 to-[#f47e82]/5 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+
+
 
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative">
           {/* Heading */}
           <header className="text-center mb-14 sm:mb-16 md:mb-20">
             <h2
               id="our-services"
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-800 relative inline-block"
+              className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 relative inline-block"
             >
               Our Services
               <div
-                className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full"
+                className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full"
                 aria-hidden="true"
               />
             </h2>
-            <p className="text-gray-500 text-lg sm:text-xl mt-7 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-gray-700 text-xl sm:text-2xl font-medium mt-7 max-w-3xl mx-auto leading-relaxed">
               We provide end-to-end product design, prototyping, sourcing, manufacturing, and branding solutions for startups, SMEs, and enterprises.
             </p>
           </header>
 
           {/* Service Cards Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
             {serviceCategories.map((cat, idx) => {
-              /* Icons for each category */
-              const icons = [
-                /* Product Design */
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg>,
-                /* Branding & Digital Design */
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" /></svg>,
-                /* Corporate Gifting */
-                <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 11.25v8.25a1.5 1.5 0 01-1.5 1.5H5.25a1.5 1.5 0 01-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 109.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1114.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" /></svg>,
-              ];
-
               return (
                 <div
                   key={cat.title}
-                  className="group relative animate-fade-in-up"
-                  style={{ animationDelay: `${idx * 200}ms` }}
+                  className="group animate-fade-in-up"
+                  style={{ animationDelay: `${idx * 150}ms` }}
                 >
-                  {/* Animated gradient border glow */}
                   <div
-                    className="absolute -inset-[1px] rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm"
-                    style={{ background: `linear-gradient(135deg, ${cat.accentColor}40, transparent, ${cat.accentColor}20)` }}
-                    aria-hidden="true"
-                  />
-
-                  {/* Card */}
-                  <div className="relative bg-white/80 backdrop-blur-sm rounded-3xl border border-gray-200/60 p-6 sm:p-8 h-full flex flex-col transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:border-gray-300/80 overflow-hidden">
-                    
-                    {/* Decorative corner gradient */}
-                    <div
-                      className="absolute -top-20 -right-20 w-40 h-40 rounded-full opacity-20 group-hover:opacity-40 transition-opacity duration-700"
-                      style={{ background: `radial-gradient(circle, ${cat.accentColor}, transparent)` }}
-                      aria-hidden="true"
-                    />
-
-                    {/* Icon + Title */}
-                    <div className="flex items-center gap-4 mb-6 relative z-10">
-                      <div
-                        className="flex-shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500"
-                        style={{ 
-                          background: `linear-gradient(135deg, ${cat.accentColor}, ${cat.accentColor}CC)`,
-                          boxShadow: `0 8px 25px ${cat.accentColor}30`
-                        }}
-                      >
-                        <span className="text-white">{icons[idx]}</span>
+                    onClick={() => {
+                      if (cat.external) {
+                        window.open(cat.link, "_blank", "noopener,noreferrer");
+                      } else {
+                        navigate(cat.link);
+                      }
+                    }}
+                    className="bg-white rounded-[2rem] h-full flex flex-col overflow-hidden shadow-[0_4px_25px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_45px_-10px_rgba(0,0,0,0.18)] transition-all duration-500 hover:-translate-y-2 border border-gray-100/80 cursor-pointer"
+                  >
+                    {/* Compact full-bleed photo container with zero cropping */}
+                    {cat.bgImage && (
+                      <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-gradient-to-b from-gray-50 to-white flex-shrink-0 border-b border-gray-100 flex items-center justify-center p-2">
+                        <img
+                          src={cat.bgImage}
+                          alt={cat.title}
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-3 right-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-gray-800 text-[11px] font-black tracking-widest uppercase shadow-sm border border-gray-200/70">
+                          0{idx + 1}
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-xl sm:text-2xl font-bold text-gray-800 group-hover:text-gray-900 transition-colors duration-300">
+                    )}
+
+                    {/* Compact Content Area */}
+                    <div className="p-6 sm:p-7 flex flex-col flex-grow bg-white">
+                      <div className="mb-4">
+                        <h3 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight mb-2 group-hover:text-[#f47e82] transition-colors duration-300">
                           {cat.title}
                         </h3>
-                        <div 
-                          className="w-0 group-hover:w-full h-0.5 rounded-full transition-all duration-500 mt-1"
+                        <div
+                          className="w-10 h-1 rounded-full transition-all duration-500 group-hover:w-20 shadow-sm"
                           style={{ backgroundColor: cat.accentColor }}
                         />
                       </div>
-                    </div>
 
-                    {/* Service items */}
-                    <div className="space-y-2.5 mb-6 flex-grow relative z-10">
-                      {cat.items.map((item, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 transition-all duration-300 cursor-default group/item"
-                          style={{ 
-                            transitionDelay: `${i * 50}ms`,
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = `${cat.accentColor}10`;
-                            e.currentTarget.style.borderColor = `${cat.accentColor}30`;
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = '';
-                            e.currentTarget.style.borderColor = '';
-                          }}
-                        >
-                          <span 
-                            className="flex-shrink-0 w-2 h-2 rounded-full transition-transform duration-300 group-hover/item:scale-150"
-                            style={{ backgroundColor: cat.accentColor }}
-                            aria-hidden="true"
-                          />
-                          <span className="text-gray-700 text-sm sm:text-[15px] font-medium group-hover/item:text-gray-900 transition-colors duration-300">
+                      <ul className="space-y-2 flex-grow">
+                        {cat.items.map((item, i) => (
+                          <li key={i} className="flex items-center gap-3 text-gray-800 text-base sm:text-[17px] font-medium py-0.5">
+                            <span
+                              className="w-2 h-2 rounded-full flex-shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-125"
+                              style={{ backgroundColor: cat.accentColor }}
+                            />
                             {item}
-                          </span>
-                          <svg 
-                            className="w-4 h-4 ml-auto opacity-0 -translate-x-2 group-hover/item:opacity-50 group-hover/item:translate-x-0 transition-all duration-300 flex-shrink-0" 
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24"
-                            style={{ color: cat.accentColor }}
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </div>
-                      ))}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-
-                    {/* CTA Button */}
-                    <div className="relative z-10 mt-auto">
-                      {cat.external ? (
-                        <a
-                          href={cat.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2.5 w-full justify-center px-6 py-3 rounded-xl text-white font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
-                          style={{ 
-                            background: `linear-gradient(135deg, ${cat.accentColor}, ${cat.accentColor}DD)`,
-                            boxShadow: `0 6px 20px ${cat.accentColor}30`
-                          }}
-                        >
-                          <span>Learn More</span>
-                          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      ) : (
-                        <button
-                          onClick={() => navigate(cat.link)}
-                          className="inline-flex items-center gap-2.5 w-full justify-center px-6 py-3 rounded-xl text-white font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
-                          style={{ 
-                            background: `linear-gradient(135deg, ${cat.accentColor}, ${cat.accentColor}DD)`,
-                            boxShadow: `0 6px 20px ${cat.accentColor}30`
-                          }}
-                        >
-                          <span>Learn More</span>
-                          <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
-                        </button>
-                      )}
-                    </div>
-
-                    {/* Bottom decorative line */}
-                    <div
-                      className="absolute bottom-0 left-0 right-0 h-1 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                      style={{ background: `linear-gradient(90deg, transparent, ${cat.accentColor}, transparent)` }}
-                      aria-hidden="true"
-                    />
                   </div>
                 </div>
               );

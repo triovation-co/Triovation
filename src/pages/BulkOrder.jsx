@@ -19,6 +19,7 @@ import banner6 from "../assets/bulkorder-page/Banner/b6.png";
 import storyImg1 from "../assets/bulkorder-page/Story/15.jpg";
 import storyImg2 from "../assets/bulkorder-page/Story/Frame 6.png";
 import storyImg3 from "../assets/bulkorder-page/Story/Gemini_Generated_Image_cap0omcap0omcap0.png";
+import storyImg4 from "../assets/bulkorder-page/Story/3d-prototype.jpg";
 
 /* ────────────────── image optimiser ────────────────── */
 const optimizeImage = (url, width = 600) => {
@@ -42,6 +43,7 @@ const successStories = [
   { img: storyImg3, title: "Drix × Marti Supreme Packaging", desc: "Bulk-manufactured boxes for a Stellarrati collaboration with PVR Pictures, translating brand identity into scalable, high-quality packaging", stat: "200+ Boxes Produced and delivered" },
   { img: storyImg2, title: "Tango Takeoffs, Brand Identity design and Bulk Brand Collateral Merchandising", desc: "Bulk-designed and produced a cohesive range of brand collaterals and merchandise, ensuring consistency and quality across apparels, stationery, and corporate touchpoints at scale", stat: "Large-Scale Brand Execution" },
   { img: storyImg1, title: "Tote Illustration Series Bulk Merch Production", desc: "Designed and produced a series of geometric, art-inspired tote bag illustrations, executed at scale for an art event", stat: "100+ Custom Illustrated Pieces" },
+  { img: storyImg4, title: "3D Prototype Development", desc: "Designed and 3D printed a high-precision prototype for rapid product validation and functional testing.", stat: "50+ 3D Printed Prototypes" },
 ];
 
 /* ────────────────── SVG Icon Components ────────────────── */
@@ -260,22 +262,14 @@ const BulkOrder = () => {
           />
         ))}
 
-        {/* Stronger overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70 flex flex-col items-center justify-center text-center px-6 z-10" style={{ fontFamily: "'Outfit', sans-serif" }}>
-          <h1
-            className="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-wide mb-5 sm:mb-6"
-            style={{ fontFamily: "'Great Vibes', cursive", textShadow: '0 2px 16px rgba(0,0,0,0.7), 0 6px 30px rgba(0,0,0,0.4)', fontWeight: 400 }}
-          >
+        {/* Sleek modern gradient overlay for contrast and depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 flex flex-col items-center justify-center text-center px-6 z-10">
+          <h1 className="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 drop-shadow-xl">
             Bulk Order
           </h1>
 
-          <p
-            className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl max-w-3xl leading-relaxed tracking-wide"
-            style={{ fontFamily: "'Playfair Display', serif", fontWeight: 500 }}
-          >
-            Custom-designed gifting solutions with seamless
-            production, competitive pricing, and scalable delivery for
-            corporate and marketing needs.
+          <p className="text-gray-200 text-lg sm:text-xl md:text-2xl max-w-3xl font-normal leading-relaxed tracking-wide drop-shadow-md">
+            Custom-designed gifting solutions with seamless production, competitive pricing, and scalable delivery for corporate and marketing needs.
           </p>
         </div>
       </section>

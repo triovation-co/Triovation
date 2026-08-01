@@ -509,12 +509,12 @@ const Navbar = () => {
       <div className="w-full bg-[#f47e82] text-white text-[10px] sm:text-xs md:text-sm py-1.5 sm:py-2 px-4 shadow-sm">
         <div className="max-w-7xl mx-auto flex justify-center items-center gap-3 sm:gap-6 font-medium tracking-wide">
           <a href="tel:+919082056827" className="hover:text-black/70 transition-colors flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
             +91-9082056827
           </a>
           <span className="w-[1px] h-3 bg-white/40 hidden sm:block"></span>
           <a href="mailto:triovation.co@gmail.com" className="hover:text-black/70 transition-colors flex items-center gap-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></svg>
             triovation.co@gmail.com
           </a>
         </div>
@@ -533,7 +533,7 @@ const Navbar = () => {
 
           {/* Desktop Links */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-8 ml-auto">
-            {["Home", "About", "Products", "Design Consultancy", "Bulk Order", "ContactUs"].map(
+            {["Home", "Products", "Design Consultancy", "Bulk Order", "About", "ContactUs"].map(
               (item, i) => {
                 // Point 8: "Consultancy" in nav should go directly to /design-consultancy
                 // to avoid the headline-cut and same-page redirect issue.
@@ -642,7 +642,7 @@ const Navbar = () => {
                   key={searchKey}
                   type="text"
                   name="product-search"
-                  placeholder="Search For Decor"
+                  placeholder="Search"
                   value={searchTerm}
                   onChange={handleSearchChange}
                   onFocus={() => searchTerm && setShowSuggestions(true)}
@@ -871,7 +871,7 @@ const Navbar = () => {
             }`}
         >
           <div className="px-4 sm:px-6 pb-4 flex flex-col space-y-3 sm:space-y-4 bg-white border-t">
-            {["Home", "About", "Products", "Design Consultancy", "Bulk Order", "ContactUs"].map(
+            {["Home", "Products", "Design Consultancy", "Bulk Order", "About", "ContactUs"].map(
               (item, i) => {
                 // Point 8: Consultancy → /design-consultancy directly
                 const getMobileHref = (navItem) => {
