@@ -35,7 +35,7 @@ const CANONICAL = {
   // Corporate Gifting
   "acrylic lamps": "acrylic lamp",
   "lithophane": "lithophane",
-  "water bottle": "bottle",
+  "bottle": "bottle",
   "organising desk": "desk organizer",
   "coasters": "coaster",
   "trophy": "trophy",
@@ -171,11 +171,11 @@ const menuData = {
     categories: [
       {
         title: "Corporate Gifting",
-        defaultItems: ["Acrylic lamps", "Lithophane", "Water Bottle", /* "Organising Desk" */],
+        defaultItems: ["Acrylic lamps", "Lithophane", "Bottle", /* "Organising Desk" */],
         allItems: [
           "Acrylic lamps",
           "Lithophane",
-          "Water Bottle",
+          "Bottle",
           // "Organising Desk",
           // "Coasters",
           "Trophy",

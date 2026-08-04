@@ -259,15 +259,24 @@ const Products = () => {
 
 
   // Single memoized array of all products — used by search, type cards, category browse
-  const allProducts = useMemo(() => [
-    ...enhancedProducts.festive,
-    ...enhancedProducts.corporate,
-    ...enhancedProducts.customisation,
-    ...enhancedProducts.homeDecor,
-    ...enhancedProducts.mechanical,
-    ...enhancedProducts.design,
-    ...enhancedProducts.education
-  ], [enhancedProducts]);
+  const allProducts = useMemo(() => {
+    const combined = [
+      ...enhancedProducts.festive,
+      ...enhancedProducts.corporate,
+      ...enhancedProducts.customisation,
+      ...enhancedProducts.homeDecor,
+      ...enhancedProducts.mechanical,
+      ...enhancedProducts.design,
+      ...enhancedProducts.education
+    ];
+    const seen = new Set();
+    return combined.filter(p => {
+      const key = p.id || p.name;
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [enhancedProducts]);
 
   const performSearch = useCallback((query) => {
     if (!query || !query.trim()) {
@@ -320,7 +329,7 @@ const Products = () => {
     setSearchResults([]);
     setIsSearching(false);
     sessionStorage.setItem("searchCleared", "true");
-    window.history.replaceState({}, document.title, window.location.pathname);
+    navigate('/products', { replace: true });
 
     // Dispatch custom event to notify navbar
     window.dispatchEvent(new CustomEvent('clearSearch'));
@@ -328,8 +337,9 @@ const Products = () => {
 
   const handleSortChange = (newSortBy) => {
     setSortBy(newSortBy);
-    // Sort is applied client-side via the useEffect that depends on sortBy.
-    // No need to re-fetch from Google Sheets.
+    if (isSearchActive) {
+      setSearchResults(prev => sortProductsLocally([...prev], newSortBy));
+    }
   };
 
   // Handler for category banner clicks
@@ -338,7 +348,7 @@ const Products = () => {
     setSearchSource('banner');
     setIsSearchActive(true);
     performSearch(searchQuery);
-    window.history.pushState({}, '', `/products?search=${encodeURIComponent(searchQuery)}`);
+    navigate(`/products?search=${encodeURIComponent(searchQuery)}`);
   };
 
   // Refs
@@ -442,17 +452,21 @@ const Products = () => {
       { name: "Clocks", image: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?q=80&w=600&auto=format&fit=crop" },
       { name: "Stickers", image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=600&auto=format&fit=crop" },
       { name: "T-shirts", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=600&auto=format&fit=crop" },
-      { name: "Frames", image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?q=80&w=600&auto=format&fit=crop" },
+      { name: "Frame", image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?q=80&w=600&auto=format&fit=crop" },
     ];
 
     // Count matching products for each type — uses memoized allProducts
     return types.map(type => {
       const keyword = type.name.toLowerCase().replace(/s$/, '');
-      const count = allProducts.filter(p =>
-        (p.name || '').toLowerCase().includes(keyword)
-      ).length;
-      return { ...type, count };
-    });
+      const matches = allProducts.filter(p =>
+        (p.name || '').toLowerCase().includes(keyword) || strictTitleMatch(p.name || '', type.name)
+      );
+      let image = type.image;
+      if ((keyword === 'frame' || keyword === 'keychain') && matches.length > 0 && matches[0].image) {
+        image = matches[0].image;
+      }
+      return { ...type, image, count: matches.length };
+    }).filter(type => type.count > 0);
   }, [allProducts]);
 
   // ── Category Browse Sections Data ──
@@ -490,7 +504,7 @@ const Products = () => {
         items: [
           makeItem("Acrylic Lamps", "acrylic lamp"),
           makeItem("Lithophane", "lithophane"),
-          makeItem("Water Bottle", "bottle"),
+          makeItem("Bottle", "bottle"),
           makeItem("Trophy", "trophy"),
           makeItem("Keychain", "keychain"),
           makeItem("Planters", "planter"),
@@ -504,7 +518,7 @@ const Products = () => {
         items: [
           makeItem("Ceramic Cups", "ceramic cup"),
           makeItem("Keychains", "keychain"),
-          makeItem("Lithophane Frame", "lithophane frame"),
+          makeItem("Lithophane", "lithophane"),
           makeItem("Bottle", "bottle"),
           makeItem("Characters", "character"),
           makeItem("Cap", "cap"),
@@ -590,164 +604,27 @@ const Products = () => {
 
       <div className="w-full px-4 sm:px-6 lg:px-4 py-8">
 
-        {/* ═══════════════ SHOP BY PRODUCT TYPE ═══════════════ */}
-        {!isSearchActive && (
-          <section className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-            <div className="flex items-center justify-between mb-5">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
-                Shop by Product Type
-              </h2>
-              <div className="hidden sm:flex items-center gap-2">
-                <button
-                  onClick={() => scrollProductTypes('left')}
-                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
-                  aria-label="Scroll left"
+        {/* Sort Controls (hidden for now) */}
+        {false && (
+          <div className="w-full px-2 py-4 lg:ml-6 2xl:ml-10">
+            <div className="flex items-center gap-2 w-full">
+              <span className="text-sm font-medium text-gray-700">Sort by:</span>
+              <div className="relative flex-1 max-w-[160px]">
+                <select
+                  className="block w-full h-8 bg-white border border-gray-300 rounded px-2 pr-8 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={sortBy}
+                  onChange={e => handleSortChange(e.target.value)}
                 >
-                  <ChevronLeft size={22} />
-                </button>
-                <button
-                  onClick={() => scrollProductTypes('right')}
-                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
-                  aria-label="Scroll right"
-                >
-                  <ChevronRight size={22} />
-                </button>
+                  <option value="featured">Featured</option>
+                  <option value="price-low-high">Price: Low to High</option>
+                  <option value="price-high-low">Price: High to Low</option>
+                  <option value="name">Alphabetical</option>
+                  <option value="newest">Newest</option>
+                </select>
               </div>
-            </div>
-            <div className="relative">
-              {/* Fade edge indicators */}
-              <div className="hidden sm:block absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none opacity-0" id="product-type-fade-left" />
-              <div className="hidden sm:block absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
-              <div
-                ref={productTypeScrollRef}
-                className="flex gap-3 sm:gap-6 lg:gap-8 overflow-x-auto pb-4 scroll-smooth"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                {productTypeCards.map((type) => (
-                  <button
-                    key={type.name}
-                    onClick={() => handleCategoryClick(type.name)}
-                    className="group flex-shrink-0 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col"
-                    style={{ width: 'calc((100% - 3 * 2rem) / 4)', minWidth: '220px' }}
-                  >
-                    <div className="relative overflow-hidden">
-                      <img
-                        src={type.image}
-                        alt={type.name}
-                        loading="lazy"
-                        className="w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-                    </div>
-                    <div className="p-3 sm:p-4 text-center">
-                      <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
-                        {type.name}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* ═══════════════ SHOP BY CATEGORY ═══════════════ */}
-        {!isSearchActive && categoryBrowseData.map((category, catIdx) => {
-          return (
-            <section key={catIdx} className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-              {/* Category Header - same style as ProductSection */}
-              <header className="flex items-center my-10">
-                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
-                <h2 className="mx-4 text-gray-800 font-semibold lg:text-xl">
-                  {category.title}
-                </h2>
-                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
-              </header>
-
-              {/* Category Grid */}
-              <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8" role="list">
-                {category.items.map((item, itemIdx) => {
-                  // Link-based items navigate to a route
-                  if (item.link) {
-                    return (
-                      <li key={itemIdx} className="w-full flex">
-                        <Link
-                          to={item.link}
-                          className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
-                        >
-                          <div className="relative overflow-hidden w-full aspect-square">
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              loading="lazy"
-                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                          </div>
-                          <div className="p-3 sm:p-4 text-center mt-auto">
-                            <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
-                              {item.name}
-                            </p>
-                          </div>
-                        </Link>
-                      </li>
-                    );
-                  }
-
-                  // Product-based items trigger search
-                  return (
-                    <li key={itemIdx} className="w-full flex">
-                      <button
-                        onClick={() => handleCategoryClick(item.name)}
-                        className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
-                      >
-                        <div className="relative overflow-hidden w-full aspect-square">
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-                        </div>
-                        <div className="p-3 sm:p-4 text-center mt-auto">
-                          <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
-                            {item.name}
-                          </p>
-                        </div>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </section>
-          );
-        })}
-
-        {/* Sort Controls */}
-        <div className="w-full px-2 py-4 lg:ml-6 2xl:ml-10">
-          <div className="flex items-center gap-2 w-full">
-            <span className="text-sm font-medium text-gray-700">Sort by:</span>
-            <div className="relative flex-1 max-w-[160px]">
-              <select
-                className="block w-full h-8 bg-white border border-gray-300 rounded px-2 pr-8 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                value={sortBy}
-                onChange={e => handleSortChange(e.target.value)}
-              >
-                <option value="featured">Featured</option>
-                <option value="price-low-high">Price: Low to High</option>
-                <option value="price-high-low">Price: High to Low</option>
-                <option value="name">Alphabetical</option>
-                <option value="newest">Newest</option>
-              </select>
             </div>
           </div>
-        </div>
-
-        {/* Category Banners - Show only when not searching */}
-
+        )}
 
         {/* Search Results Section */}
         {isSearchActive && (
@@ -871,192 +748,226 @@ const Products = () => {
           </div>
         )}
 
-        {/* Regular Product Sections - Only show if not searching AND category has products */}
-        {!isSearchActive && (
-          <>
-            {hasFestiveProducts && (
-              <Suspense fallback={<SectionSkeleton />}>
-                <ProductSection
-                  title="Festive Season"
-                  products={enhancedProducts.festive}
-                  displayedProducts={displayedFestiveProducts}
-                  showAll={showAllSections.festive}
-                  setShowAll={(val) => toggleShowAll('festive', val)}
-                  sectionRef={festiveRef}
-                  scrollToRef={scrollToRef}
-                  shouldHighlight={shouldHighlight}
-                  buttonColor="bg-orange-400"
-                  handleAddToCart={handleAddToCart}
-                />
-              </Suspense>
-            )}
-
-            {hasCorporateProducts && (
-              <Suspense fallback={<SectionSkeleton />}>
-                <ProductSection
-                  title="Corporate Gifting"
-                  products={enhancedProducts.corporate}
-                  displayedProducts={displayedCorporateProducts}
-                  showAll={showAllSections.corporate}
-                  setShowAll={(val) => toggleShowAll('corporate', val)}
-                  sectionRef={corporateRef}
-                  scrollToRef={scrollToRef}
-                  shouldHighlight={shouldHighlight}
-                  buttonColor="bg-orange-400"
-                  handleAddToCart={handleAddToCart}
-                />
-              </Suspense>
-            )}
-
-            {hasCustomisationProducts && (
-              <Suspense fallback={<SectionSkeleton />}>
-                <ProductSection
-                  title="Customisation & Merchandising"
-                  products={enhancedProducts.customisation}
-                  displayedProducts={displayedCustomisationProducts}
-                  showAll={showAllSections.customisation}
-                  setShowAll={(val) => toggleShowAll('customisation', val)}
-                  sectionRef={customisationRef}
-                  scrollToRef={scrollToRef}
-                  shouldHighlight={shouldHighlight}
-                  buttonColor="bg-orange-400"
-                  handleAddToCart={handleAddToCart}
-                />
-              </Suspense>
-            )}
-
-            {hasHomeDecorProducts && (
-              <Suspense fallback={<SectionSkeleton />}>
-                <ProductSection
-                  title="Home Decor"
-                  products={enhancedProducts.homeDecor}
-                  displayedProducts={displayedHomeDecorProducts}
-                  showAll={showAllSections.homeDecor}
-                  setShowAll={(val) => toggleShowAll('homeDecor', val)}
-                  sectionRef={homeDecorRef}
-                  scrollToRef={scrollToRef}
-                  shouldHighlight={shouldHighlight}
-                  buttonColor="bg-orange-400"
-                  handleAddToCart={handleAddToCart}
-                />
-              </Suspense>
-            )}
-
-            {hasMechanicalProducts && (
-              <Suspense fallback={<SectionSkeleton />}>
-                <ProductSection
-                  title="Mechanical Products"
-                  products={enhancedProducts.mechanical}
-                  displayedProducts={displayedMechanicalProducts}
-                  showAll={showAllSections.mechanical}
-                  setShowAll={(val) => toggleShowAll('mechanical', val)}
-                  sectionRef={mechanicalRef}
-                  scrollToRef={scrollToRef}
-                  shouldHighlight={shouldHighlight}
-                  buttonColor="bg-orange-400"
-                  handleAddToCart={handleAddToCart}
-                />
-              </Suspense>
-            )}
-
-            {hasDesignProducts && (
-              <Suspense fallback={<SectionSkeleton />}>
-                <ProductSection
-                  title="Design Consultancy"
-                  products={enhancedProducts.design}
-                  displayedProducts={displayedDesignProducts}
-                  showAll={showAllSections.design}
-                  setShowAll={(val) => toggleShowAll('design', val)}
-                  sectionRef={designRef}
-                  scrollToRef={scrollToRef}
-                  shouldHighlight={shouldHighlight}
-                  buttonColor="bg-orange-400"
-                  handleAddToCart={handleAddToCart}
-                />
-              </Suspense>
-            )}
-
-            {hasEducationProducts && (
-              <Suspense fallback={<SectionSkeleton />}>
-                <ProductSection
-                  title="Education & Workshops"
-                  products={enhancedProducts.education}
-                  displayedProducts={displayedEducationProducts}
-                  showAll={showAllSections.education}
-                  setShowAll={(val) => toggleShowAll('education', val)}
-                  sectionRef={educationRef}
-                  scrollToRef={scrollToRef}
-                  shouldHighlight={shouldHighlight}
-                  buttonColor="bg-orange-400"
-                  handleAddToCart={handleAddToCart}
-                />
-              </Suspense>
-            )}
-          </>
-        )}
-      </div>
-
-
-      {/* Corporate Bulk Gifting Section - Only show if not searching */}
-      {!isSearchActive && (
-        <div className="mt-20">
-          <main className="container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 bg-white">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
-
-              <div className="relative flex items-center justify-center w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] 2xl:min-h-[600px]">
-                <div
-                  className="absolute 
-                  left-1/3 sm:left-[35%] md:left-[40%] lg:left-[45%] 
-                  top-1/2 -translate-y-1/2 
-                  w-[200px] h-[260px] 
-                  sm:w-[275px] sm:h-[350px]  
-                  md:w-[275px] md:h-[350px]
-                  lg:w-[335px] lg:h-[370px] 
-                  xl:w-[425px] xl:h-[500px]
-                  overflow-hidden shadow-lg rounded-t-full"
-                >
-                  <img src={bulkorder1} alt="Gift Background Right" className="w-full h-full object-cover" />
-                </div>
-
-                <div
-                  className="absolute
-                            left-[8%] md:left-[10%] lg:left-[12%]
-                            top-[55%] sm:top-[15%] md:top-[62.7%] lg:top-[57%] xl:top-[60.2%]
-                            -translate-y-1/2
-                            rounded-t-full overflow-hidden
-                            w-[180px] h-[230px] 
-                            sm:w-[225px] sm:h-[250px]  
-                            md:w-[225px] md:h-[250px]
-                            lg:w-[275px] lg:h-[300px] 
-                            xl:w-[375px] xl:h-[400px]
-                            mx-auto"
-                >
-                  <img src={bulkorder2} alt="Gift Foreground Left" className="w-full h-full object-cover" />
-                </div>
-              </div>
-
-              <div className="mt-10 lg:mt-20 text-center lg:text-left px-2">
-                <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-4">
-                  Joining Kits, Event Giveaways & More
-                </p>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-700 mb-4">
-                  Corporate Bulk Gifting
-                </h1>
-                <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
-                  Email at <span className="font-semibold">Triovation.co@gmail.com</span> for any B2B gifting requirement!
-                </p>
+        {/* ═══════════════ SHOP BY PRODUCT TYPE ═══════════════ */}
+        {!isSearchActive && sortBy === "featured" && (
+          <section className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
+                Festival Season
+              </h2>
+              <div className="hidden sm:flex items-center gap-2">
                 <button
-                  onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}
-                  className="group relative overflow-hidden px-7 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-blue-400 text-white font-semibold tracking-wide shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.03]"
+                  onClick={() => scrollProductTypes('left')}
+                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
+                  aria-label="Scroll left"
                 >
-                  <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition"></span>
-                  Contact Us
+                  <ChevronLeft size={22} />
+                </button>
+                <button
+                  onClick={() => scrollProductTypes('right')}
+                  className="w-10 h-10 rounded-full bg-gray-100 hover:bg-orange-100 text-gray-600 hover:text-orange-600 flex items-center justify-center transition-all duration-200 shadow-sm hover:shadow-md"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight size={22} />
                 </button>
               </div>
             </div>
-          </main>
-        </div>
-      )}
+            <div className="relative">
+              {/* Fade edge indicators */}
+              <div className="hidden sm:block absolute left-0 top-0 bottom-4 w-12 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none opacity-0" id="product-type-fade-left" />
+              <div className="hidden sm:block absolute right-0 top-0 bottom-4 w-12 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
+              <div
+                ref={productTypeScrollRef}
+                className="flex gap-3 sm:gap-6 lg:gap-8 overflow-x-auto pb-4 scroll-smooth"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
+                {productTypeCards.map((type) => (
+                  <button
+                    key={type.name}
+                    onClick={() => handleCategoryClick(type.name)}
+                    className="group flex-shrink-0 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col"
+                    style={{ width: 'calc((100% - 3 * 2rem) / 4)', minWidth: '220px' }}
+                  >
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={type.image}
+                        alt={type.name}
+                        loading="lazy"
+                        className="w-full h-35 sm:h-56 md:h-50 lg:h-50 xl:h-75 2xl:h-100 object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+                    </div>
+                    <div className="p-3 sm:p-4 text-center">
+                      <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+                        {type.name}
+                      </p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ═══════════════ SHOP BY CATEGORY ═══════════════ */}
+        {!isSearchActive && sortBy === "featured" && categoryBrowseData.map((category, catIdx) => {
+          return (
+            <section key={catIdx} className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+              {/* Category Header - same style as ProductSection */}
+              <header className="flex items-center my-10">
+                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
+                <h2 className="mx-4 text-gray-800 font-semibold lg:text-xl">
+                  {category.title}
+                </h2>
+                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
+              </header>
+
+              {/* Category Grid */}
+              <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8" role="list">
+                {category.items.map((item, itemIdx) => {
+                  // Link-based items navigate to a route
+                  if (item.link) {
+                    return (
+                      <li key={itemIdx} className="w-full flex">
+                        <Link
+                          to={item.link}
+                          className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
+                        >
+                          <div className="relative overflow-hidden w-full aspect-square">
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                              loading="lazy"
+                              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                          </div>
+                          <div className="p-3 sm:p-4 text-center mt-auto">
+                            <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+                              {item.name}
+                            </p>
+                          </div>
+                        </Link>
+                      </li>
+                    );
+                  }
+
+                  // Product-based items trigger search
+                  return (
+                    <li key={itemIdx} className="w-full flex">
+                      <button
+                        onClick={() => handleCategoryClick(item.name)}
+                        className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
+                      >
+                        <div className="relative overflow-hidden w-full aspect-square">
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+
+                        </div>
+                        <div className="p-3 sm:p-4 text-center mt-auto">
+                          <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+                            {item.name}
+                          </p>
+                        </div>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          );
+        })}
+
+        {/* ═══════════════ ALL PRODUCTS (SORTED) ═══════════════ */}
+        {!isSearchActive && sortBy !== "featured" && (
+          <div className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">
+                All Products ({sortBy === 'price-low-high' ? 'Price: Low to High' : sortBy === 'price-high-low' ? 'Price: High to Low' : sortBy === 'name' ? 'Alphabetical' : 'Newest'})
+              </h2>
+              <button
+                onClick={() => setSortBy("featured")}
+                className="flex items-center gap-2 text-orange-500 hover:text-orange-600 transition-colors"
+              >
+                <X size={20} />
+                <span className="text-sm font-medium">Reset Sort</span>
+              </button>
+            </div>
+
+            <p className="text-gray-600 mb-6">Showing {allProducts.length} product{allProducts.length !== 1 ? 's' : ''}</p>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8 mb-20">
+              {sortProductsLocally(allProducts, sortBy).map((product) => (
+                <div
+                  key={product.id}
+                  className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <Link to={`/product/${product.id}`}>
+                    <div className="relative aspect-square">
+                      <img
+                        src={optimizeImage(product.image, 600)}
+                        alt={product.name}
+                        loading="lazy"
+                        fetchpriority="low"
+                        decoding="async"
+                        className="rounded-2xl w-full h-full object-cover transition duration-500 ease-out blur-sm"
+                        onLoad={(e) => e.currentTarget.classList.remove("blur-sm")}
+                      />
+                      {product.savePercent && (
+                        <div className="absolute top-2 right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded">
+                          Save {product.savePercent}
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+
+                  <div className="p-4 flex flex-col flex-grow text-center">
+                    <Link to={`/product/${product.id}`}>
+                      <h2 className="text-base sm:text-lg text-gray-700 font-semibold mb-2">
+                        {product.name}
+                      </h2>
+                      <p className="text-gray-600 text-xs sm:text-sm lg:text-xs 2xl:text-sm mb-3 leading-relaxed flex-grow line-clamp-2">
+                        {stripHtml(product.description) || `${product.name} - Perfect for your needs.`}
+                      </p>
+                      <p className="font-medium text-gray-800 mb-4 text-sm sm:text-base">
+                        {product.originalPrice ? (
+                          <>
+                            <span className="line-through text-gray-500 mr-2">₹{product.originalPrice}</span>
+                            from ₹{product.price}
+                          </>
+                        ) : (
+                          `from ₹${product.price}`
+                        )}
+                      </p>
+                    </Link>
+                    <div className="w-full flex justify-center mt-auto">
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleAddToCart(product);
+                        }}
+                        className="bg-orange-500 hover:bg-orange-600 text-white px-3 py-2 rounded-md transition-colors"
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+
+
+
 
 
       <WhatsAppButton />

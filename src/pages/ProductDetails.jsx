@@ -262,25 +262,7 @@ const ProductDetails = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-white ">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8">
-        {/* Breadcrumb Navigation */}
-        <nav className="mb-4 sm:mb-6 flex items-center text-xs sm:text-sm text-gray-500 overflow-x-auto" aria-label="Breadcrumb">
-          <Link to="/" className="hover:text-orange-600 transition-colors whitespace-nowrap">Home</Link>
-          <span className="mx-2">/</span>
-          <Link to="/products" className="hover:text-orange-600 transition-colors whitespace-nowrap">Products</Link>
-          {product.category && (
-            <>
-              <span className="mx-2">/</span>
-              <Link
-                to={`/products?search=${encodeURIComponent(product.category)}`}
-                className="hover:text-orange-600 transition-colors whitespace-nowrap"
-              >
-                {product.category}
-              </Link>
-            </>
-          )}
-          <span className="mx-2">/</span>
-          <span className="text-gray-800 font-medium truncate max-w-[200px]">{product.name}</span>
-        </nav>
+
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 p-3 sm:p-4 lg:p-6">

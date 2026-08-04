@@ -221,7 +221,7 @@ export const categories = [
       { id: 63, name: "Keychains", price: 149, image: image2, description: "Personalized metal and acrylic keychains" },
       { id: 64, name: "Lithophane Frame", price: 1499, image: image2, description: "3D lithophane photo frames with LED backlight" },
       { id: 65, name: "T-shirts", price: 599, image: image2, description: "Custom printed t-shirts with your design" },
-      { id: 66, name: "Bottle Engraving", price: 799, image: image2, description: "Personalized engraved water bottles and tumblers" },
+      { id: 66, name: "Bottle Engraving", price: 799, image: image2, description: "Personalized engraved bottles and tumblers" },
       { id: 67, name: "Characters", price: 999, image: image2, description: "Custom character illustrations and caricatures" },
       { id: 68, name: "Cap", price: 499, image: image2, description: "Personalized caps and hats with embroidery" },
       { id: 69, name: "Tote Bags", price: 399, image: image2, description: "Custom printed canvas and cotton tote bags" },

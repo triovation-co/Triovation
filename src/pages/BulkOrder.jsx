@@ -173,7 +173,7 @@ const bulkCategoryNames = [
   { label: "Trophy", terms: ["trophy", "award", "medal"] },
   { label: "Mugs", terms: ["mug", "cup"] },
   { label: "Pop Sockets", terms: ["pop socket", "socket", "grip"] },
-  { label: "Water Bottle", terms: ["bottle", "flask", "sipper"] }
+  { label: "Bottle", terms: ["bottle", "flask", "sipper"] }
 ];
 
 const BulkOrder = () => {
