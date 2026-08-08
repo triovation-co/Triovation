@@ -45,7 +45,9 @@ import BulkOrder from "./pages/BulkOrder";
 function App() {
 
   const location = useLocation();
-  const isBulkOrder = location.pathname.toLowerCase() === "/bulkorder";
+  const hasBottomBar = 
+    location.pathname.toLowerCase() === "/bulkorder" || 
+    location.pathname.toLowerCase() === "/design-consultancy";
 
   const openEnquiry = () => {
     window.dispatchEvent(new Event("open-enquiry-form"));
@@ -142,7 +144,7 @@ function App() {
         </main>
 
         {/* WhatsApp Button */}
-        <WhatsAppButton bottomOffset={isBulkOrder} />
+        <WhatsAppButton bottomOffset={hasBottomBar} />
 
         {/* Cart Toast Notification — fires when item added to cart (Point 3) */}
         <CartToast />
@@ -167,7 +169,7 @@ function App() {
               className={`
                 fixed 
                 right-4 md:right-6 
-                ${isBulkOrder ? "bottom-[8.75rem] md:bottom-[10rem]" : "bottom-[5.25rem] md:bottom-[6.25rem]"}
+                ${hasBottomBar ? "bottom-[9.75rem] md:bottom-[11rem]" : "bottom-[5.25rem] md:bottom-[6.25rem]"}
                 bg-[#0F172A] text-white
                 w-14 h-14 md:w-16 md:h-16
                 rounded-full shadow-2xl

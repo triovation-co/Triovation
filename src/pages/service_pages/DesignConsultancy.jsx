@@ -591,17 +591,41 @@ const DesignConsultancy = () => {
 
         .dc-startup-step-card img {
           width: 100%;
-          max-width: 380px;
           height: auto;
           aspect-ratio: 1/1;
           object-fit: cover;
-          border-radius: 16px;
-          margin: 0 auto 20px;
+          border-radius: 20px;
+          margin: 0 auto 14px;
+          box-shadow: 0 4px 16px rgba(0,0,0,0.06);
           transition: transform 0.5s cubic-bezier(.4,0,.2,1), box-shadow 0.5s ease;
         }
         .dc-startup-step-card:hover img {
           transform: scale(1.03);
-          box-shadow: 0 12px 32px rgba(0,0,0,0.08);
+          box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+        }
+
+        /* ── Startup section responsive grid ── */
+        .dc-startup-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr) !important;
+          gap: 8px; /* Small gap for mobile */
+          max-width: 100%;
+          margin: 0 auto 48px;
+          padding: 0 4px;
+        }
+        .dc-startup-grid .dc-startup-step-card {
+          width: 100%;
+          margin: 0;
+        }
+        @media (min-width: 768px) {
+          .dc-startup-grid {
+            max-width: 1200px;
+            gap: clamp(24px, 3vw, 40px);
+            padding: 0;
+          }
+          .dc-startup-step-card img {
+            max-width: 380px;
+          }
         }
 
         .dc-consult-btn {
@@ -668,6 +692,7 @@ const DesignConsultancy = () => {
           }
           .dc-flow-card {
             width: 100%;
+            padding: 20px;
           }
           .dc-flow-arm {
             display: none;
@@ -676,6 +701,35 @@ const DesignConsultancy = () => {
           .dc-flow-row-right .dc-flow-card {
             margin-left: 0;
             margin-right: 0;
+          }
+
+          /* Bigger card overlay text on mobile */
+          .dc-card-overlay p {
+            font-size: 0.8rem !important;
+            letter-spacing: 0.3px;
+          }
+
+          /* Startup step label text — adjusted to fit 3 narrow columns */
+          .dc-startup-step-card p {
+            font-size: 0.75rem !important;
+            line-height: 1.4 !important;
+            margin-top: 2px;
+          }
+
+          /* Startup step card padding — tight for 3 cols */
+          .dc-startup-step-card {
+            padding: 4px 2px !important;
+          }
+
+          /* Consult button sizing */
+          .dc-consult-btn {
+            padding: 14px 36px;
+            font-size: 0.9rem;
+          }
+
+          /* Startup title */
+          .dc-startup-title {
+            font-size: 1.5rem !important;
           }
         }
       `}</style>
@@ -913,19 +967,12 @@ const DesignConsultancy = () => {
               margin: "0 auto",
             }}>
               We provide affordable, professional design services to help
-              <br />
-              Young startup grow.
+              {" "}Young startup grow.
             </p>
           </div>
 
           {/* 3 Step Cards */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "clamp(20px, 3vw, 40px)",
-            maxWidth: 1200,
-            margin: "0 auto 48px",
-          }}>
+          <div className="dc-startup-grid">
             {[
               { img: startupQuestionImg, label: "1. Tell us about your brand" },
               { img: designIdeationImg, label: "2. Ideate Design Directions with Us" },
@@ -934,10 +981,10 @@ const DesignConsultancy = () => {
               <div key={i} className={`dc-startup-step-card dc-startup-step-${i}`}>
                 <img src={item.img} alt={item.label} />
                 <p style={{
-                  fontSize: "clamp(0.9rem, 1.6vw, 1.05rem)",
+                  fontSize: "clamp(1rem, 1.6vw, 1.1rem)",
                   fontWeight: 600,
                   color: "#1f2937",
-                  lineHeight: 1.5,
+                  lineHeight: 1.6,
                 }}>
                   {item.label}
                 </p>

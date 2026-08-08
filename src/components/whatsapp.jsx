@@ -11,7 +11,7 @@ const WhatsAppButton = ({ phoneNumber = "+918828293426", message = "", bottomOff
     <button
       onClick={handleClick}
       className={`fixed right-4 md:right-6
-                 ${bottomOffset ? "bottom-[4.5rem] md:bottom-[5.5rem]" : "bottom-4 md:bottom-6"}
+                 ${bottomOffset ? "bottom-[5.5rem] md:bottom-[6.5rem]" : "bottom-4 md:bottom-6"}
                  flex items-center justify-center
                  bg-green-500 hover:bg-green-600
                  text-white shadow-lg rounded-full
