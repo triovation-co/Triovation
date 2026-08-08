@@ -45,6 +45,35 @@ const SectionSkeleton = () => (
   </div>
 );
 
+// Lazy-render wrapper — only mounts children when scrolled into view
+const LazySection = ({ children, fallback, rootMargin = "200px" }) => {
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [rootMargin]);
+
+  return (
+    <div ref={ref}>
+      {isVisible ? children : (fallback || <SectionSkeleton />)}
+    </div>
+  );
+};
+
 
 // Decode entities and remove tags safely
 const stripHtml = (html = '') => {
@@ -266,8 +295,7 @@ const Products = () => {
       ...enhancedProducts.customisation,
       ...enhancedProducts.homeDecor,
       ...enhancedProducts.mechanical,
-      ...enhancedProducts.design,
-      ...enhancedProducts.education
+      ...enhancedProducts.design
     ];
     const seen = new Set();
     return combined.filter(p => {
@@ -441,32 +469,27 @@ const Products = () => {
   // ── Product Type Cards Data ──
   const productTypeCards = React.useMemo(() => {
     const types = [
-      { name: "Keychains", image: "https://images.unsplash.com/photo-1670540805686-a73a025c0dd1?q=80&w=600&auto=format&fit=crop" },
-      { name: "Bottles", image: "https://images.unsplash.com/photo-1625708458528-802ec79b1ed8?q=80&w=600&auto=format&fit=crop" },
-      { name: "Lamps", image: "https://images.unsplash.com/photo-1475783006851-1d68dd683eff?q=80&w=600&auto=format&fit=crop" },
-      { name: "Caps", image: "https://images.unsplash.com/photo-1653704841996-c2ed854aedd8?q=80&w=600&auto=format&fit=crop" },
-      { name: "Trophy", image: "https://images.unsplash.com/photo-1757365225211-1515ecc8a109?q=80&w=600&auto=format&fit=crop" },
-      { name: "Bags", image: "https://plus.unsplash.com/premium_photo-1683746792239-6ce8cdd3ac78?q=80&w=600&auto=format&fit=crop" },
-      { name: "Planters", image: "https://images.unsplash.com/photo-1519710164239-da123dc03ef4?w=600&q=80" },
-      { name: "Books", image: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?q=80&w=600&auto=format&fit=crop" },
-      { name: "Clocks", image: "https://images.unsplash.com/photo-1563861826100-9cb868fdbe1c?q=80&w=600&auto=format&fit=crop" },
-      { name: "Stickers", image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?q=80&w=600&auto=format&fit=crop" },
-      { name: "T-shirts", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=600&auto=format&fit=crop" },
-      { name: "Frame", image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?q=80&w=600&auto=format&fit=crop" },
+      { name: "Acrylic Lamp", keyword: "acrylic lamp", image: "https://images.unsplash.com/photo-1475783006851-1d68dd683eff?q=80&w=600&auto=format&fit=crop" },
+      { name: "Wooden Frame", keyword: "frame", image: "https://images.unsplash.com/photo-1513519245088-0e12902e35ca?q=80&w=600&auto=format&fit=crop" },
+      { name: "Lithophane", keyword: "lithophane", image: null },
+      { name: "Bags", keyword: "bag", image: "https://plus.unsplash.com/premium_photo-1683746792239-6ce8cdd3ac78?q=80&w=600&auto=format&fit=crop" },
+      { name: "Bottles", keyword: "bottle", image: "https://images.unsplash.com/photo-1625708458528-802ec79b1ed8?q=80&w=600&auto=format&fit=crop" },
+      { name: "Characters", keyword: "character", image: null },
+      { name: "Cap", keyword: "cap", image: "https://images.unsplash.com/photo-1653704841996-c2ed854aedd8?q=80&w=600&auto=format&fit=crop" },
     ];
 
     // Count matching products for each type — uses memoized allProducts
     return types.map(type => {
-      const keyword = type.name.toLowerCase().replace(/s$/, '');
+      const keyword = (type.keyword || type.name).toLowerCase().replace(/s$/, '');
       const matches = allProducts.filter(p =>
-        (p.name || '').toLowerCase().includes(keyword) || strictTitleMatch(p.name || '', type.name)
+        (p.name || '').toLowerCase().includes(keyword) || strictTitleMatch(p.name || '', keyword)
       );
       let image = type.image;
-      if ((keyword === 'frame' || keyword === 'keychain') && matches.length > 0 && matches[0].image) {
+      if ((!image || keyword.includes('frame') || keyword.includes('keychain') || keyword.includes('lithophane') || keyword.includes('character')) && matches.length > 0 && matches[0].image) {
         image = matches[0].image;
       }
-      return { ...type, image, count: matches.length };
-    }).filter(type => type.count > 0);
+      return { ...type, image, count: matches.length, searchKeyword: type.keyword || type.name };
+    }).filter(type => type.count > 0 && type.image);
   }, [allProducts]);
 
   // ── Category Browse Sections Data ──
@@ -484,10 +507,10 @@ const Products = () => {
     };
 
     // Build a category item only if products exist
-    const makeItem = (name, keyword) => {
+    const makeItem = (name, keyword, customImage) => {
       const { count, image } = findProducts(keyword || name);
-      if (count === 0 || !image) return null;
-      return { name, image, count };
+      if (count === 0 || (!image && !customImage)) return null;
+      return { name, image: customImage || image, count, searchKeyword: keyword || name };
     };
 
     // Link-based items are always shown (services, not products)
@@ -504,7 +527,7 @@ const Products = () => {
         items: [
           makeItem("Acrylic Lamps", "acrylic lamp"),
           makeItem("Lithophane", "lithophane"),
-          makeItem("Bottle", "bottle"),
+          makeItem("Bottle", "bottle", "https://images.unsplash.com/photo-1625708458528-802ec79b1ed8?q=80&w=600&auto=format&fit=crop"),
           makeItem("Trophy", "trophy"),
           makeItem("Keychain", "keychain"),
           makeItem("Planters", "planter"),
@@ -519,7 +542,7 @@ const Products = () => {
           makeItem("Ceramic Cups", "ceramic cup"),
           makeItem("Keychains", "keychain"),
           makeItem("Lithophane", "lithophane"),
-          makeItem("Bottle", "bottle"),
+          makeItem("Bottle", "bottle", "https://images.unsplash.com/photo-1625708458528-802ec79b1ed8?q=80&w=600&auto=format&fit=crop"),
           makeItem("Characters", "character"),
           makeItem("Cap", "cap"),
           makeItem("Tote Bags", "tote bag"),
@@ -553,18 +576,6 @@ const Products = () => {
           makeLinkItem("Social Media Posts", "/design-consultancy/social-media-design"),
           makeLinkItem("Illustration", "/design-consultancy/digital-illustration-design"),
           makeLinkItem("Business Cards", "/design-consultancy/business-collateral-design"),
-        ],
-      },
-      {
-        title: "Education & Workshops",
-        gradient: "from-sky-500 to-blue-600",
-        isLinkBased: true,
-        items: [
-          makeLinkItem("Design Consultancy", "/design-consultancy"),
-          makeLinkItem("Branding", "/design-consultancy/brand-identity-design"),
-          makeLinkItem("UI/UX", "/design-consultancy/website-uiux-design"),
-          makeLinkItem("Zine", "/design-consultancy/book-magazine-zine-design"),
-          makeItem("Books", "book"),
         ],
       },
     ];
@@ -753,7 +764,7 @@ const Products = () => {
           <section className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
-                Festival Season
+                Festive Season
               </h2>
               <div className="hidden sm:flex items-center gap-2">
                 <button
@@ -784,7 +795,7 @@ const Products = () => {
                 {productTypeCards.map((type) => (
                   <button
                     key={type.name}
-                    onClick={() => handleCategoryClick(type.name)}
+                    onClick={() => handleCategoryClick(type.searchKeyword || type.name)}
                     className="group flex-shrink-0 rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col"
                     style={{ width: 'calc((100% - 3 * 2rem) / 4)', minWidth: '220px' }}
                   >
@@ -813,6 +824,7 @@ const Products = () => {
         {/* ═══════════════ SHOP BY CATEGORY ═══════════════ */}
         {!isSearchActive && sortBy === "featured" && categoryBrowseData.map((category, catIdx) => {
           return (
+          <LazySection key={`lazy-cat-${catIdx}`}>
             <section key={catIdx} className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
               {/* Category Header - same style as ProductSection */}
               <header className="flex items-center my-10">
@@ -857,7 +869,7 @@ const Products = () => {
                   return (
                     <li key={itemIdx} className="w-full flex">
                       <button
-                        onClick={() => handleCategoryClick(item.name)}
+                        onClick={() => handleCategoryClick(item.searchKeyword || item.name)}
                         className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
                       >
                         <div className="relative overflow-hidden w-full aspect-square">
@@ -881,6 +893,7 @@ const Products = () => {
                 })}
               </ul>
             </section>
+          </LazySection>
           );
         })}
 
@@ -964,12 +977,85 @@ const Products = () => {
           </div>
         )}
 
+        {/* Corporate Bulk Gifting Section */}
+        <section className="mt-16 mb-20 container mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 2xl:px-12 bg-white">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-20 xl:gap-40 2xl:gap-40 items-center">
+            {/* Left Column: Images */}
+            <figure className="relative flex items-center justify-center w-full min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] 2xl:min-h-[600px]" aria-label="Corporate gifting showcase">
+              <div className="absolute 
+                left-1/3 sm:left-[35%] md:left-[40%] lg:left-[45%] 
+                top-1/2 -translate-y-1/2 
+                w-[200px] h-[260px] 
+                sm:w-[275px] sm:h-[350px]  
+                md:w-[275px] md:h-[350px]
+                lg:w-[335px] lg:h-[370px] 
+                xl:w-[425px] xl:h-[500px]
+                overflow-hidden shadow-lg rounded-t-full">
+                <img
+                  src={bulkorder1}
+                  alt="Premium corporate gift boxes and bulk order packages"
+                  className="w-full h-full object-cover"
+                  width="425"
+                  height="500"
+                  loading="lazy"
+                />
+              </div>
+
+              <div className="absolute
+                left-[8%] md:left-[10%] lg:left-[12%]
+                top-[55%] sm:top-[15%] md:top-[62.7%] lg:top-[57%] xl:top-[60.2%]
+                top-1/2 -translate-y-1/2
+                rounded-t-full overflow-hidden
+                w-[180px] h-[230px]
+                sm:w-[225px] sm:h-[250px]  
+                md:w-[225px] md:h-[250px]
+                lg:w-[275px] lg:h-[300px] 
+                xl:w-[375px] xl:h-[400px]
+                mx-auto">
+                <img
+                  src={bulkorder2}
+                  alt="Customized corporate gifts and event giveaways collection"
+                  className="w-full h-full object-cover"
+                  width="375"
+                  height="400"
+                  loading="lazy"
+                />
+              </div>
+            </figure>
+
+            {/* Right Column */}
+            <div className="mt-10 lg:mt-20 text-center lg:text-left px-2">
+              <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-4">
+                Joining Kits, Event Giveaways & More
+              </p>
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl 2xl:text-5xl font-bold text-gray-700 mb-4">
+                Corporate Bulk Gifting
+              </h2>
+
+              <p className="text-sm sm:text-base lg:text-lg 2xl:text-xl text-gray-500 mb-6">
+                Email at <a
+                  href="mailto:Triovation.co@gmail.com"
+                  className="font-semibold hover:text-sky-500 transition-colors focus:outline-none focus:underline"
+                >
+                  Triovation.co@gmail.com
+                </a>
+              </p>
+
+              <button
+                onClick={() => window.dispatchEvent(new Event("open-enquiry-form"))}
+                className="group relative overflow-hidden px-7 py-3 rounded-xl bg-gradient-to-r from-sky-400 to-blue-400 text-white font-semibold tracking-wide shadow-md transition-all duration-300 hover:shadow-xl hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                type="button"
+                aria-label="Open contact form for corporate bulk gifting enquiry"
+              >
+                <span className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition" aria-hidden="true"></span>
+                Contact Us
+              </button>
+            </div>
+          </div>
+        </section>
+
       </div>
-
-
-
-
-
       <WhatsAppButton />
 
 

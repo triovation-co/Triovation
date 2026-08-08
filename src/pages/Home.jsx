@@ -181,8 +181,8 @@ const OurStorySection = ({ vis, navigate }) => {
                     {/* Arrow pointing to stem */}
                     <div
                       className={`absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-[#f47e82] rotate-45 shadow-sm ${isAbove
-                          ? "bottom-[-8px] border-r-[3px] border-b-[3px]"
-                          : "top-[-8px] border-l-[3px] border-t-[3px]"
+                        ? "bottom-[-8px] border-r-[3px] border-b-[3px]"
+                        : "top-[-8px] border-l-[3px] border-t-[3px]"
                         }`}
                     />
                   </div>
@@ -203,8 +203,8 @@ const OurStorySection = ({ vis, navigate }) => {
               <div className="relative z-10 flex-shrink-0 mt-8">
                 <div
                   className={`w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${idx % 2 === 0
-                      ? "bg-gradient-to-br from-[#f47e82] to-[#e05a5e] border-2 border-white"
-                      : "bg-white border-[3px] border-[#f47e82]"
+                    ? "bg-gradient-to-br from-[#f47e82] to-[#e05a5e] border-2 border-white"
+                    : "bg-white border-[3px] border-[#f47e82]"
                     }`}
                 >
                   <span
@@ -723,13 +723,13 @@ const Home = () => {
               </h2>
               <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed hover:text-gray-700 transition-colors duration-300">
                 <strong className="text-[#f47e82]">TRIOVATION</strong> is a creative collective
-                bringing together design, manufacturing, gifting, and hands-on education on a single
+                bringing together design, manufacturing, and corporate gifting on a single
                 platform. Our expertise lies in transforming abstract ideas into tangible products and
-                experiences from custom corporate hampers to product design consultancy and
-                machine-learning workshops. Partner with us to craft meaningful gifts, unlock innovative
-                design solutions, and inspire learning through creativity and technology. We combine
+                experiences from custom corporate hampers to tailored product design consultancy.
+                Partner with us to craft meaningful gifts, unlock innovative
+                design solutions, and inspire excellence through creativity and technology. We combine
                 creativity, precision, and customization to bring ideas to life whether it's a unique
-                corporate hamper, product design support, or an engaging workshop.
+                corporate hamper or comprehensive product design support.
               </p>
             </div>
           </article>
@@ -746,12 +746,12 @@ const Home = () => {
             {
               id: 2,
               title: "Tailored Custom Solutions",
-              desc: "From corporate gifting to product innovation and workshops, everything we create is customizable. Materials, designs, and experiences are shaped around your needs.",
+              desc: "From corporate gifting to product innovation, everything we create is completely customizable. Materials, designs, and experiences are tailored specifically around your needs.",
             },
             {
               id: 3,
-              title: "Innovation Meets Education",
-              desc: "We teach and inspire adhering to the current trends. Through design consultancy to develop brand positioning, current technology machine workshops, and interactive learning kits, TRIOVATION blends creativity with education, empowering both professionals and kids.",
+              title: "Strategic Brand Innovation",
+              desc: "We design and create adhering to current market trends. Through expert design consultancy to develop strong brand positioning and state-of-the-art fabrication, TRIOVATION blends creativity with functional strategy to empower your organization.",
             },
           ].map((card, index) => (
             <article

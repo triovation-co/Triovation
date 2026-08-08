@@ -262,8 +262,8 @@ export const useProductManager = () => {
      INIT LOAD
   ========================================================= */
   useEffect(() => {
-    fetchProducts('featured');
-    fetchCategories();
+    // Fire both in parallel — don't wait for one to finish
+    Promise.all([fetchProducts('featured'), fetchCategories()]);
   }, [fetchProducts, fetchCategories]);
 
   /* =========================================================

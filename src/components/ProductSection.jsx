@@ -24,24 +24,7 @@ const optimizeImage = (url, width = 600) => {
   return url;
 };
 
-// Helper: Generate structured data for product
-const generateProductSchema = (product, category) => {
-  return {
-    "@context": "https://schema.org/",
-    "@type": "Product",
-    "name": product.name,
-    "image": product.image,
-    "description": stripHtml(product.description) || `${product.name} - Perfect for your needs.`,
-    "offers": {
-      "@type": "Offer",
-      "price": product.price,
-      "priceCurrency": "INR",
-      "availability": "https://schema.org/InStock",
-      "url": `${window.location.origin}/product/${product.id}`
-    },
-    "category": category
-  };
-};
+
 
 const ProductSection = ({
   title,
@@ -88,16 +71,7 @@ const ProductSection = ({
               <li
                 key={product.id}
                 className="w-full rounded-2xl overflow-hidden bg-white flex flex-col h-full"
-                itemScope
-                itemType="https://schema.org/Product"
               >
-                {/* Structured data script */}
-                <script 
-                  type="application/ld+json"
-                  dangerouslySetInnerHTML={{
-                    __html: JSON.stringify(generateProductSchema(product, title))
-                  }}
-                />
 
                 <Link 
                   to={`/product/${product.id}`}

@@ -7,13 +7,13 @@ const banners = [
     id: 1,
     title: "Lamps",
     subtitle: "Best Gifts & Offers",
-    image: "https://images.unsplash.com/photo-1475783006851-1d68dd683eff?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1475783006851-1d68dd683eff?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 2,
     title: "Keychains",
     subtitle: "Bulk Orders Available",
-    image: "https://images.unsplash.com/photo-1670540805686-a73a025c0dd1?q=80&w=1167&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1670540805686-a73a025c0dd1?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 3,
@@ -31,19 +31,19 @@ const banners = [
     id: 5,
     title: "Caps",
     subtitle: "Trendy Collection",
-    image: "https://images.unsplash.com/photo-1653704841996-c2ed854aedd8?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1653704841996-c2ed854aedd8?q=80&w=800&auto=format&fit=crop",
   },
    {
     id: 6,
     title: "Trophy",
     subtitle: "Trendy Collection",
-    image: "https://images.unsplash.com/photo-1757365225211-1515ecc8a109?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1757365225211-1515ecc8a109?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
     id: 7,
     title: "Book",
     subtitle: "Customised Books",
-    image: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1550399105-c4db5fb85c18?q=80&w=800&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
     {
     id: 8,
@@ -94,7 +94,16 @@ const HeroBanner = () => {
             index === current ? "opacity-100 z-10" : "opacity-0 z-0"
           }`}
         >
-          <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
+          <img
+            src={banner.image}
+            alt={banner.title}
+            className="w-full h-full object-cover"
+            loading={index === current ? "eager" : "lazy"}
+            fetchPriority={index === current ? "high" : "low"}
+            decoding={index === current ? "sync" : "async"}
+            width="800"
+            height="520"
+          />
 
           {/* Centered Overlay */}
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-center">

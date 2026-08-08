@@ -140,13 +140,19 @@ class GoogleSheetsAPI {
           const url = this.buildURL(action, params);
           console.log(`🌐 Making GET request (attempt ${attempt}): ${action}`, { url, params });
 
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+
           const response = await fetch(url, {
             method: 'GET',
-            cache: 'no-cache',
+            cache: 'default',
             headers: {
               'Accept': 'application/json,text/plain,*/*'
-            }
+            },
+            signal: controller.signal
           });
+
+          clearTimeout(timeoutId);
 
           console.log(`📡 Response status: ${response.status}`);
 

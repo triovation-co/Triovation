@@ -250,23 +250,6 @@ const menuData = {
           { label: "Business Cards", link: "/design-consultancy/business-collateral-design" },
         ],
       },
-      {
-        title: "Education &<br />  Workshops",
-        defaultItems: [
-          { label: "Design Consultancy", link: "/design-consultancy" },
-          { label: "Branding", link: "/design-consultancy/brand-identity-design" },
-          { label: "UI/UX", link: "/design-consultancy/website-uiux-design" },
-          { label: "Zine", link: "/design-consultancy/book-magazine-zine-design" },
-        ],
-        allItems: [
-          { label: "Design Consultancy", link: "/design-consultancy" },
-          { label: "Branding", link: "/design-consultancy/brand-identity-design" },
-          { label: "UI/UX", link: "/design-consultancy/website-uiux-design" },
-          { label: "Zine", link: "/design-consultancy/book-magazine-zine-design" },
-          { label: "Books", link: "/design-consultancy/book-magazine-zine-design" },
-          // "Poster & Graphics",
-        ],
-      },
     ],
   },
 };
