@@ -721,10 +721,15 @@ const DesignConsultancy = () => {
             padding: 4px 2px !important;
           }
 
-          /* Consult button sizing */
           .dc-consult-btn {
-            padding: 14px 36px;
-            font-size: 0.9rem;
+            padding: 10px 28px;
+            font-size: 0.8rem;
+            gap: 8px;
+            letter-spacing: 1px;
+          }
+          .dc-consult-btn svg {
+            width: 16px;
+            height: 16px;
           }
 
           /* Startup title */

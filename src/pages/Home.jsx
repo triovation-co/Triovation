@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Users, Puzzle, PackageCheck } from "lucide-react";
 import corporateGiftHero from "../assets/corporate-gift-hero.png";
 import corporateGifting from "../assets/corporate-gifting.jpg";
 import designConsultancy from "../assets/design-consultancy.jpg";
@@ -709,11 +710,10 @@ const Home = () => {
         aria-labelledby="why-choose-us"
       >
         <div className="container mx-auto py-2 sm:py-4 md:py-7 lg:py-10 xl:py-10 px-4 sm:px-6 md:px-8 lg:px-10">
-          <article className="grid grid-cols-1 md:grid-cols-1 gap-10 lg:gap-16 xl:gap-24 items-center">
-            <div className="text-center md:text-left order-2 md:order-1 space-y-6">
+          <div className="text-center space-y-4 mb-10 sm:mb-14">
               <h2
                 id="why-choose-us"
-                className="text-3xl lg:text-4xl xl:text-4xl font-bold mb-6 lg:mb-8 xl:mb-8 text-gray-800 text-center relative"
+                className="text-3xl lg:text-4xl xl:text-4xl font-bold text-gray-800 relative inline-block"
               >
                 Why Choose Us
                 <div
@@ -721,18 +721,12 @@ const Home = () => {
                   aria-hidden="true"
                 />
               </h2>
-              <p className="text-gray-600 text-lg lg:text-xl xl:text-xl leading-relaxed hover:text-gray-700 transition-colors duration-300">
-                <strong className="text-[#f47e82]">TRIOVATION</strong> is a creative collective
-                bringing together design, manufacturing, and corporate gifting on a single
-                platform. Our expertise lies in transforming abstract ideas into tangible products and
-                experiences from custom corporate hampers to tailored product design consultancy.
-                Partner with us to craft meaningful gifts, unlock innovative
-                design solutions, and inspire excellence through creativity and technology. We combine
-                creativity, precision, and customization to bring ideas to life whether it's a unique
-                corporate hamper or comprehensive product design support.
+              <p className="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto mt-4">
+                Design, manufacturing,{" "}
+                <span className="font-semibold text-gray-700">custom and bulk gifting</span>
+                {" "}—combined to turn ideas into impact.
               </p>
-            </div>
-          </article>
+          </div>
         </div>
 
         {/* Feature Cards */}
@@ -740,23 +734,28 @@ const Home = () => {
           {[
             {
               id: 1,
-              title: "Diverse Expert Team",
-              desc: "Our team brings together specialists in Graphic design, Packaging design, UI/UX design, Brand positioning, 3D design and fabrication, electronics, sourcing, and creative strategy. This diverse skill set allows us to deliver innovative, end-to-end solutions under one roof.",
+              title: "Expert Team",
+              desc: "Skilled specialists in design, engineering, and manufacturing delivering end-to-end solutions.",
+              icon: Users,
             },
             {
               id: 2,
-              title: "Tailored Custom Solutions",
-              desc: "From corporate gifting to product innovation, everything we create is completely customizable. Materials, designs, and experiences are tailored specifically around your needs.",
+              title: "Custom Solutions",
+              desc: "Tailored products and experiences designed to match your brand and needs.",
+              icon: Puzzle,
             },
             {
               id: 3,
-              title: "Strategic Brand Innovation",
-              desc: "We design and create adhering to current market trends. Through expert design consultancy to develop strong brand positioning and state-of-the-art fabrication, TRIOVATION blends creativity with functional strategy to empower your organization.",
+              title: "End-to-End Delivery",
+              desc: "From design files to fully manufactured products, we manage every stage of the journey.",
+              icon: PackageCheck,
             },
-          ].map((card, index) => (
+          ].map((card, index) => {
+            const IconComponent = card.icon;
+            return (
             <article
               key={card.id}
-              className="relative group bg-white rounded-2xl shadow-lg p-6 sm:p-8 flex flex-col items-center text-center transition-all duration-700 max-w-sm mx-auto w-full hover:-translate-y-6 hover:shadow-2xl hover:shadow-[#f47e82]/20 border border-transparent hover:border-[#f47e82]/30 animate-fade-in-up"
+              className="relative group bg-white rounded-2xl shadow-lg p-8 sm:p-10 py-12 sm:py-14 flex flex-col items-center text-center transition-all duration-700 max-w-sm mx-auto w-full hover:-translate-y-6 hover:shadow-2xl hover:shadow-[#f47e82]/20 border border-transparent hover:border-[#f47e82]/30 animate-fade-in-up"
               style={{ animationDelay: `${index * 200}ms` }}
             >
               {/* Animated Background Glow */}
@@ -766,21 +765,26 @@ const Home = () => {
               />
               {/* Circle Badge */}
               <div
-                className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-[#f47e82] to-[#fca5a5] flex items-center justify-center mb-4 sm:mb-5 shadow-lg shadow-[#f47e82]/30 transform"
+                className="relative h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-[#f47e82] to-[#fca5a5] flex items-center justify-center mb-3 sm:mb-4 shadow-lg shadow-[#f47e82]/30 transform"
                 aria-label={`Feature ${card.id}`}
               >
                 <span className="text-white text-xl sm:text-2xl font-extrabold">{card.id}</span>
+              </div>
+              {/* Icon */}
+              <div className="relative z-10 mb-3 sm:mb-4">
+                <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 text-gray-700 group-hover:text-[#f47e82] transition-colors duration-500" strokeWidth={1.5} />
               </div>
               {/* Title */}
               <h3 className="relative text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-800 group-hover:text-[#f47e82] transition-colors duration-500 z-10">
                 {card.title}
               </h3>
               {/* Description */}
-              <p className="relative text-gray-600 text-sm sm:text-base text-justify leading-relaxed group-hover:text-gray-700 transition-colors duration-300 z-10">
+              <p className="relative text-gray-600 text-sm sm:text-base text-center leading-relaxed group-hover:text-gray-700 transition-colors duration-300 z-10">
                 {card.desc}
               </p>
             </article>
-          ))}
+            );
+          })}
         </div>
       </section>
 
