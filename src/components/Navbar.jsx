@@ -242,7 +242,7 @@ const menuData = {
           { label: "Branding", link: "/design-consultancy/brand-identity-design" },
           { label: "UI/UX", link: "/design-consultancy/website-uiux-design" },
           { label: "Zine", link: "/design-consultancy/book-magazine-zine-design" },
-          { label: "Books", link: "/design-consultancy/book-magazine-zine-design" },
+          { label: "Notebook", link: "/design-consultancy/book-magazine-zine-design" },
           // "Poster & Infographics",
           { label: "Social media posts", link: "/design-consultancy/social-media-design" },
           { label: "Illustration", link: "/design-consultancy/digital-illustration-design" },

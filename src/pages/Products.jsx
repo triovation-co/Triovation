@@ -572,7 +572,7 @@ const Products = () => {
           makeLinkItem("Branding", "/design-consultancy/brand-identity-design"),
           makeLinkItem("UI/UX", "/design-consultancy/website-uiux-design"),
           makeLinkItem("Zine", "/design-consultancy/book-magazine-zine-design"),
-          makeItem("Books", "book"),
+          makeItem("Notebook", "book"),
           makeLinkItem("Social Media Posts", "/design-consultancy/social-media-design"),
           makeLinkItem("Illustration", "/design-consultancy/digital-illustration-design"),
           makeLinkItem("Business Cards", "/design-consultancy/business-collateral-design"),

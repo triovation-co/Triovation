@@ -1,6 +1,6 @@
 // src/services/googleSheetsAPI.js
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUJS-VNU057UWFWAykP-LMGBV1q-GJw8Ns7Pq-HMe8STV7sfPx-VJsnf_6EPTjsS0frQ/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWRo8Fr7j9Kk9tfDVYs0s9I2tJnQmXzdmRrwHvp0zSvxyKZxtXhyMuquHhODy-pOIl/exec';
 
 // Enhanced getAllProducts function with sorting
 export const getAllProducts = async (sortBy = 'featured') => {

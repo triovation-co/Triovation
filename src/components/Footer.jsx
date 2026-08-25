@@ -156,7 +156,7 @@ const Footer = () => {
                   setFormErrors({});
                   setOpenCatalogueForm(false);
 
-                  window.open("/catalogue.pdf", "_blank", "noopener,noreferrer");
+                  window.open("/Final PC1.pdf", "_blank", "noopener,noreferrer");
                 }}
                 className="px-6 py-6 space-y-5"
               >
