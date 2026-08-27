@@ -45,8 +45,8 @@ import BulkOrder from "./pages/BulkOrder";
 function App() {
 
   const location = useLocation();
-  const hasBottomBar = 
-    location.pathname.toLowerCase() === "/bulkorder" || 
+  const hasBottomBar =
+    location.pathname.toLowerCase() === "/bulkorder" ||
     location.pathname.toLowerCase() === "/design-consultancy";
 
   const openEnquiry = () => {

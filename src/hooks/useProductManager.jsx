@@ -7,10 +7,32 @@ import { transformAllProductImages } from '../utils/productImages.js';
 ========================================================= */
 const CACHE_TTL = 10 * 60 * 1000; // 10 minutes
 const PRODUCTS_CACHE_KEY = 'triovation_products_cache';
+const SESSION_CACHE_KEY = 'triovation_products_session';
 
 /* =========================================================
    CACHE HELPERS
 ========================================================= */
+
+// Session cache — fast, same-tab only, survives page navigations
+const getSessionCachedProducts = (sortBy) => {
+  try {
+    const raw = sessionStorage.getItem(`${SESSION_CACHE_KEY}_${sortBy}`);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+};
+
+const setSessionCachedProducts = (sortBy, data) => {
+  try {
+    sessionStorage.setItem(`${SESSION_CACHE_KEY}_${sortBy}`, JSON.stringify(data));
+  } catch {
+    // sessionStorage might be full — ignore
+  }
+};
+
+// LocalStorage cache — persists across sessions
 const getCachedProducts = (sortBy) => {
   try {
     const raw = localStorage.getItem(`${PRODUCTS_CACHE_KEY}_${sortBy}`);
@@ -31,13 +53,19 @@ const getCachedProducts = (sortBy) => {
 };
 
 const setCachedProducts = (sortBy, data) => {
-  localStorage.setItem(
-    `${PRODUCTS_CACHE_KEY}_${sortBy}`,
-    JSON.stringify({
-      timestamp: Date.now(),
-      data,
-    })
-  );
+  try {
+    localStorage.setItem(
+      `${PRODUCTS_CACHE_KEY}_${sortBy}`,
+      JSON.stringify({
+        timestamp: Date.now(),
+        data,
+      })
+    );
+  } catch {
+    // localStorage might be full — ignore
+  }
+  // Also update session cache for instant subsequent reads
+  setSessionCachedProducts(sortBy, data);
 };
 
 /* =========================================================
@@ -144,27 +172,43 @@ export const useProductManager = () => {
   );
 
   /* =========================================================
-     FETCH PRODUCTS (CACHED)
+     FETCH PRODUCTS (CACHED — Session → LocalStorage → Network)
   ========================================================= */
   const fetchProducts = useCallback(
     async (sortBy = 'featured') => {
       try {
         setError(null);
 
-        // 1️⃣ Use cache instantly
-        const cached = getCachedProducts(sortBy);
-        if (cached) {
-          console.log('⚡ Using cached products');
-          setProducts(cached);
+        // 1️⃣ Session cache — instant (same tab, survives SPA navigation)
+        const sessionCached = getSessionCachedProducts(sortBy);
+        if (sessionCached) {
+          console.log('⚡ Using session-cached products (instant)');
+          setProducts(sessionCached);
           setCurrentSortBy(sortBy);
           setLoading(false);
 
-          // 2️⃣ Background refresh
+          // Background refresh — keeps data fresh
           setTimeout(() => refreshFromServer(sortBy), 0);
           return;
         }
 
-        // 3️⃣ No cache → normal fetch
+        // 2️⃣ LocalStorage cache — fast (persists across sessions)
+        const cached = getCachedProducts(sortBy);
+        if (cached) {
+          console.log('⚡ Using localStorage-cached products');
+          setProducts(cached);
+          setCurrentSortBy(sortBy);
+          setLoading(false);
+
+          // Populate session cache for next time
+          setSessionCachedProducts(sortBy, cached);
+
+          // Background refresh
+          setTimeout(() => refreshFromServer(sortBy), 0);
+          return;
+        }
+
+        // 3️⃣ No cache → network fetch (shows loading spinner)
         setLoading(true);
         await refreshFromServer(sortBy);
       } catch (err) {

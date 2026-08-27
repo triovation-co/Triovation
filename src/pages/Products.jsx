@@ -8,6 +8,7 @@ import WhatsAppButton from "../components/whatsapp.jsx";
 import HeroBanner from "../components/HeroBanner.jsx";
 import { lazy, Suspense } from "react";
 import { useCart } from "../context/CartContext";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const ProductSection = lazy(() =>
   import("../components/ProductSection.jsx")
@@ -124,6 +125,15 @@ const Products = () => {
   // Use React Router's useLocation hook
   const location = useLocation();
   const { addToCart } = useCart();
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Products — Corporate Gifting & Custom Merchandise | Triovation',
+    description: 'Browse premium corporate gifting products, custom merchandise, festive hampers, home décor, and more at Triovation. Bulk orders available.',
+    keywords: 'corporate gifts, custom merchandise, festive gifts, home decor, bulk orders, Triovation, Mumbai',
+    canonicalUrl: 'https://www.triovation.com/Products',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
 
 
   // State — single object replaces 7 separate showAll* hooks

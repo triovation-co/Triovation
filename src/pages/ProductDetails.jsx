@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useProductManager } from '../hooks/useProductManager.jsx';
+import useDocumentMeta from '../hooks/useDocumentMeta.js';
 import {
   FestiveSeason,
   corporateGiftingProducts,
@@ -65,6 +66,34 @@ const ProductDetails = () => {
 
   // Check if product is customizable
   const isCustomizable = ['T0001', 'T0002', 'T0003'].includes(product?.id);
+
+  // ──────────── Dynamic SEO Meta Tags ────────────
+  const stripHtmlForMeta = (html) => {
+    if (!html) return '';
+    return html.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').trim().slice(0, 160);
+  };
+
+  const productMetaData = useMemo(() => {
+    if (!product) return null;
+    return {
+      name: product.name,
+      description: stripHtmlForMeta(product.description || product.shortDescription),
+      image: Array.isArray(product.images) ? product.images[0] : product.image,
+      price: product.price,
+      category: product.category,
+      url: `https://www.triovation.com/product/${product.id}`,
+    };
+  }, [product]);
+
+  useDocumentMeta({
+    title: product ? `${product.name} | Triovation` : 'Loading Product... | Triovation',
+    description: productMetaData?.description || 'Premium corporate gifting product by Triovation',
+    keywords: product ? `${product.name}, ${product.category || 'corporate gifting'}, Triovation, buy online` : '',
+    canonicalUrl: productMetaData?.url || `https://www.triovation.com/product/${id}`,
+    ogImage: productMetaData?.image || 'https://www.triovation.com/og-image.jpg',
+    ogType: 'product',
+    product: productMetaData,
+  });
 
   useEffect(() => {
     window.scrollTo(0, 0);
