@@ -40,6 +40,7 @@ import OrderSuccess from "./components/OrderSuccess";
 import CartToast from "./components/CartToast";
 import SiteMap from "./pages/SiteMap";
 import BulkOrder from "./pages/BulkOrder";
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 
 function App() {
@@ -192,6 +193,7 @@ function App() {
 
         <Footer />
       </div>
+      <SpeedInsights />
     </CartProvider>
   );
 }
