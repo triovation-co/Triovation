@@ -1,11 +1,19 @@
 {
-  "proxy": {
-    "entrypoint": "proxy.js",
-    "matcher": [
-      "/((?!api|_vercel|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)"
-    ]
-  },
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(googlebot|bingbot|yandex|baiduspider|facebookexternalhit|twitterbot|linkedinbot|slackbot|whatsapp|discordbot|applebot|redditbot|pinterestbot|telegrambot|google-inspectiontool|chrome-lighthouse|rogerbot|embedly|quora link preview|showyoubot|outbrain|vkshare|w3c_validator|bitlybot|skypeuripreview|flipboard|tumblr|bitrix link preview|xing-contenttabreceiver|qwantify|google page speed|nuzzel|developers\\.google\\.com\\/\\+\\/web\\/snippet|pinterest\\/0\\.).*"
+        }
+      ],
+      "destination": "/api/prerender?path=/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
-}
+}
