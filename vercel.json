@@ -1,4 +1,10 @@
 {
+  "proxy": {
+    "entrypoint": "proxy.js",
+    "matcher": [
+      "/((?!api|_vercel|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)"
+    ]
+  },
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]

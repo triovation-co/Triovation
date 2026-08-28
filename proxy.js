@@ -1,5 +1,6 @@
-// Vercel Edge Middleware — intercepts bot requests and proxies them to Prerender.io
+// Vercel Routing Middleware — intercepts bot requests and proxies them to Prerender.io
 // Docs: https://docs.prerender.io/docs/vercel
+// Convention: export default function proxy() for Vercel Routing Middleware (non-Next.js)
 
 const BOT_AGENTS = [
   'googlebot',
@@ -49,20 +50,7 @@ const IGNORED_EXTENSIONS = [
   '.woff', '.woff2', '.svg', '.eot', '.webp', '.avif', '.webm',
 ];
 
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for:
-     * - api routes
-     * - _next static files
-     * - _next image optimization
-     * - static files in /public
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)',
-  ],
-};
-
-export default async function middleware(request) {
+export default async function proxy(request) {
   const userAgent = (request.headers.get('user-agent') || '').toLowerCase();
   const url = new URL(request.url);
   const pathname = url.pathname.toLowerCase();
@@ -80,7 +68,7 @@ export default async function middleware(request) {
     return; // Not a bot — serve the normal React SPA
   }
 
-  // Get Prerender token from environment variable
+  // Get Prerender token from environment variable (set in Vercel Dashboard)
   const prerenderToken = process.env.PRERENDER_TOKEN;
 
   if (!prerenderToken) {
@@ -95,7 +83,7 @@ export default async function middleware(request) {
     const prerenderResponse = await fetch(prerenderUrl, {
       headers: {
         'X-Prerender-Token': prerenderToken,
-        'X-Prerender-Int-Type': 'vercel-edge',
+        'X-Prerender-Int-Type': 'vercel',
       },
       redirect: 'manual',
     });
