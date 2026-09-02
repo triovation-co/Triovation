@@ -618,6 +618,7 @@ const Products = () => {
 
   return (
     <div className="overflow-x-hidden min-h-screen">
+      <h1 className="sr-only">Products — Corporate Gifting & Custom Merchandise | Triovation</h1>
       {/* FULL WIDTH HERO BANNER */}
       {!isSearchActive && <HeroBanner />}
 

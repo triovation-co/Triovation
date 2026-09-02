@@ -3,11 +3,22 @@ import bulkorder1 from "../assets/bulkorder1.png";
 import bulkorder2 from "../assets/bulkorder2.png";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const ContactUs = () => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Contact Us | Triovation',
+    description: 'Get in touch with Triovation for corporate gifting enquiries, design consultancy, or custom merchandise orders. Based in Mumbai, India.',
+    keywords: 'contact Triovation, corporate gifting enquiry, design consultancy contact, Mumbai',
+    canonicalUrl: 'https://www.triovation.com/ContactUs',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

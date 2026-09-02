@@ -1,8 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle } from "lucide-react";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const ThankYou = () => {
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Thank You for Your Enquiry | Triovation',
+    description: 'Thank you for contacting Triovation. Our team has received your message and will get back to you shortly.',
+    keywords: 'thank you, enquiry received, Triovation',
+    canonicalUrl: 'https://www.triovation.com/thank-you',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white shadow-xl rounded-2xl p-10 max-w-md w-full text-center">
@@ -28,3 +38,4 @@ const ThankYou = () => {
 };
 
 export default ThankYou;
+

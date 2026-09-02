@@ -26,8 +26,18 @@ import BusinessCollateralDesign from "./design_consultancy_pages/BusinessCollate
 import DigitalIllustrationDesign from "./design_consultancy_pages/DigitalIllustrationDesign";
 import SocialMediaDesign from "./design_consultancy_pages/SocialMediaDesign";
 import DigitalPaintingDesign from "./design_consultancy_pages/DigitalPaintingDesign";
+import useDocumentMeta from "../../hooks/useDocumentMeta.js";
 const DesignConsultancy = () => {
   const navigate = useNavigate();
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Design Consultancy — Branding, UI/UX & More | Triovation',
+    description: 'Comprehensive design consultancy services: brand identity, UI/UX, illustrations, social media design, business collateral, and more by Triovation.',
+    keywords: 'design consultancy, brand identity, UI/UX, illustration, business cards, Triovation',
+    canonicalUrl: 'https://www.triovation.com/design-consultancy',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
   const [showAll, setShowAll] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(true);
   const [cardsVisible, setCardsVisible] = useState(true);

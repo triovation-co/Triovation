@@ -2,6 +2,7 @@ import React, { useState, useMemo, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useProductManager } from "../hooks/useProductManager.jsx";
 import { validateName, validatePhone, validateEmailOptional, validateEmail, validatePhoneOptional, validateRequired } from "../utils/validators";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 import precisionCraftingImg from "../assets/precision-crafting.png";
 import talkToUsImg from "../assets/talk to us.png";
 import deliveryImg from "../assets/delivery.png";
@@ -178,6 +179,15 @@ const bulkCategoryNames = [
 
 const BulkOrder = () => {
   const { products: sheetProducts, loading } = useProductManager();
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Bulk Order & Corporate Gifting | Triovation',
+    description: 'Place bulk orders for corporate gifts, event giveaways, joining kits, and custom merchandise. Contact Triovation for volume pricing and personalized solutions.',
+    keywords: 'bulk order, corporate gifting, event giveaways, joining kits, volume orders, Triovation',
+    canonicalUrl: 'https://www.triovation.com/bulkorder',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
 
   const bulkProductCategories = useMemo(() => {
     const categories = bulkCategoryNames.map(category => {

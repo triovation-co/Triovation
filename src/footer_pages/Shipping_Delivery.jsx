@@ -1,6 +1,15 @@
 import React from "react";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 export default function ShippingPolicy() {
+  useDocumentMeta({
+    title: 'Shipping & Delivery Policy | Triovation',
+    description: "Learn about Triovation's shipping and delivery policies, timelines, and charges across India.",
+    keywords: 'shipping policy, delivery, shipping charges, Triovation',
+    canonicalUrl: 'https://www.triovation.com/shipping-delivery',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
   return (
     <div className="max-w-4xl mx-auto p-6 my-8">
       <h1 className="text-3xl font-bold mb-4 flex justify-center">Shipping &amp; Delivery Policy</h1>

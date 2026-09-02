@@ -1,8 +1,18 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle, Package, MessageCircle, ArrowRight, ShoppingBag } from "lucide-react";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const OrderSuccess = () => {
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Order Placed Successfully | Triovation',
+    description: 'Your order has been placed successfully with Triovation. Our team will contact you shortly to confirm payment and delivery details.',
+    keywords: 'order success, order confirmation, Triovation',
+    canonicalUrl: 'https://www.triovation.com/order-success',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
   }, []);

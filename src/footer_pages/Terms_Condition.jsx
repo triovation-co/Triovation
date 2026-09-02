@@ -1,6 +1,15 @@
 import React from "react";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 export default function TermsAndConditions() {
+  useDocumentMeta({
+    title: 'Terms & Conditions | Triovation',
+    description: "Read the terms and conditions for using Triovation's website and services.",
+    keywords: 'terms and conditions, legal, Triovation',
+    canonicalUrl: 'https://www.triovation.com/terms-condition',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
   return (
     <div className="max-w-4xl mx-auto p-6 my-8">
       <h1 className="text-3xl font-bold mb-4 flex justify-center">Terms &amp; Conditions</h1>

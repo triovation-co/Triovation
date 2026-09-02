@@ -5,11 +5,22 @@ import Design_Consultancy from '../assets/Design_Consultancy.jpg'
 import Startup_Venture_Support from '../assets/Startup_Venture_Support.jpg'
 import WhatsAppButton from "../components/whatsapp";
 import { useNavigate } from "react-router-dom";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 
 const Service = () => {
   const sectionRefs = useRef([]);
   const navigate = useNavigate();
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Design Consultancy & Services | Triovation',
+    description: 'Professional design consultancy services including branding, UI/UX, illustration, social media design, and more by Triovation.',
+    keywords: 'design consultancy, branding services, UI/UX design, graphic design, Triovation',
+    canonicalUrl: 'https://www.triovation.com/Consultancy',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
 
 
   // Smooth scroll function

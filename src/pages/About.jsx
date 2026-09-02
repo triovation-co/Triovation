@@ -6,10 +6,21 @@ import Our_crasftsmenship from "../assets/Our_crasftsmenship.jpg";
 import flower from "../assets/flower.png";
 import design from "../assets/design.jpg";
 import WhatsAppButton from "../components/whatsapp";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'About Us — Our Story & Mission | Triovation',
+    description: 'Learn about Triovation — a creative design studio specializing in corporate gifting, custom merchandise, and design consultancy based in Mumbai, India.',
+    keywords: 'about Triovation, design studio Mumbai, corporate gifting company, our story, mission',
+    canonicalUrl: 'https://www.triovation.com/About',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
   const [visibleSections, setVisibleSections] = useState({
     story: false,
     approach: false,

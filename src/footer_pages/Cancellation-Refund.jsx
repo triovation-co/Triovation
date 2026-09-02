@@ -1,6 +1,16 @@
 import React, { useEffect } from 'react';
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const CancellationRefundPolicy = () => {
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Cancellation & Refund Policy | Triovation',
+    description: "Read Triovation's cancellation and refund policy for orders and services.",
+    keywords: 'cancellation policy, refund policy, returns, Triovation',
+    canonicalUrl: 'https://www.triovation.com/cancellation-refund',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
 
   // Point 7: Force scroll to top when this page loads.
   // React Router re-uses the component without a full page reload,

@@ -1,4 +1,5 @@
 import React from "react";
+import useDocumentMeta from "../../../hooks/useDocumentMeta.js";
 
 import f1 from "../../../assets/design_consultancy/brand_manual_design/1.png";
 import f2 from "../../../assets/design_consultancy/brand_manual_design/2.png";
@@ -25,11 +26,20 @@ const frames = [
 ];
 
 const BrandManualDesign = () => {
+  useDocumentMeta({
+    title: 'Brand Manual Design | Triovation Design Consultancy',
+    description: 'Complete brand manual and guideline design services to maintain brand consistency across all touchpoints.',
+    keywords: 'brand manual, brand guidelines, brand book, design system, Triovation',
+    canonicalUrl: 'https://www.triovation.com/design-consultancy/brand-manual-design',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
   return (
     <div style={{ width: "100%" }}>
+      <h1 className="sr-only">Brand Manual Design — Triovation Design Consultancy</h1>
       {frames.map((img, i) => (
         <div key={i}>
-          <img src={img} alt={`brand-manual-${i}`} style={{ width: "100%" }} />
+          <img src={img} alt={`Brand manual design portfolio piece ${i + 1}`} style={{ width: "100%" }} />
         </div>
       ))}
     </div>
@@ -37,3 +47,4 @@ const BrandManualDesign = () => {
 };
 
 export default BrandManualDesign;
+

@@ -1,4 +1,5 @@
 import React from "react";
+import useDocumentMeta from "../../../hooks/useDocumentMeta.js";
 
 import f1 from "../../../assets/design_consultancy/brand_identity_design/Frame 1.png";
 import f2 from "../../../assets/design_consultancy/brand_identity_design/Frame 2.png";
@@ -11,17 +12,25 @@ import f24 from "../../../assets/design_consultancy/brand_identity_design/Frame 
 const frames = [f1, f2, f3, f4, f5, f6, f24];
 
 const BrandIdentityDesign = () => {
+  useDocumentMeta({
+    title: 'Brand Identity Design | Triovation Design Consultancy',
+    description: 'Professional brand identity design services — logos, color systems, typography, and complete visual identity by Triovation.',
+    keywords: 'brand identity design, logo design, visual identity, branding, Triovation',
+    canonicalUrl: 'https://www.triovation.com/design-consultancy/brand-identity-design',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
   return (
     <div style={{ width: "100%" }}>
-
+      <h1 className="sr-only">Brand Identity Design — Triovation Design Consultancy</h1>
       {frames.map((img, i) => (
         <div key={i}>
-          <img src={img} alt={`frame-${i}`} style={{ width: "100%" }} />
+          <img src={img} alt={`Brand identity design portfolio piece ${i + 1}`} style={{ width: "100%" }} />
         </div>
       ))}
-
     </div>
   );
 };
 
 export default BrandIdentityDesign;
+

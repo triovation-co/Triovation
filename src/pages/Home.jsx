@@ -13,6 +13,7 @@ import serviceBgBranding from "../assets/service-bg-branding.jpg";
 import serviceBgCorporateGifting from "../assets/service-bg-corporate-gifting.png";
 import WhatsAppButton from "../components/whatsapp";
 import { useNavigate } from "react-router-dom";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 /* ────────────── Success Stories Data ────────────── */
 const successStories = [
@@ -371,6 +372,15 @@ const Home = () => {
   const [scrollY, setScrollY] = useState(0);
   const [visibleSections, setVisibleSections] = useState({});
   const navigate = useNavigate();
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Gifting Solutions & Corporate Merchandise | Triovation',
+    description: 'Triovation offers premium corporate gifting solutions, custom merchandise, design consultancy, and educational workshops. Based in Mumbai, India — bulk orders welcome.',
+    keywords: 'corporate gifting, custom product design, design consultancy, educational workshops, brand identity, 3D fabrication, personalized gifts, startup support, creative solutions, Mumbai, India, Triovation',
+    canonicalUrl: 'https://www.triovation.com/',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
 
   useEffect(() => {
     setIsVisible(true);

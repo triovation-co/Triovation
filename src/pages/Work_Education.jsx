@@ -5,9 +5,20 @@ import Education from '../assets/Education.jpg'
 import Education1 from "../assets/Education1.png"
 import workshop1 from "../assets/workshop1.png"
 import WhatsAppButton from "../components/whatsapp";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const Work_Education = () => {
   const sectionRefs = useRef([]);
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: 'Education & Workshops | Triovation',
+    description: "Join Triovation's educational workshops on design, branding, 3D printing, and creative skills. Learn from industry professionals.",
+    keywords: 'design workshops, creative education, branding course, 3D printing workshop, Triovation',
+    canonicalUrl: 'https://www.triovation.com/Education',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
 
   // Smooth scroll function
   const scrollToSection = (sectionId) => {

@@ -26,6 +26,7 @@ import uShapeCalendar from "../assets/customization_page/u_shape_calendar.jpg";
 import Blue from "../assets/customization_page/blue_light.jpg";
 import warm from "../assets/customization_page/warn_light.jpg";
 import WhatsAppButton from "../components/whatsapp.jsx";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const powerSources = [
   {
@@ -91,6 +92,15 @@ export default function CustomizationPage() {
   const [selectedDesign, setSelectedDesign] = useState("");
   const [product, setProduct] = useState(null);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // ──────────── Page-level SEO ────────────
+  useDocumentMeta({
+    title: product ? `Customize ${product.name} | Triovation` : 'Customize Your Product | Triovation',
+    description: 'Design and customize your own product at Triovation — choose designs, colors, and personalization options for unique gifts and merchandise.',
+    keywords: 'customize product, personalize gift, custom design, Triovation',
+    canonicalUrl: id ? `https://www.triovation.com/customize/${id}` : 'https://www.triovation.com/Customize_product',
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
 
   useEffect(() => {
     if (sheetLoading || !id) return;

@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { categories } from "../assets/data.jsx";
+import useDocumentMeta from "../hooks/useDocumentMeta.js";
 
 const Category_page = () => {
   const { categoryName } = useParams();
@@ -13,6 +14,46 @@ const Category_page = () => {
 
   // Find category object
   const category = categories.find(cat => cat.title === decodedName);
+
+  // ──────────── SEO meta mapping for category pages ────────────
+  const categoryMeta = useMemo(() => {
+    const metaMap = {
+      'FestiveSeason': {
+        title: 'Festive Season Gifts & Hampers | Triovation',
+        description: 'Explore premium festive season gifts, curated hampers, and celebration essentials by Triovation. Perfect for Diwali, Christmas, New Year, and more.',
+        keywords: 'festive season gifts, Diwali gifts, Christmas hampers, celebration gifts, Triovation',
+      },
+      'corporateGiftingProducts': {
+        title: 'Corporate Gifting Products | Triovation',
+        description: 'Premium corporate gifting products for businesses — employee appreciation gifts, client gifts, event giveaways, and branded merchandise by Triovation.',
+        keywords: 'corporate gifts, employee gifts, client gifts, branded merchandise, Triovation',
+      },
+      'customisationProducts': {
+        title: 'Customisation Products | Triovation',
+        description: 'Personalised and customisable products by Triovation — acrylic lamps, custom gifts, and bespoke merchandise tailored to your needs.',
+        keywords: 'custom products, personalised gifts, acrylic lamps, bespoke merchandise, Triovation',
+      },
+      'homeDecorProducts': {
+        title: 'Home Décor Products | Triovation',
+        description: 'Beautiful home décor products by Triovation — handcrafted items, artistic pieces, and modern home accessories for every space.',
+        keywords: 'home decor, handcrafted decor, artistic home items, modern accessories, Triovation',
+      },
+    };
+    return metaMap[categoryName] || {
+      title: `${decodedName} | Triovation`,
+      description: `Browse ${decodedName} products at Triovation. Premium quality, customizable options, and bulk orders available.`,
+      keywords: `${decodedName}, Triovation, products, corporate gifting`,
+    };
+  }, [categoryName, decodedName]);
+
+  useDocumentMeta({
+    title: categoryMeta.title,
+    description: categoryMeta.description,
+    keywords: categoryMeta.keywords,
+    canonicalUrl: `https://www.triovation.com/Category_page/${categoryName}`,
+    ogImage: 'https://www.triovation.com/og-image.jpg',
+  });
+
 
   if (!category) {
     return (
