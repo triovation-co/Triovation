@@ -2,10 +2,12 @@
  * prerender.mjs — Post-build SEO meta injection script
  *
  * After `vite build` produces the SPA in dist/, this script:
- *   1. Reads the route → meta tag mapping
- *   2. Creates a copy of index.html for each route
- *   3. Injects the correct <title>, meta description, OG tags, JSON-LD etc.
- *   4. Injects an <h1> tag and <noscript> content so crawlers see meaningful HTML
+ *   1. Reads the route → meta tag mapping for static pages
+ *   2. Fetches all products from the Google Sheets API
+ *   3. Creates a copy of index.html for each route (static + product detail)
+ *   4. Injects the correct <title>, meta description, OG tags, JSON-LD etc.
+ *   5. Injects an <h1> tag and <noscript> content so crawlers see meaningful HTML
+ *   6. For product pages, injects JSON-LD Product structured data
  *
  * This approach works on ANY environment (including Vercel's build servers)
  * because it does NOT require a headless browser.
@@ -23,7 +25,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DIST_DIR = path.join(__dirname, 'dist');
 const BASE_URL = 'https://www.triovation.com';
 
-// ──────────── Route → SEO Meta Mapping ────────────
+// Google Sheets API endpoint (same one used by the frontend)
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWRo8Fr7j9Kk9tfDVYs0s9I2tJnQmXzdmRrwHvp0zSvxyKZxtXhyMuquHhODy-pOIl/exec';
+
+// ──────────── Route → SEO Meta Mapping (Static Pages) ────────────
 const ROUTES = [
   {
     path: '/About',
@@ -257,10 +262,167 @@ const ROUTES = [
   },
 ];
 
+// ──────────── Category Label Mapping ────────────
+const CATEGORY_LABELS = {
+  'FestiveSeason': 'Festive Season Gifts',
+  'corporateGiftingProducts': 'Corporate Gifting',
+  'customisationProducts': 'Customisation & Merchandising',
+  'homeDecorProducts': 'Home Décor',
+  'mechanicalProducts': 'Mechanical Products',
+  'designConsultancyProducts': 'Design & Consultancy',
+  'educationWorkshopsProducts': 'Education & Workshops',
+};
+
+// ──────────── Fetch Products from Google Sheets API ────────────
+async function fetchProductsFromAPI() {
+  const MAX_RETRIES = 3;
+  const RETRY_DELAY = 2000;
+
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    try {
+      console.log(`  📡 Fetching products from Google Sheets API (attempt ${attempt})...`);
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
+      const response = await fetch(
+        `${APPS_SCRIPT_URL}?action=getAllProducts&sortBy=featured`,
+        {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' },
+          signal: controller.signal,
+        }
+      );
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      if (data.error) {
+        throw new Error(`API error: ${data.error}`);
+      }
+
+      if (!Array.isArray(data)) {
+        throw new Error('API did not return an array');
+      }
+
+      console.log(`  ✅ Fetched ${data.length} products from API`);
+      return data;
+
+    } catch (err) {
+      console.warn(`  ⚠️  Attempt ${attempt} failed: ${err.message}`);
+      if (attempt < MAX_RETRIES) {
+        console.log(`  ⏳ Retrying in ${RETRY_DELAY / 1000}s...`);
+        await new Promise(r => setTimeout(r, RETRY_DELAY * attempt));
+      }
+    }
+  }
+
+  console.error('  ❌ All API fetch attempts failed. Product pages will not be pre-rendered.');
+  return [];
+}
+
+// ──────────── Convert Product to Route Config ────────────
+function stripHtml(html) {
+  if (!html) return '';
+  return html.replace(/<[^>]*>/g, '').replace(/&[^;]+;/g, ' ').trim();
+}
+
+function truncate(str, maxLen) {
+  if (!str) return '';
+  const clean = str.replace(/\s+/g, ' ').trim();
+  if (clean.length <= maxLen) return clean;
+  return clean.slice(0, maxLen - 3).trim() + '...';
+}
+
+function productToRoute(product) {
+  const id = product.id?.toString().trim();
+  if (!id) return null;
+
+  const name = product.name || `Product ${id}`;
+  const rawDescription = stripHtml(product.description || product.shortDescription || '');
+  const description = truncate(rawDescription, 160) ||
+    `Buy ${name} online at Triovation. Premium corporate gifting and custom merchandise.`;
+  const category = product.category || '';
+  const categoryLabel = CATEGORY_LABELS[category] || category.replace(/([A-Z])/g, ' $1').trim();
+  const price = product.price;
+  const image = product.image || '';
+
+  // Format price for display
+  const priceStr = price
+    ? `₹${typeof price === 'number' ? price.toLocaleString('en-IN') : price}`
+    : '';
+
+  // Build noscript content with product details
+  const noscriptParts = [`${name} by Triovation.`];
+  if (priceStr) noscriptParts.push(`Price: ${priceStr}.`);
+  if (categoryLabel) noscriptParts.push(`Category: ${categoryLabel}.`);
+  if (rawDescription) noscriptParts.push(truncate(rawDescription, 300));
+  noscriptParts.push('Available for purchase and bulk orders across India.');
+
+  // Build JSON-LD Product structured data
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: name,
+    description: truncate(rawDescription, 500) || description,
+    url: `${BASE_URL}/product/${id}`,
+    brand: {
+      '@type': 'Brand',
+      name: 'Triovation',
+    },
+    offers: {
+      '@type': 'Offer',
+      url: `${BASE_URL}/product/${id}`,
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Triovation',
+      },
+    },
+  };
+
+  // Add price to offers if available
+  if (price) {
+    const numPrice = typeof price === 'string' ? parseFloat(price.replace(/[₹,\s]/g, '')) : price;
+    if (!isNaN(numPrice) && numPrice > 0) {
+      productJsonLd.offers.price = numPrice;
+    }
+  }
+
+  // Add image if available
+  if (image) {
+    productJsonLd.image = image;
+  }
+
+  // Add category as additional property
+  if (categoryLabel) {
+    productJsonLd.category = categoryLabel;
+  }
+
+  return {
+    path: `/product/${id}`,
+    title: `${name} | Triovation`,
+    description: description,
+    keywords: `${name}, ${categoryLabel}, corporate gifting, buy online, Triovation`.replace(/, ,/g, ','),
+    h1: name,
+    ogImage: image || undefined,
+    ogType: 'product',
+    noscriptContent: noscriptParts.join(' '),
+    productJsonLd: productJsonLd,
+  };
+}
+
 // ──────────── Inject meta tags into HTML ────────────
 function injectMeta(html, route) {
   const url = `${BASE_URL}${route.path}`;
   const ogImage = route.ogImage || `${BASE_URL}/og-image.jpg`;
+  const ogType = route.ogType || 'website';
 
   // Replace <title>
   html = html.replace(
@@ -278,7 +440,7 @@ function injectMeta(html, route) {
   html = upsertMeta(html, 'property', 'og:description', route.description);
   html = upsertMeta(html, 'property', 'og:url', url);
   html = upsertMeta(html, 'property', 'og:image', ogImage);
-  html = upsertMeta(html, 'property', 'og:type', 'website');
+  html = upsertMeta(html, 'property', 'og:type', ogType);
 
   // Twitter Card
   html = upsertMeta(html, 'property', 'twitter:title', route.title);
@@ -295,6 +457,15 @@ function injectMeta(html, route) {
   // NoIndex for transactional pages
   if (route.noIndex) {
     html = upsertMeta(html, 'name', 'robots', 'noindex, nofollow');
+  }
+
+  // ──────── Inject JSON-LD Product schema (product pages only) ────────
+  if (route.productJsonLd) {
+    const jsonLdScript = `<script type="application/ld+json">${JSON.stringify(route.productJsonLd)}</script>`;
+    html = html.replace(
+      '</head>',
+      `  ${jsonLdScript}\n</head>`
+    );
   }
 
   // ──────── Inject H1 + noscript content into <div id="root"> ────────
@@ -348,6 +519,9 @@ async function main() {
   const baseHtml = await readFile(indexPath, 'utf-8');
   let count = 0;
 
+  // ═══════════ PHASE 1: Static Pages ═══════════
+  console.log('📄 Phase 1: Pre-rendering static pages...\n');
+
   for (const route of ROUTES) {
     // Create output directory
     const outputDir = path.join(DIST_DIR, ...route.path.split('/').filter(Boolean));
@@ -365,7 +539,44 @@ async function main() {
     count++;
   }
 
-  console.log(`\n🎉 Pre-rendered ${count} routes with SEO meta tags!\n`);
+  console.log(`\n  📄 ${count} static pages pre-rendered.\n`);
+
+  // ═══════════ PHASE 2: Product Detail Pages ═══════════
+  console.log('🛍️  Phase 2: Pre-rendering product detail pages...\n');
+
+  const products = await fetchProductsFromAPI();
+  let productCount = 0;
+
+  if (products.length === 0) {
+    console.warn('  ⚠️  No products fetched — skipping product page pre-rendering.');
+  } else {
+    for (const product of products) {
+      const route = productToRoute(product);
+      if (!route) {
+        console.warn(`  ⚠️  Skipping product with missing ID`);
+        continue;
+      }
+
+      // Create output directory: dist/product/{id}/
+      const outputDir = path.join(DIST_DIR, 'product', product.id.toString().trim());
+      await mkdir(outputDir, { recursive: true });
+
+      // Inject product-specific meta tags
+      const html = injectMeta(baseHtml, route);
+
+      // Write the file
+      const outputFile = path.join(outputDir, 'index.html');
+      await writeFile(outputFile, html, 'utf-8');
+
+      const relativePath = path.relative(DIST_DIR, outputFile);
+      console.log(`  ✅ ${route.path} → dist/${relativePath}`);
+      productCount++;
+    }
+  }
+
+  const total = count + productCount;
+  console.log(`\n  🛍️  ${productCount} product pages pre-rendered.`);
+  console.log(`\n🎉 Pre-rendered ${total} total routes with SEO meta tags!\n`);
 }
 
 main().catch((err) => {
