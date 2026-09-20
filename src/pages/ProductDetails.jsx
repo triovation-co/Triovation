@@ -186,11 +186,15 @@ const ProductDetails = () => {
 
   const getAvailableImages = () => {
     const images = [];
-    if (product.image) images.push(product.image);
+    const cleanStr = (u) => (typeof u === 'string' ? u.replace(/^[\[\s'"]+|[\]\s'"]+$/g, '').trim() : '');
+    if (product.image) images.push(cleanStr(product.image));
     if (product.images && Array.isArray(product.images)) {
-      images.push(...product.images);
+      images.push(...product.images.map(cleanStr));
+    } else if (typeof product.images === 'string') {
+      const matches = product.images.match(/https?:\/\/[^\s,'"]+/g);
+      if (matches) images.push(...matches.map(cleanStr));
     }
-    return [...new Set(images)];
+    return [...new Set(images.filter(Boolean))];
   };
 
   const handlePreviousImage = () => {

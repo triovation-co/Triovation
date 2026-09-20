@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloudinary Image Uploader</title>
+  <style>
+    :root {
+      --primary: #f97316;
+      --primary-hover: #ea580c;
+      --primary-light: #ffedd5;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-600: #4b5563;
+      --gray-800: #1f2937;
+      --green-600: #16a34a;
+      --green-50: #f0fdf4;
+      --red-600: #dc2626;
+      --red-50: #fef2f2;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--gray-50);
+      color: var(--gray-800);
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    .header h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--gray-800);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      background: var(--primary-light);
+      color: var(--primary-hover);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+    }
+
+    /* Product Target Card */
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .refresh-btn {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .refresh-btn:hover {
+      text-decoration: underline;
+    }
+
+    .row-selector-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gray-50);
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--gray-200);
+      margin-bottom: 8px;
+    }
+
+    .row-input {
+      width: 60px;
+      font-weight: 700;
+      color: var(--primary-hover);
+      padding: 4px 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .product-info {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 4px;
+    }
+
+    .product-thumb {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      flex-shrink: 0;
+    }
+
+    .product-details {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .product-id {
+      font-weight: 700;
+      color: var(--primary-hover);
+      font-size: 12px;
+    }
+
+    .product-name {
+      font-weight: 600;
+      color: var(--gray-800);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+
+    /* Target Selection */
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      font-size: 11px;
+      margin-bottom: 5px;
+      color: var(--gray-600);
+      text-transform: uppercase;
+    }
+
+    .radio-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .radio-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 10px;
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .radio-label:hover {
+      border-color: var(--primary);
+    }
+
+    .radio-label input[type="radio"] {
+      accent-color: var(--primary);
+    }
+
+    /* Dropzone: label naturally triggers input! */
+    .dropzone {
+      display: block;
+      border: 2px dashed #d1d5db;
+      border-radius: 8px;
+      background: white;
+      padding: 22px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: 12px;
+    }
+
+    .dropzone:hover {
+      border-color: var(--primary);
+      background: #fffaf5;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .dropzone-icon {
+      font-size: 28px;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .dropzone-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-800);
+    }
+
+    .dropzone-subtext {
+      font-size: 10px;
+      color: var(--gray-600);
+      margin-top: 2px;
+    }
+
+    /* Multi-Image Preview Grid */
+    .preview-section {
+      display: none;
+      margin-bottom: 12px;
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-600);
+      margin-bottom: 8px;
+    }
+
+    .clear-all-btn {
+      color: var(--red-600);
+      background: none;
+      border: none;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .clear-all-btn:hover {
+      text-decoration: underline;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .preview-card {
+      position: relative;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--gray-50);
+      aspect-ratio: 1;
+    }
+
+    .preview-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .preview-card-remove {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      background: rgba(0,0,0,0.65);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    /* Main Action Button */
+    .btn-submit {
+      width: 100%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 11px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-submit:disabled {
+      background: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    /* Settings section */
+    .settings-toggle {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--gray-600);
+      cursor: pointer;
+      margin-top: 14px;
+      padding: 6px;
+      border-radius: 4px;
+      background: var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      justify-content: center;
+      user-select: none;
+    }
+
+    .settings-toggle:hover {
+      color: var(--primary-hover);
+    }
+
+    .settings-panel {
+      display: block;
+      margin-top: 8px;
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 6px 8px;
+      font-size: 12px;
+      border: 1px solid var(--gray-200);
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    .alert-success {
+      background: var(--green-50);
+      color: var(--green-600);
+      border: 1px solid #bbf7d0;
+    }
+
+    .alert-error {
+      background: var(--red-50);
+      color: var(--red-600);
+      border: 1px solid #fecaca;
+    }
+
+    .url-box {
+      font-family: monospace;
+      font-size: 10px;
+      background: var(--gray-100);
+      padding: 6px;
+      border-radius: 4px;
+      word-break: break-all;
+      margin-top: 4px;
+      user-select: all;
+      max-height: 90px;
+      overflow-y: auto;
+    }
+
+    .spinner {
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      border-top: 2px solid white;
+      width: 14px;
+      height: 14px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <h2>📸 Cloudinary Uploader</h2>
+    <span class="badge">Triovation</span>
+  </div>
+
+  <!-- Alert Box -->
+  <div id="alertSuccess" class="alert alert-success">
+    <div style="font-weight: 600;">✅ Upload Complete!</div>
+    <div id="alertSuccessMsg" style="margin-top: 2px; font-size: 11px;"></div>
+    <div id="alertSuccessUrl" class="url-box"></div>
+  </div>
+
+  <div id="alertError" class="alert alert-error">
+    <div style="font-weight: 600;">❌ Error</div>
+    <div id="alertErrorMsg" style="font-size: 11px;"></div>
+  </div>
+
+  <!-- Product Row Selected Card -->
+  <div class="card">
+    <div class="card-title">
+      <span>Target Product</span>
+      <button class="refresh-btn" type="button" onclick="fetchActiveRow()" title="Get active row from sheet">
+        🔄 Detect Row
+      </button>
+    </div>
+
+    <!-- Direct Editable Row Selector -->
+    <div class="row-selector-bar">
+      <span style="font-size: 11px; font-weight: 600; color: var(--gray-600);">Target Row #:</span>
+      <input type="number" id="inputRow" class="row-input" min="2" value="2" oninput="handleRowInput()" title="Type any row number here">
+      <span id="rowStatus" style="font-size: 11px; color: var(--gray-600); flex: 1; text-align: right;">Ready</span>
+    </div>
+
+    <!-- Product Info (ID & Name) -->
+    <div id="productInfo" class="product-info">
+      <img id="currentImg" class="product-thumb" src="https://placehold.co/80x80?text=No+Img" alt="Thumb" />
+      <div class="product-details">
+        <div class="product-id" id="displayId">Row 2</div>
+        <div class="product-name" id="displayName">Selected Product</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Destination Field Selection -->
+  <div class="form-group">
+    <label class="form-label">Save Image Link To</label>
+    <div class="radio-group">
+      <label class="radio-label">
+        <input type="radio" name="targetMode" value="main" onchange="handleTargetModeChange()">
+        <span>Main (Col F)</span>
+      </label>
+      <label class="radio-label">
+        <input type="radio" name="targetMode" value="gallery" checked onchange="handleTargetModeChange()">
+        <span>Gallery (Col G)</span>
+      </label>
+    </div>
+  </div>
+
+  <!-- Hidden Native File Input (Accepts Multiple Files!) -->
+  <input type="file" id="fileInput" accept="image/*" multiple style="display: none;" onchange="handleFileInputChange(event)">
+
+  <!-- Dropzone Label -->
+  <label for="fileInput" class="dropzone" id="dropzone"
+         ondragover="handleDragOver(event)"
+         ondragleave="handleDragLeave(event)"
+         ondrop="handleDrop(event)">
+    <span class="dropzone-icon">📁</span>
+    <div class="dropzone-text">Click or drag images here</div>
+    <div class="dropzone-subtext" id="dropzoneSubtext">Select 1 or multiple images (JPG, PNG, WEBP)</div>
+  </label>
+
+  <!-- Multi-Image Preview Section -->
+  <div class="preview-section" id="previewSection">
+    <div class="preview-header">
+      <span id="previewCount">0 images selected</span>
+      <button type="button" class="clear-all-btn" onclick="clearAllFiles()">Clear all</button>
+    </div>
+    <div class="preview-grid" id="previewGrid"></div>
+  </div>
+
+  <!-- Submit Button -->
+  <button id="btnUpload" type="button" class="btn-submit" onclick="startUploadProcess()" disabled>
+    <span id="btnIcon">⚡</span>
+    <span id="btnText">Upload & Add to Sheet</span>
+  </button>
+
+  <!-- Cloudinary Settings -->
+  <div class="settings-toggle" onclick="toggleSettingsPanel()">
+    ⚙️ Cloudinary Credentials <span id="settingsArrow">▲</span>
+  </div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <label class="form-label">Cloud Name</label>
+    <input type="text" id="cfgCloudName" class="input-field" placeholder="e.g. dze9kd1fl" value="dze9kd1fl">
+
+    <label class="form-label">Upload Preset (Unsigned)</label>
+    <input type="text" id="cfgUploadPreset" class="input-field" placeholder="e.g. triovation_products" value="triovation_products">
+
+    <label class="form-label">Folder (Optional)</label>
+    <input type="text" id="cfgFolder" class="input-field" placeholder="triovation/products" value="triovation/products">
+
+    <button type="button" onclick="saveCredentials()" style="width: 100%; background: var(--gray-800); color: white; border: none; padding: 7px; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer;">
+      Save Credentials
+    </button>
+  </div>
+
+  <script>
+    // Selected files array
+    var selectedFiles = [];
+
+    function safeStorageGet(key, defaultVal) {
+      try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          var val = window.localStorage.getItem(key);
+          if (val) return val;
+        }
+      } catch (e) {}
+      return defaultVal;
+    }
+
+    function safeStorageSet(key, val) {
+      try {
+        if (typeof window !== 'undefined' && window.localStorage) {
+          window.localStorage.setItem(key, val);
+        }
+      } catch (e) {}
+    }
+
+    function toggleSettingsPanel() {
+      var panel = document.getElementById('settingsPanel');
+      var arrow = document.getElementById('settingsArrow');
+      if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        arrow.textContent = '▲';
+      } else {
+        panel.style.display = 'none';
+        arrow.textContent = '▼';
+      }
+    }
+
+    function saveCredentials() {
+      var cName = document.getElementById('cfgCloudName').value.trim();
+      var preset = document.getElementById('cfgUploadPreset').value.trim();
+      var folder = document.getElementById('cfgFolder').value.trim();
+
+      safeStorageSet('trio_cloud_name', cName);
+      safeStorageSet('trio_upload_preset', preset);
+      safeStorageSet('trio_folder', folder);
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.saveCloudinaryConfig(cName, preset, folder);
+      }
+
+      alert('Credentials saved!');
+      updateUploadButtonState();
+    }
+
+    function loadSavedCredentials() {
+      var cName = safeStorageGet('trio_cloud_name', 'dze9kd1fl');
+      var preset = safeStorageGet('trio_upload_preset', 'triovation_products');
+      var folder = safeStorageGet('trio_folder', 'triovation/products');
+
+      document.getElementById('cfgCloudName').value = cName;
+      document.getElementById('cfgUploadPreset').value = preset;
+      document.getElementById('cfgFolder').value = folder;
+
+      if (typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run
+          .withSuccessHandler(function(config) {
+            if (config && config.cloudName) {
+              document.getElementById('cfgCloudName').value = config.cloudName;
+            }
+            if (config && config.uploadPreset) {
+              document.getElementById('cfgUploadPreset').value = config.uploadPreset;
+            }
+            if (config && config.folder) {
+              document.getElementById('cfgFolder').value = config.folder;
+            }
+            updateUploadButtonState();
+          })
+          .getCloudinaryConfig();
+      }
+    }
+
+    // Drag and Drop
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      document.getElementById('dropzone').classList.add('dragover');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      document.getElementById('dropzone').classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      document.getElementById('dropzone').classList.remove('dragover');
+
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        addFilesToList(Array.from(e.dataTransfer.files));
+      }
+    }
+
+    function handleFileInputChange(e) {
+      if (e.target && e.target.files && e.target.files.length > 0) {
+        addFilesToList(Array.from(e.target.files));
+      }
+    }
+
+    function addFilesToList(newFiles) {
+      var validImages = newFiles.filter(function(f) {
+        return f && f.type && f.type.match(/^image\//i);
+      });
+
+      if (validImages.length === 0) {
+        showError('Please select valid image files (JPG, PNG, WEBP).');
+        return;
+      }
+
+      hideAlerts();
+
+      // Check if mode is 'main': main only allows 1 image
+      var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
+      if (targetMode === 'main') {
+        selectedFiles = [validImages[0]];
+      } else {
+        selectedFiles = selectedFiles.concat(validImages);
+      }
+
+      renderPreviewGrid();
+      updateUploadButtonState();
+    }
+
+    function removeFileByIndex(index) {
+      selectedFiles.splice(index, 1);
+      renderPreviewGrid();
+      updateUploadButtonState();
+    }
+
+    function clearAllFiles() {
+      selectedFiles = [];
+      document.getElementById('fileInput').value = '';
+      renderPreviewGrid();
+      updateUploadButtonState();
+    }
+
+    function renderPreviewGrid() {
+      var section = document.getElementById('previewSection');
+      var grid = document.getElementById('previewGrid');
+      var count = document.getElementById('previewCount');
+
+      if (selectedFiles.length === 0) {
+        section.style.display = 'none';
+        grid.innerHTML = '';
+        return;
+      }
+
+      section.style.display = 'block';
+      count.textContent = selectedFiles.length + (selectedFiles.length === 1 ? ' image selected' : ' images selected');
+      grid.innerHTML = '';
+
+      selectedFiles.forEach(function(file, idx) {
+        var card = document.createElement('div');
+        card.className = 'preview-card';
+
+        var img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.alt = file.name;
+
+        var removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.className = 'preview-card-remove';
+        removeBtn.innerHTML = '×';
+        removeBtn.onclick = function() { removeFileByIndex(idx); };
+
+        card.appendChild(img);
+        card.appendChild(removeBtn);
+        grid.appendChild(card);
+      });
+    }
+
+    function handleTargetModeChange() {
+      var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
+      var fileInput = document.getElementById('fileInput');
+      var subtext = document.getElementById('dropzoneSubtext');
+
+      if (targetMode === 'main') {
+        fileInput.removeAttribute('multiple');
+        subtext.textContent = 'Select 1 image for Main Image (JPG, PNG, WEBP)';
+        if (selectedFiles.length > 1) {
+          selectedFiles = [selectedFiles[0]];
+          renderPreviewGrid();
+        }
+      } else {
+        fileInput.setAttribute('multiple', 'multiple');
+        subtext.textContent = 'Select 1 or multiple images for Gallery (JPG, PNG, WEBP)';
+      }
+      updateUploadButtonState();
+    }
+
+    function handleRowInput() {
+      var r = parseInt(document.getElementById('inputRow').value, 10) || 2;
+      document.getElementById('displayId').textContent = 'Row ' + r;
+      document.getElementById('displayName').textContent = '';
+      updateUploadButtonState();
+    }
+
+    function updateUploadButtonState() {
+      var cName = document.getElementById('cfgCloudName').value.trim();
+      var preset = document.getElementById('cfgUploadPreset').value.trim();
+      var row = parseInt(document.getElementById('inputRow').value, 10);
+      var hasFiles = selectedFiles.length > 0;
+
+      var canUpload = !!(cName && preset && row >= 2 && hasFiles);
+      document.getElementById('btnUpload').disabled = !canUpload;
+
+      if (hasFiles) {
+        var count = selectedFiles.length;
+        document.getElementById('btnText').textContent = 'Upload ' + count + (count === 1 ? ' Image' : ' Images') + ' to Sheet';
+      } else {
+        document.getElementById('btnText').textContent = 'Upload & Add to Sheet';
+      }
+    }
+
+    // Row detection
+    function fetchActiveRow() {
+      var rowStatus = document.getElementById('rowStatus');
+      rowStatus.textContent = 'Detecting...';
+
+      var timeoutId = setTimeout(function() {
+        rowStatus.textContent = 'Manual row active';
+        updateUploadButtonState();
+      }, 2000);
+
+      try {
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(info) {
+              clearTimeout(timeoutId);
+              rowStatus.textContent = 'Row detected';
+
+              if (info && info.row) {
+                document.getElementById('inputRow').value = info.row;
+                document.getElementById('displayId').textContent = info.id || ('Row ' + info.row);
+                document.getElementById('displayName').textContent = info.name || '';
+                if (info.mainImage && info.mainImage.indexOf('http') === 0) {
+                  document.getElementById('currentImg').src = info.mainImage;
+                } else {
+                  document.getElementById('currentImg').src = 'https://placehold.co/80x80?text=No+Img';
+                }
+              }
+              updateUploadButtonState();
+            })
+            .withFailureHandler(function(err) {
+              clearTimeout(timeoutId);
+              rowStatus.textContent = 'Enter row #';
+              updateUploadButtonState();
+            })
+            .getActiveProductInfo();
+        } else {
+          clearTimeout(timeoutId);
+          rowStatus.textContent = 'Ready';
+          updateUploadButtonState();
+        }
+      } catch (err) {
+        clearTimeout(timeoutId);
+        rowStatus.textContent = 'Ready';
+        updateUploadButtonState();
+      }
+    }
+
+    // Batch Upload to Cloudinary + Sheet Save
+    async function startUploadProcess() {
+      if (selectedFiles.length === 0) return;
+
+      var cloudName = document.getElementById('cfgCloudName').value.trim();
+      var uploadPreset = document.getElementById('cfgUploadPreset').value.trim();
+      var folder = document.getElementById('cfgFolder').value.trim();
+      var targetRow = parseInt(document.getElementById('inputRow').value, 10) || 2;
+      var targetMode = document.querySelector('input[name="targetMode"]:checked').value;
+
+      if (!cloudName || !uploadPreset) {
+        showError('Please enter your Cloud Name and Upload Preset below.');
+        document.getElementById('settingsPanel').style.display = 'block';
+        return;
+      }
+
+      hideAlerts();
+      var btn = document.getElementById('btnUpload');
+      var btnText = document.getElementById('btnText');
+      var btnIcon = document.getElementById('btnIcon');
+
+      btn.disabled = true;
+      btnIcon.innerHTML = '<div class="spinner"></div>';
+
+      var total = selectedFiles.length;
+      var uploadedUrls = [];
+
+      try {
+        for (var i = 0; i < total; i++) {
+          var file = selectedFiles[i];
+          btnText.textContent = 'Uploading ' + (i + 1) + ' of ' + total + '...';
+
+          var formData = new FormData();
+          formData.append('file', file);
+          formData.append('upload_preset', uploadPreset);
+          if (folder) {
+            formData.append('folder', folder);
+          }
+
+          var uploadUrl = 'https://api.cloudinary.com/v1_1/' + encodeURIComponent(cloudName) + '/image/upload';
+          var res = await fetch(uploadUrl, { method: 'POST', body: formData });
+
+          if (!res.ok) {
+            var errJson = await res.json().catch(function() { return {}; });
+            throw new Error((errJson && errJson.error && errJson.error.message) || ('Cloudinary HTTP ' + res.status));
+          }
+
+          var data = await res.json();
+          if (data && data.secure_url) {
+            uploadedUrls.push(data.secure_url);
+          }
+        }
+
+        // Save all URLs into Google Sheet
+        btnText.textContent = 'Saving to Sheet...';
+
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) {
+              btnIcon.innerHTML = '⚡';
+              btnText.textContent = 'Upload & Add to Sheet';
+
+              var msg = 'Saved ' + res.count + (res.count === 1 ? ' link' : ' links') + ' to ' + res.columnName + ' (' + res.cellA1 + ') as clickable hyperlinks!';
+              showSuccess(msg, uploadedUrls.join('\n'));
+
+              if (targetMode === 'main' && uploadedUrls[0]) {
+                document.getElementById('currentImg').src = uploadedUrls[0];
+              }
+
+              clearAllFiles();
+              fetchActiveRow();
+            })
+            .withFailureHandler(function(err) {
+              btnIcon.innerHTML = '⚡';
+              btnText.textContent = 'Upload & Add to Sheet';
+              btn.disabled = false;
+              showError('Images uploaded, but sheet write failed: ' + err.message);
+            })
+            .saveImageUrls(uploadedUrls, targetMode, targetRow);
+        } else {
+          btnIcon.innerHTML = '⚡';
+          btnText.textContent = 'Upload & Add to Sheet';
+          showSuccess('Uploaded ' + uploadedUrls.length + ' images (Preview):', uploadedUrls.join('\n'));
+        }
+
+      } catch (err) {
+        btnIcon.innerHTML = '⚡';
+        btnText.textContent = 'Upload & Add to Sheet';
+        btn.disabled = false;
+        showError('Upload error: ' + err.message);
+      }
+    }
+
+    function showSuccess(msg, url) {
+      document.getElementById('alertSuccessMsg').textContent = msg;
+      document.getElementById('alertSuccessUrl').textContent = url;
+      document.getElementById('alertSuccess').style.display = 'block';
+      document.getElementById('alertError').style.display = 'none';
+    }
+
+    function showError(msg) {
+      document.getElementById('alertErrorMsg').textContent = msg;
+      document.getElementById('alertError').style.display = 'block';
+      document.getElementById('alertSuccess').style.display = 'none';
+    }
+
+    function hideAlerts() {
+      document.getElementById('alertSuccess').style.display = 'none';
+      document.getElementById('alertError').style.display = 'none';
+    }
+
+    // Init
+    try {
+      loadSavedCredentials();
+      fetchActiveRow();
+      handleTargetModeChange();
+    } catch (e) {
+      console.error(e);
+    }
+  </script>
+</body>
+</html>

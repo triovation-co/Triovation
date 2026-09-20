@@ -59,6 +59,24 @@ export const getLocalProductImages = (productId, fallbackMainUrl = '', fallbackE
   return images.length > 0 ? images : [fallbackMainUrl, ...fallbackExtraUrls].filter(Boolean);
 };
 
+export const cleanImageUrl = (url) => {
+  if (!url || typeof url !== 'string') return '';
+  return url.replace(/^[\[\s'"]+|[\]\s'"]+$/g, '').trim();
+};
+
+export const sanitizeImages = (images) => {
+  if (!images) return [];
+  if (Array.isArray(images)) {
+    return images.map(cleanImageUrl).filter(Boolean);
+  }
+  if (typeof images === 'string') {
+    const matches = images.match(/https?:\/\/[^\s,'"]+/g);
+    if (matches && matches.length > 0) return matches;
+    return images.split(',').map(cleanImageUrl).filter(Boolean);
+  }
+  return [];
+};
+
 /**
  * Transform a product object to use local image paths.
  * Modifies `image` and `images` fields in-place.
@@ -70,15 +88,23 @@ export const transformProductImages = (product) => {
 
   const id = product.id.toString().trim();
   const entry = imageMap[id];
+  const cleanedMain = cleanImageUrl(product.image);
+  const cleanedExtras = sanitizeImages(product.images);
 
-  if (!entry) return product;
+  if (!entry) {
+    return {
+      ...product,
+      image: cleanedMain,
+      images: cleanedExtras,
+    };
+  }
 
   return {
     ...product,
-    image: entry.main || product.image,
+    image: entry.main || cleanedMain,
     images: (entry.extras && entry.extras.length > 0)
       ? entry.extras
-      : (product.images || []),
+      : (cleanedExtras || []),
   };
 };
 
