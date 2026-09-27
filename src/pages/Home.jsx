@@ -568,12 +568,12 @@ const Home = () => {
             </h1>
 
             {/* Service Pillars */}
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-4 gap-y-2 text-gray-700 text-lg lg:text-xl font-semibold animate-fade-in-up delay-200">
-              <span>Corporate Gifting</span>
+            <div className="flex flex-nowrap items-center justify-center md:justify-start gap-x-2 sm:gap-x-4 gap-y-2 text-gray-700 text-sm sm:text-lg lg:text-xl font-semibold animate-fade-in-up delay-200">
+              <span className="whitespace-nowrap">Corporate Gifting</span>
               <span className="text-[#f47e82]" aria-hidden="true">│</span>
-              <span>Product Design</span>
+              <span className="whitespace-nowrap">Product Design</span>
               <span className="text-[#f47e82]" aria-hidden="true">│</span>
-              <span>Brand Experiences</span>
+              <span className="whitespace-nowrap">Brand Experiences</span>
             </div>
 
             <div className="space-y-4 text-gray-700 text-base md:text-lg leading-relaxed">
@@ -582,12 +582,18 @@ const Home = () => {
               </p>
             </div>
 
-            <div className="pt-2 animate-fade-in-up delay-600 flex justify-center md:justify-start">
+            <div className="pt-2 animate-fade-in-up delay-600 flex flex-wrap justify-center md:justify-start gap-3 sm:gap-4">
               <button
                 onClick={() => navigate('/ContactUs')}
                 className="bg-[#e43e39] text-white px-8 py-3.5 font-bold rounded shadow-lg hover:bg-[#d03531] transition-all hover:-translate-y-1 hover:shadow-xl tracking-wider text-sm"
               >
                 CONSULT NOW
+              </button>
+              <button
+                onClick={() => window.dispatchEvent(new Event("open-catalogue-form"))}
+                className="group relative px-8 py-3.5 font-bold rounded border-2 border-[#e43e39] text-[#e43e39] bg-white shadow-lg hover:bg-[#e43e39] hover:text-white transition-all hover:-translate-y-1 hover:shadow-xl tracking-wider text-sm"
+              >
+                PRODUCT CATALOGUE
               </button>
             </div>
           </article>

@@ -766,12 +766,12 @@ const DesignConsultancy = () => {
           </div>
 
           <div className="text-center mb-7 dc-stagger-2">
-            <p style={{ color: "#f47e82", fontSize: "clamp(0.8rem, 2vw, 1.05rem)", fontWeight: 500, letterSpacing: "1px", margin: 0 }}>
+            <p style={{ color: "#f47e82", fontSize: "clamp(0.75rem, 2vw, 1.05rem)", fontWeight: 500, letterSpacing: "1px", margin: 0, whiteSpace: "nowrap" }}>
               {categories.map((cat, i) => (
                 <span key={cat}>
                   <span className="dc-cat-tag" style={{ color: "#f47e82" }}>{cat}</span>
                   {i < categories.length - 1 && (
-                    <span style={{ margin: "0 10px", opacity: 0.35, fontWeight: 300 }}>|</span>
+                    <span style={{ margin: "0 5px", opacity: 0.35, fontWeight: 300 }}>|</span>
                   )}
                 </span>
               ))}
@@ -1250,16 +1250,11 @@ const DesignConsultancy = () => {
 
       {/* ═══════════════ CTA Bottom Bar ═══════════════ */}
       <div className="pb-20 sm:pb-32"></div>
-      <div className="fixed bottom-0 left-0 w-full z-50 py-1.5 sm:py-3 bg-white/60 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] flex justify-center gap-2 sm:gap-6 px-3 sm:px-4">
-        <button 
-          onClick={() => setOpenConsultForm(true)}
-          className="bg-red-600 hover:bg-red-700 text-white font-bold text-[8px] sm:text-sm md:text-base px-4 sm:px-10 py-2 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(220,38,38,0.5)] hover:shadow-[0_15px_30px_rgba(220,38,38,0.7)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border-2 border-white/20">
-          GET A QUOTE
-        </button>
+      <div className="fixed bottom-0 left-0 w-full z-50 py-1.5 sm:py-3 bg-white/60 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] flex justify-center px-3 sm:px-4">
         <Link 
-          to="/bulkorder"
-          className="bg-gray-900 hover:bg-black text-white font-bold text-[8px] sm:text-sm md:text-base px-4 sm:px-10 py-2 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border border-white/10">
-          BULK ORDER
+          to="/ContactUs"
+          className="bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-sm md:text-base px-10 sm:px-14 py-2.5 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(220,38,38,0.5)] hover:shadow-[0_15px_30px_rgba(220,38,38,0.7)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border-2 border-white/20">
+          CONSULT NOW
         </Link>
       </div>
       {/* ═══════════════ Lightbox Modal ═══════════════ */}

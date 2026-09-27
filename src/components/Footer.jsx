@@ -1,11 +1,18 @@
 import Logo from "../assets/logo_bg.png";
 import img from "../assets/image1.jpg";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { validateName, validatePhone, validateEmailOptional } from "../utils/validators";
 
 const Footer = () => {
   const [openCatalogueForm, setOpenCatalogueForm] = useState(false);
+
+  // Allow other pages (e.g. Home) to open the catalogue modal via a custom event
+  useEffect(() => {
+    const openFromEvent = () => setOpenCatalogueForm(true);
+    window.addEventListener("open-catalogue-form", openFromEvent);
+    return () => window.removeEventListener("open-catalogue-form", openFromEvent);
+  }, []);
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -27,8 +34,8 @@ const Footer = () => {
           <div>
             <img src={Logo} alt="Logo" className="h-12 w-auto mb-4 -ml-1" />
             <p className="text-sm 2xl:text-base mb-6 font-semibold">
-              Turn your imagination into reality with Triovation.<br></br>
-              From custom gifts to creative solutions! let's build<br></br> something extraordinary together.
+              Turn your imagination into reality with Triovation.<br className="hidden lg:inline" />
+              From custom gifts to creative solutions! let's build<br className="hidden lg:inline" /> something extraordinary together.
             </p>
             <h2 className="font-bold text-base 2xl:text-lg mb-3">REACH OUT TO US</h2>
             <a
@@ -45,6 +52,7 @@ const Footer = () => {
               triovation.co@gmail.com
             </a>
             <p className="text-sm 2xl:text-base font-semibold mt-2">Mumbai-400014, India</p>
+            <p className="text-sm 2xl:text-base font-semibold mt-1">Tirupati 517501</p>
             <div className="flex gap-3 mt-4">
               <a href="#" className="text-pink-600 text-2xl"><i className="fab fa-instagram"></i></a>
               <a href="#" className="text-blue-700 text-2xl"><i className="fab fa-linkedin"></i></a>
@@ -58,7 +66,7 @@ const Footer = () => {
               <li>
                 <button
                   onClick={() => setOpenCatalogueForm(true)}
-                  className="hover:text-blue-600 text-left"
+                  className="hover:text-[#e05a5e] text-left font-bold text-[#f47e82]"
                 >
                   Product Catalogue
                 </button>

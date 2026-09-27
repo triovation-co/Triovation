@@ -273,7 +273,7 @@ const BulkOrder = () => {
         ))}
 
         {/* Sleek modern gradient overlay for contrast and depth */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 flex flex-col items-center justify-center text-center px-6 z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/80 flex flex-col items-center justify-center text-center px-6 pt-24 sm:pt-28 md:pt-32 z-10">
           <h1 className="text-white text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-6 drop-shadow-xl">
             Bulk Order
           </h1>
@@ -711,15 +711,15 @@ const BulkOrder = () => {
 
       {/* ═══════════════ CTA ═══════════════ */}
       <div className="pb-20 sm:pb-32"></div>
-      <div className="fixed bottom-0 left-0 w-full z-50 py-1.5 sm:py-3 bg-white/60 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] flex justify-center gap-2 sm:gap-6 px-3 sm:px-4">
+      <div className="fixed bottom-0 left-0 w-full z-50 py-1.5 sm:py-3 bg-white/60 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] flex flex-row justify-center gap-2 sm:gap-6 px-3 sm:px-4">
         <button 
           onClick={() => setOpenQuoteForm(true)}
-          className="bg-red-600 hover:bg-red-700 text-white font-bold text-[8px] sm:text-sm md:text-base px-4 sm:px-10 py-2 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(220,38,38,0.5)] hover:shadow-[0_15px_30px_rgba(220,38,38,0.7)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border-2 border-white/20">
+          className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-sm md:text-base px-4 sm:px-10 py-2 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(220,38,38,0.5)] hover:shadow-[0_15px_30px_rgba(220,38,38,0.7)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border-2 border-white/20">
           GET A QUOTE
         </button>
         <Link 
           to="/products"
-          className="bg-gray-900 hover:bg-black text-white font-bold text-[8px] sm:text-sm md:text-base px-4 sm:px-10 py-2 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border border-white/10">
+          className="w-full sm:w-auto text-center bg-gray-900 hover:bg-black text-white font-bold text-sm sm:text-sm md:text-base px-4 sm:px-10 py-2 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(0,0,0,0.2)] hover:shadow-[0_15px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border border-white/10">
           VIEW PRODUCTS
         </Link>
       </div>
