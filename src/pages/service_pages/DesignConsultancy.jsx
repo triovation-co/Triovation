@@ -6,6 +6,10 @@ import startupQuestionImg from "../../assets/design_consultancy/startup_question
 import designIdeationImg from "../../assets/design_consultancy/design_ideation.png";
 import brandSystemImg from "../../assets/design_consultancy/brand_system.png";
 
+import serviceBgProductDesign from "../../assets/service-bg-product-design.jpg";
+import serviceBgBranding from "../../assets/service-bg-branding.jpg";
+import serviceBgCorporateGifting from "../../assets/service-bg-corporate-gifting.png";
+
 import brandIdentity from "../../assets/design_consultancy/brand_identity_design/Thumbnail.jpg";
 import brandManual from "../../assets/design_consultancy/brand_manual_design/Thumbnail.png";
 import digitalIllustration from "../../assets/design_consultancy/digital_illustration/Thumbnail.jpg";
@@ -72,6 +76,55 @@ const DesignConsultancy = () => {
   const categories = ["Graphics", "Branding", "Packaging", "Website", "Product"];
   const visibleCards = showAll ? cards : cards.slice(0, 6);
 
+  /* ── Service categories (same as Home page) ── */
+  const serviceCategories = [
+    {
+      title: "Product Design",
+      items: [
+        "3D Prototyping & Printing",
+        "Packaging Design",
+        "Custom Product Development",
+        "Manufacturing Support",
+        "Product Visualization",
+      ],
+      link: "#",
+      external: true,
+      accentColor: "#f47e82",
+      bgImage: serviceBgProductDesign,
+    },
+    {
+      title: "Branding & Digital Design",
+      items: [
+        "Brand Identity Design",
+        "Graphic Design",
+        "Website Design",
+        "UI/UX Design",
+        "Marketing Collateral",
+        "Social Media Creatives",
+      ],
+      link: "/design-consultancy",
+      external: false,
+      accentColor: "#f47e82",
+      bgImage: serviceBgBranding,
+    },
+    {
+      title: "Corporate Gifting",
+      items: [
+        "Innovative Product Range",
+        "Promotional Merchandise",
+        "Custom Branded Products",
+        "Bulk Production & Fulfillment",
+      ],
+      link: "/bulkorder",
+      external: false,
+      accentColor: "#f47e82",
+      bgImage: serviceBgCorporateGifting,
+    },
+  ];
+
+  const [servicesVisible, setServicesVisible] = useState(false);
+  const servicesRef = useRef(null);
+
   const approachSteps = [
     {
       icon: MessageSquare,
@@ -104,6 +157,7 @@ const DesignConsultancy = () => {
             if (entry.target === gridRef.current) setCardsVisible(true);
             if (entry.target === approachRef.current) setApproachVisible(true);
             if (entry.target === startupRef.current) setStartupVisible(true);
+            if (entry.target === servicesRef.current) setServicesVisible(true);
           }
         });
       },
@@ -113,6 +167,7 @@ const DesignConsultancy = () => {
     if (gridRef.current) observer.observe(gridRef.current);
     if (approachRef.current) observer.observe(approachRef.current);
     if (startupRef.current) observer.observe(startupRef.current);
+    if (servicesRef.current) observer.observe(servicesRef.current);
     return () => observer.disconnect();
   }, []);
 
@@ -766,9 +821,9 @@ const DesignConsultancy = () => {
           </div>
 
           <div className="text-center mb-7 dc-stagger-2">
-            <p style={{ color: "#f47e82", fontSize: "clamp(0.75rem, 2vw, 1.05rem)", fontWeight: 500, letterSpacing: "1px", margin: 0, whiteSpace: "nowrap" }}>
+            <p style={{ color: "#f47e82", fontSize: "clamp(0.75rem, 2vw, 1.05rem)", fontWeight: 500, letterSpacing: "1px", margin: 0, display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "2px 0" }}>
               {categories.map((cat, i) => (
-                <span key={cat}>
+                <span key={cat} style={{ whiteSpace: "nowrap" }}>
                   <span className="dc-cat-tag" style={{ color: "#f47e82" }}>{cat}</span>
                   {i < categories.length - 1 && (
                     <span style={{ margin: "0 5px", opacity: 0.35, fontWeight: 300 }}>|</span>
@@ -791,7 +846,121 @@ const DesignConsultancy = () => {
           </div>
         </div>
 
-        {/* ── Cards Grid ── */}
+        {/* ═══════ OUR SERVICES — Premium Card Grid ═══════ */}
+        <section
+          ref={servicesRef}
+          className={`relative z-10 py-16 sm:py-20 md:py-24 lg:py-28 transition-all duration-1000 ${
+            servicesVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}
+          aria-labelledby="dc-our-services"
+        >
+
+          <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 relative">
+            {/* Heading */}
+            <header className="text-center mb-14 sm:mb-16 md:mb-20">
+              <h2
+                id="dc-our-services"
+                className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-gray-900 relative inline-block"
+              >
+                Our Services
+                <div
+                  className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 w-24 h-1.5 bg-gradient-to-r from-[#f47e82] to-[#fca5a5] rounded-full"
+                  aria-hidden="true"
+                />
+              </h2>
+              <p className="text-gray-700 text-xl sm:text-2xl font-medium mt-7 max-w-3xl mx-auto leading-relaxed">
+                We provide end-to-end product design, prototyping, sourcing, manufacturing, and branding solutions for startups, SMEs, and enterprises.
+              </p>
+            </header>
+
+            {/* Service Cards Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 max-w-7xl mx-auto">
+              {serviceCategories.map((cat, idx) => (
+                <div
+                  key={cat.title}
+                  className="group"
+                  style={{ opacity: servicesVisible ? 1 : 0, transform: servicesVisible ? 'translateY(0)' : 'translateY(30px)', transition: `opacity 0.8s ${idx * 0.15}s ease, transform 0.8s ${idx * 0.15}s ease` }}
+                >
+                  <div
+                    onClick={() => {
+                      if (cat.external) {
+                        window.open(cat.link, "_blank", "noopener,noreferrer");
+                      } else {
+                        navigate(cat.link);
+                      }
+                    }}
+                    className="bg-white rounded-[2rem] h-full flex flex-col overflow-hidden shadow-[0_4px_25px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_45px_-10px_rgba(0,0,0,0.18)] transition-all duration-500 hover:-translate-y-2 border border-gray-100/80 cursor-pointer"
+                  >
+                    {/* Photo container */}
+                    {cat.bgImage && (
+                      <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-gradient-to-b from-gray-50 to-white flex-shrink-0 border-b border-gray-100 flex items-center justify-center p-2">
+                        <img
+                          src={cat.bgImage}
+                          alt={cat.title}
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
+                          loading="lazy"
+                        />
+                        <div className="absolute top-3 right-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-gray-800 text-[11px] font-black tracking-widest uppercase shadow-sm border border-gray-200/70">
+                          0{idx + 1}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Content Area */}
+                    <div className="p-6 sm:p-7 flex flex-col flex-grow bg-white">
+                      <div className="mb-4">
+                        <h3 className="text-xl sm:text-2xl font-black text-gray-900 tracking-tight mb-2 group-hover:text-[#f47e82] transition-colors duration-300">
+                          {cat.title}
+                        </h3>
+                        <div
+                          className="w-10 h-1 rounded-full transition-all duration-500 group-hover:w-20 shadow-sm"
+                          style={{ backgroundColor: cat.accentColor }}
+                        />
+                      </div>
+
+                      <ul className="space-y-2 flex-grow">
+                        {cat.items.map((item, i) => (
+                          <li key={i} className="flex items-center gap-3 text-gray-800 text-base sm:text-[17px] font-medium py-0.5">
+                            <span
+                              className="w-2 h-2 rounded-full flex-shrink-0 shadow-sm transition-transform duration-300 group-hover:scale-125"
+                              style={{ backgroundColor: cat.accentColor }}
+                            />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Portfolio Section Title ── */}
+        <div className="text-center mb-14 mt-8" style={{ position: "relative", zIndex: 1 }}>
+          <h2 style={{
+            fontSize: "clamp(1.6rem, 4vw, 2.5rem)",
+            fontWeight: 700,
+            color: "#1a1a1a",
+            margin: 0,
+            position: "relative",
+            display: "inline-block",
+            paddingBottom: "12px",
+          }}>
+            Our Portfolio/Work
+            <div style={{
+              position: "absolute",
+              bottom: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              width: "60px",
+              height: "3px",
+              background: "#f47e82",
+              borderRadius: "999px",
+            }} />
+          </h2>
+        </div>
         <div
           ref={gridRef}
           className={`dc-grid-wrapper ${cardsVisible ? "visible" : ""} px-4 sm:px-8 md:px-12 lg:px-20 xl:px-32`}

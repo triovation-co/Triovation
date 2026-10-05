@@ -568,7 +568,7 @@ const Home = () => {
             </h1>
 
             {/* Service Pillars */}
-            <div className="flex flex-nowrap items-center justify-center md:justify-start gap-x-2 sm:gap-x-4 gap-y-2 text-gray-700 text-sm sm:text-lg lg:text-xl font-semibold animate-fade-in-up delay-200">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-2 sm:gap-x-4 gap-y-2 text-gray-700 text-sm sm:text-lg lg:text-xl font-semibold animate-fade-in-up delay-200">
               <span className="whitespace-nowrap">Corporate Gifting</span>
               <span className="text-[#f47e82]" aria-hidden="true">│</span>
               <span className="whitespace-nowrap">Product Design</span>
