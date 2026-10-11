@@ -599,6 +599,76 @@ const Products = () => {
       .filter(cat => cat.items.length > 0);
   }, [allProducts]);
 
+  // ── Dynamic Category Cards from API Data ──
+  // Auto-discovers new product types from sheet data not covered by hardcoded categories
+  const dynamicCategoryData = React.useMemo(() => {
+    if (!sheetProducts || sheetProducts.length === 0) return [];
+
+    // Extract base product type name (remove trailing numbers/sequences)
+    const getBaseType = (name) => {
+      return (name || '')
+        .replace(/\s*\d+\s*$/i, '')     // "Name Plate 1" → "Name Plate"
+        .replace(/\s*#\d+\s*$/i, '')    // "Lamp #2" → "Lamp"
+        .replace(/\s*-\s*\d+\s*$/i, '') // "Trophy - 3" → "Trophy"
+        .replace(/\s*v\d+\s*$/i, '')    // "Clock v2" → "Clock"
+        .trim();
+    };
+
+    // Collect all keywords already covered by hardcoded category cards
+    const coveredSet = new Set();
+    categoryBrowseData.forEach(cat => {
+      cat.items.forEach(item => {
+        if (item?.searchKeyword) coveredSet.add(item.searchKeyword.toLowerCase().replace(/s$/, ''));
+        if (item?.name) coveredSet.add(item.name.toLowerCase().replace(/s$/, ''));
+      });
+    });
+    productTypeCards.forEach(type => {
+      if (type.searchKeyword) coveredSet.add(type.searchKeyword.toLowerCase().replace(/s$/, ''));
+      if (type.name) coveredSet.add(type.name.toLowerCase().replace(/s$/, ''));
+    });
+    const coveredKeywords = [...coveredSet];
+
+    // Check if a base name is already covered by an existing card
+    const isCovered = (baseName) => {
+      const bn = baseName.toLowerCase().replace(/s$/, '');
+      return coveredKeywords.some(kw => bn.includes(kw) || kw.includes(bn));
+    };
+
+    // Group sheet products by category → base product type
+    const categoryMap = {};
+    sheetProducts.forEach(product => {
+      const cat = (product.category || '').trim();
+      if (!cat || !product.name) return;
+
+      const baseName = getBaseType(product.name);
+      if (!baseName || isCovered(baseName)) return;
+
+      if (!categoryMap[cat]) categoryMap[cat] = {};
+      const baseKey = baseName.toLowerCase();
+      if (!categoryMap[cat][baseKey]) {
+        categoryMap[cat][baseKey] = {
+          name: baseName,
+          image: product.image || null,
+          count: 0,
+          searchKeyword: baseName,
+        };
+      }
+      categoryMap[cat][baseKey].count++;
+      // Use the first product with a valid image
+      if (!categoryMap[cat][baseKey].image && product.image) {
+        categoryMap[cat][baseKey].image = product.image;
+      }
+    });
+
+    // Build sections: one per unique category, each with cards for product types
+    return Object.entries(categoryMap)
+      .map(([categoryName, typeMap]) => ({
+        title: categoryName,
+        items: Object.values(typeMap).filter(item => item.image),
+      }))
+      .filter(section => section.items.length > 0);
+  }, [sheetProducts, categoryBrowseData, productTypeCards]);
+
   // Refs for category scroll containers
   const categoryScrollRefs = useRef({});
 
@@ -907,6 +977,49 @@ const Products = () => {
           </LazySection>
           );
         })}
+
+        {/* ═══════════════ DYNAMIC CATEGORIES FROM API ═══════════════ */}
+        {!isSearchActive && sortBy === "featured" && dynamicCategoryData.length > 0 && dynamicCategoryData.map((category, catIdx) => (
+          <LazySection key={`lazy-dyn-${catIdx}`}>
+            <section className="w-full max-w-10xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+              {/* Category Header - matches existing style */}
+              <header className="flex items-center my-10">
+                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
+                <h2 className="mx-4 text-gray-800 font-semibold lg:text-xl">
+                  {category.title}
+                </h2>
+                <div className="flex-grow border-t-2 border-gray-300" aria-hidden="true"></div>
+              </header>
+
+              {/* Dynamic Category Grid */}
+              <ul className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-8" role="list">
+                {category.items.map((item, itemIdx) => (
+                  <li key={itemIdx} className="w-full flex">
+                    <button
+                      onClick={() => handleCategoryClick(item.searchKeyword || item.name)}
+                      className="group w-full rounded-2xl overflow-hidden bg-white shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 flex flex-col h-full"
+                    >
+                      <div className="relative overflow-hidden w-full aspect-square">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                      </div>
+                      <div className="p-3 sm:p-4 text-center mt-auto">
+                        <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-800 group-hover:text-orange-600 transition-colors truncate">
+                          {item.name}
+                        </p>
+                      </div>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          </LazySection>
+        ))}
 
         {/* ═══════════════ ALL PRODUCTS (SORTED) ═══════════════ */}
         {!isSearchActive && sortBy !== "featured" && (
