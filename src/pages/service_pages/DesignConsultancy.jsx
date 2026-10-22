@@ -9,6 +9,7 @@ import brandSystemImg from "../../assets/design_consultancy/brand_system.png";
 import serviceBgProductDesign from "../../assets/service-bg-product-design.jpg";
 import serviceBgBranding from "../../assets/service-bg-branding.jpg";
 import serviceBgCorporateGifting from "../../assets/service-bg-corporate-gifting.png";
+import packagingImg from "../../assets/bulkorder-page/Story/Gemini_Generated_Image_cap0omcap0omcap0.png";
 
 import brandIdentity from "../../assets/design_consultancy/brand_identity_design/Thumbnail.jpg";
 import brandManual from "../../assets/design_consultancy/brand_manual_design/Thumbnail.png";
@@ -79,46 +80,49 @@ const DesignConsultancy = () => {
   /* ── Service categories (same as Home page) ── */
   const serviceCategories = [
     {
-      title: "Product Design",
+      title: "Visual Identity",
       items: [
-        "3D Prototyping & Printing",
-        "Packaging Design",
-        "Custom Product Development",
-        "Manufacturing Support",
-        "Product Visualization",
+        "Branding",
+        "Logos",
+        "Typography",
+        "Visual Systems",
+        "Print & Manufacturing",
       ],
       link: "#",
       external: true,
       accentColor: "#f47e82",
-      bgImage: serviceBgProductDesign,
+      bgImage: serviceBgBranding,
+      coverFit: true,
+      imgScale: 'scale-110',
     },
     {
-      title: "Branding & Digital Design",
+      title: "Digital Experiences",
       items: [
-        "Brand Identity Design",
-        "Graphic Design",
-        "Website Design",
-        "UI/UX Design",
-        "Marketing Collateral",
-        "Social Media Creatives",
+        "Websites",
+        "UI/UX",
+        "Campaigns",
+        "Social",
       ],
       link: "/design-consultancy",
       external: false,
       accentColor: "#f47e82",
-      bgImage: serviceBgBranding,
+      bgImage: websiteUiux,
+      coverFit: true,
+      imgScale: 'scale-110',
     },
     {
-      title: "Corporate Gifting",
+      title: "Packaging Design",
       items: [
-        "Innovative Product Range",
-        "Promotional Merchandise",
-        "Custom Branded Products",
-        "Bulk Production & Fulfillment",
+        "Concepts",
+        "Labels",
+        "Print",
+        "Custom Packaging",
+        "Production",
       ],
       link: "/bulkorder",
       external: false,
       accentColor: "#f47e82",
-      bgImage: serviceBgCorporateGifting,
+      bgImage: packagingImg,
     },
   ];
 
@@ -868,9 +872,7 @@ const DesignConsultancy = () => {
                   aria-hidden="true"
                 />
               </h2>
-              <p className="text-gray-700 text-xl sm:text-2xl font-medium mt-7 max-w-3xl mx-auto leading-relaxed">
-                We provide end-to-end product design, prototyping, sourcing, manufacturing, and branding solutions for startups, SMEs, and enterprises.
-              </p>
+
             </header>
 
             {/* Service Cards Grid */}
@@ -893,11 +895,11 @@ const DesignConsultancy = () => {
                   >
                     {/* Photo container */}
                     {cat.bgImage && (
-                      <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-gradient-to-b from-gray-50 to-white flex-shrink-0 border-b border-gray-100 flex items-center justify-center p-2">
+                      <div className="relative w-full h-[280px] sm:h-[320px] overflow-hidden bg-gradient-to-b from-gray-50 to-white flex-shrink-0 border-b border-gray-100 flex items-center justify-center p-2">
                         <img
                           src={cat.bgImage}
                           alt={cat.title}
-                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
+                          className={`w-full h-full ${cat.coverFit ? `object-cover ${cat.imgScale || 'scale-100'}` : 'object-contain'} group-hover:scale-${cat.coverFit ? '[1.05]' : '105'} transition-transform duration-700 ease-out`}
                           loading="lazy"
                         />
                         <div className="absolute top-3 right-4 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-gray-800 text-[11px] font-black tracking-widest uppercase shadow-sm border border-gray-200/70">
