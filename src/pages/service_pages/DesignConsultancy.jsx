@@ -20,6 +20,7 @@ import socialMedia from "../../assets/design_consultancy/Social_Media/Thumbnail.
 import digitalPainting from "../../assets/design_consultancy/Digital_painting/Thumbnail.jpg";
 import websiteUiux from "../../assets/design_consultancy/Website_UiUx_design/Thambnail.png";
 import bookMagazine from "../../assets/design_consultancy/Book_magazine_zinedesign/Thumbnail.png";
+import packageDesignThumb from "../../assets/design_consultancy/Package_design/Thumbnail.jpg";
 
 // Component imports for the modal
 import BrandIdentityDesign from "./design_consultancy_pages/BrandIdentityDesign";
@@ -27,6 +28,7 @@ import BrandCampaignsDesign from "./design_consultancy_pages/BrandCampaignsDesig
 import BrandManualDesign from "./design_consultancy_pages/BrandManualDesign";
 import WebsiteUiUxDesign from "./design_consultancy_pages/WebsiteUiUxDesign";
 import BookMagazineZineDesign from "./design_consultancy_pages/BookMagazineZineDesign";
+import PackageDesign from "./design_consultancy_pages/PackageDesign";
 import BusinessCollateralDesign from "./design_consultancy_pages/BusinessCollateralDesign";
 import DigitalIllustrationDesign from "./design_consultancy_pages/DigitalIllustrationDesign";
 import SocialMediaDesign from "./design_consultancy_pages/SocialMediaDesign";
@@ -67,7 +69,7 @@ const DesignConsultancy = () => {
     { title: "BRAND\nCampaign\nDESIGN", img: brandCampaigns, link: "/design-consultancy/brand-campaigns-design", component: BrandCampaignsDesign },
     { title: "BRAND\nManual\nDESIGN", img: brandManual, link: "/design-consultancy/brand-manual-design", component: BrandManualDesign },
     { title: "Website\nUI/UX\nDESIGN", img: websiteUiux, link: "/design-consultancy/website-uiux-design", component: WebsiteUiUxDesign },
-    { title: "Packaging\nDESIGN", img: bookMagazine, link: "/design-consultancy/book-magazine-zine-design", component: BookMagazineZineDesign },
+    { title: "Packaging\nDESIGN", img: packageDesignThumb, link: "/design-consultancy/package-design", component: PackageDesign },
     { title: "Business\nCollateral\nDESIGN", img: businessCollateral, link: "/design-consultancy/business-collateral-design", component: BusinessCollateralDesign },
     { title: "Digital\nIllustrations", img: digitalIllustration, link: "/design-consultancy/digital-illustration-design", component: DigitalIllustrationDesign },
     { title: "Social\nMedia\nDESIGN", img: socialMedia, link: "/design-consultancy/social-media-design", component: SocialMediaDesign },
@@ -122,7 +124,7 @@ const DesignConsultancy = () => {
       link: "/bulkorder",
       external: false,
       accentColor: "#f47e82",
-      bgImage: packagingImg,
+      bgImage: packageDesignThumb,
     },
   ];
 
@@ -805,6 +807,12 @@ const DesignConsultancy = () => {
           .dc-startup-title {
             font-size: 1.5rem !important;
           }
+
+          /* Category tags — prevent touching edges */
+          .dc-cat-tags-row {
+            font-size: 0.6rem !important;
+            letter-spacing: 0.3px !important;
+          }
         }
       `}</style>
 
@@ -825,7 +833,7 @@ const DesignConsultancy = () => {
           </div>
 
           <div className="text-center mb-7 dc-stagger-2">
-            <p style={{ color: "#f47e82", fontSize: "clamp(0.75rem, 2vw, 1.05rem)", fontWeight: 500, letterSpacing: "1px", margin: 0, display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "2px 0" }}>
+            <p className="dc-cat-tags-row" style={{ color: "#f47e82", fontSize: "clamp(0.75rem, 2vw, 1.05rem)", fontWeight: 500, letterSpacing: "1px", margin: 0, display: "flex", flexWrap: "wrap", justifyContent: "center", alignItems: "center", gap: "2px 0" }}>
               {categories.map((cat, i) => (
                 <span key={cat} style={{ whiteSpace: "nowrap" }}>
                   <span className="dc-cat-tag" style={{ color: "#f47e82" }}>{cat}</span>
