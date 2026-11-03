@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { ChevronDown, MessageSquare, PenTool, RefreshCw, CheckCircle, X } from "lucide-react";
 import { validateName, validateEmail, validatePhoneOptional, validateRequired } from "../../utils/validators";
+import { submitConsultancyEnquiry } from "../../services/googleSheetsAPI.js";
 import startupQuestionImg from "../../assets/design_consultancy/startup_question.png";
 import designIdeationImg from "../../assets/design_consultancy/design_ideation.png";
 import brandSystemImg from "../../assets/design_consultancy/brand_system.png";
@@ -57,6 +58,7 @@ const DesignConsultancy = () => {
 
   /* ── Consult form modal ── */
   const [openConsultForm, setOpenConsultForm] = useState(false);
+  const [isSubmittingConsult, setIsSubmittingConsult] = useState(false);
   const [consultForm, setConsultForm] = useState({ name: "", email: "", phone: "", location: "", message: "" });
   const [consultErrors, setConsultErrors] = useState({});
 
@@ -892,14 +894,7 @@ const DesignConsultancy = () => {
                   style={{ opacity: servicesVisible ? 1 : 0, transform: servicesVisible ? 'translateY(0)' : 'translateY(30px)', transition: `opacity 0.8s ${idx * 0.15}s ease, transform 0.8s ${idx * 0.15}s ease` }}
                 >
                   <div
-                    onClick={() => {
-                      if (cat.external) {
-                        window.open(cat.link, "_blank", "noopener,noreferrer");
-                      } else {
-                        navigate(cat.link);
-                      }
-                    }}
-                    className="bg-white rounded-[2rem] h-full flex flex-col overflow-hidden shadow-[0_4px_25px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_45px_-10px_rgba(0,0,0,0.18)] transition-all duration-500 hover:-translate-y-2 border border-gray-100/80 cursor-pointer"
+                    className="bg-white rounded-[2rem] h-full flex flex-col overflow-hidden shadow-[0_4px_25px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_15px_45px_-10px_rgba(0,0,0,0.18)] transition-all duration-500 hover:-translate-y-2 border border-gray-100/80 cursor-default"
                   >
                     {/* Photo container */}
                     {cat.bgImage && (
@@ -1247,7 +1242,7 @@ const DesignConsultancy = () => {
 
             <div style={{ overflowY: "auto", padding: "24px" }}>
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
                   const nameResult = validateName(consultForm.name);
                   const emailResult = validateEmail(consultForm.email);
@@ -1264,10 +1259,27 @@ const DesignConsultancy = () => {
 
                   if (!nameResult.valid || !emailResult.valid || !phoneResult.valid || !locationResult.valid) return;
 
-                  alert("Consultation request submitted successfully!");
-                  setConsultForm({ name: "", email: "", phone: "", location: "", message: "" });
-                  setConsultErrors({});
-                  setOpenConsultForm(false);
+                  try {
+                    setIsSubmittingConsult(true);
+                    await submitConsultancyEnquiry({
+                      name: consultForm.name,
+                      email: consultForm.email,
+                      phone: consultForm.phone,
+                      location: consultForm.location,
+                      message: consultForm.message,
+                      source: "Design Consultancy Page"
+                    });
+  
+                    setConsultForm({ name: "", email: "", phone: "", location: "", message: "" });
+                    setConsultErrors({});
+                    setOpenConsultForm(false);
+                    navigate("/consultancy-confirmation");
+                  } catch (err) {
+                    console.error("Failed to submit consultation enquiry:", err);
+                    alert("Failed to submit request. Please try again.");
+                  } finally {
+                    setIsSubmittingConsult(false);
+                  }
                 }}
                 style={{ display: "flex", flexDirection: "column", gap: 18 }}
               >
@@ -1430,11 +1442,12 @@ const DesignConsultancy = () => {
       {/* ═══════════════ CTA Bottom Bar ═══════════════ */}
       <div className="pb-20 sm:pb-32"></div>
       <div className="fixed bottom-0 left-0 w-full z-50 py-1.5 sm:py-3 bg-white/60 backdrop-blur-lg border-t border-gray-200/50 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] flex justify-center px-3 sm:px-4">
-        <Link 
-          to="/ContactUs"
-          className="bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-sm md:text-base px-10 sm:px-14 py-2.5 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(220,38,38,0.5)] hover:shadow-[0_15px_30px_rgba(220,38,38,0.7)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border-2 border-white/20">
+        <button 
+          type="button"
+          onClick={() => setOpenConsultForm(true)}
+          className="bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-sm md:text-base px-10 sm:px-14 py-2.5 sm:py-4 rounded-full shadow-[0_10px_25px_rgba(220,38,38,0.5)] hover:shadow-[0_15px_30px_rgba(220,38,38,0.7)] transition-all duration-300 hover:scale-105 tracking-wide whitespace-nowrap border-2 border-white/20 cursor-pointer">
           CONSULT NOW
-        </Link>
+        </button>
       </div>
       {/* ═══════════════ Lightbox Modal ═══════════════ */}
       <div 

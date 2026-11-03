@@ -22,6 +22,8 @@ import CancellationRefundPolicy from "./footer_pages/Cancellation-Refund.jsx";
 import WhatsAppButton from "./components/whatsapp.jsx";
 import ScrollToTop from "./components/ScrollToTop";
 import ThankYou from "./pages/ThankYou";
+import BulkOrderConfirmation from "./pages/BulkOrderConfirmation";
+import ConsultancyConfirmation from "./pages/ConsultancyConfirmation";
 import EnquiryModal from "./components/EnquiryModal";
 import DesignConsultancy from "./pages/service_pages/DesignConsultancy.jsx";
 import BrandIdentityDesign from "./pages/service_pages/design_consultancy_pages/BrandIdentityDesign";
@@ -110,6 +112,8 @@ function App() {
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/thank-you" element={<ThankYou />} />
+            <Route path="/bulk-order-confirmation" element={<BulkOrderConfirmation />} />
+            <Route path="/consultancy-confirmation" element={<ConsultancyConfirmation />} />
             <Route path="/order-success" element={<OrderSuccess />} />
 
             {/* Admin/Grid Pages */}

@@ -26,7 +26,7 @@ const DIST_DIR = path.join(__dirname, 'dist');
 const BASE_URL = 'https://www.triovation.com';
 
 // Google Sheets API endpoint (same one used by the frontend)
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWRo8Fr7j9Kk9tfDVYs0s9I2tJnQmXzdmRrwHvp0zSvxyKZxtXhyMuquHhODy-pOIl/exec';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycD8ax_4y5tOSwh7X-c7Me4Md17BDNovD5mSqz6ZlqVesMOuwMzkwQZls2_JeydJql/exec';
 
 // ──────────── Route → SEO Meta Mapping (Static Pages) ────────────
 const ROUTES = [

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { submitBulkOrderEnquiry } from "../services/googleSheetsAPI.js";
 import { useProductManager } from "../hooks/useProductManager.jsx";
 import { validateName, validatePhone, validateEmailOptional, validateEmail, validatePhoneOptional, validateRequired } from "../utils/validators";
 import useDocumentMeta from "../hooks/useDocumentMeta.js";
@@ -178,6 +179,7 @@ const bulkCategoryNames = [
 ];
 
 const BulkOrder = () => {
+  const navigate = useNavigate();
   const { products: sheetProducts, loading } = useProductManager();
 
   // ──────────── Page-level SEO ────────────
@@ -232,6 +234,7 @@ const BulkOrder = () => {
 
   /* ── Quote form modal ── */
   const [openQuoteForm, setOpenQuoteForm] = useState(false);
+  const [isSubmittingQuote, setIsSubmittingQuote] = useState(false);
   const [quoteForm, setQuoteForm] = useState({ name: "", email: "", phone: "", location: "", message: "" });
   const [quoteErrors, setQuoteErrors] = useState({});
 
@@ -841,7 +844,7 @@ const BulkOrder = () => {
 
             <div className="overflow-y-auto px-6 py-6">
               <form
-                onSubmit={(e) => {
+                onSubmit={async (e) => {
                   e.preventDefault();
                   const nameResult = validateName(quoteForm.name);
                   const emailResult = validateEmail(quoteForm.email);
@@ -858,11 +861,26 @@ const BulkOrder = () => {
                   
                   if (!nameResult.valid || !emailResult.valid || !phoneResult.valid || !locationResult.valid) return;
                   
-                  // Form is valid - in a real app you'd send data to backend here
-                  alert("Quote request submitted successfully!");
-                  setQuoteForm({ name: "", email: "", phone: "", location: "", message: "" });
-                  setQuoteErrors({});
-                  setOpenQuoteForm(false);
+                  try {
+                    setIsSubmittingQuote(true);
+                    await submitBulkOrderEnquiry({
+                      name: quoteForm.name,
+                      email: quoteForm.email,
+                      phone: quoteForm.phone,
+                      location: quoteForm.location,
+                      message: quoteForm.message,
+                      source: "Bulk Order Page"
+                    });
+                    setQuoteForm({ name: "", email: "", phone: "", location: "", message: "" });
+                    setQuoteErrors({});
+                    setOpenQuoteForm(false);
+                    navigate("/bulk-order-confirmation");
+                  } catch (err) {
+                    console.error("Failed to submit bulk order enquiry:", err);
+                    alert("Failed to submit enquiry. Please try again.");
+                  } finally {
+                    setIsSubmittingQuote(false);
+                  }
                 }}
                 className="space-y-5"
               >
@@ -948,9 +966,10 @@ const BulkOrder = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:opacity-90 active:scale-95 transition"
+                    disabled={isSubmittingQuote}
+                    className="px-6 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:opacity-90 active:scale-95 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Submit Request
+                    {isSubmittingQuote ? "Submitting..." : "Submit Request"}
                   </button>
                 </div>
               </form>

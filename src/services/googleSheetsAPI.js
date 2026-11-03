@@ -1,6 +1,6 @@
 // src/services/googleSheetsAPI.js
 
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWRo8Fr7j9Kk9tfDVYs0s9I2tJnQmXzdmRrwHvp0zSvxyKZxtXhyMuquHhODy-pOIl/exec';
+export const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycD8ax_4y5tOSwh7X-c7Me4Md17BDNovD5mSqz6ZlqVesMOuwMzkwQZls2_JeydJql/exec';
 
 // Enhanced getAllProducts function with sorting
 export const getAllProducts = async (sortBy = 'featured') => {
@@ -103,7 +103,7 @@ class GoogleSheetsAPI {
 
     while (this.requestQueue.length > 0) {
       const { requestFn, resolve, reject } = this.requestQueue.shift();
-      
+
       try {
         const result = await requestFn();
         resolve(result);
@@ -134,7 +134,7 @@ class GoogleSheetsAPI {
   async makeGetRequest(action, params = {}) {
     return this.queueRequest(async () => {
       let lastError;
-      
+
       for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
         try {
           const url = this.buildURL(action, params);
@@ -168,7 +168,7 @@ class GoogleSheetsAPI {
         } catch (error) {
           lastError = error;
           console.warn(`❌ Attempt ${attempt} failed for ${action}:`, error.message);
-          
+
           if (attempt < this.maxRetries) {
             await new Promise(resolve => setTimeout(resolve, this.retryDelay * attempt));
           }
@@ -188,7 +188,7 @@ class GoogleSheetsAPI {
   async makePostRequest(action, data = {}) {
     return this.queueRequest(async () => {
       let lastError;
-      
+
       for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
         try {
           console.log(`🌐 Making POST request (attempt ${attempt}): ${action}`, data);
@@ -219,7 +219,7 @@ class GoogleSheetsAPI {
         } catch (error) {
           lastError = error;
           console.warn(`❌ Attempt ${attempt} failed for ${action}:`, error.message);
-          
+
           if (attempt < this.maxRetries) {
             await new Promise(resolve => setTimeout(resolve, this.retryDelay * attempt));
           }
@@ -285,5 +285,65 @@ class GoogleSheetsAPI {
     return await this.makeGetRequest('test');
   }
 }
+
+// ─── Enquiry Submission Helpers ─────────────────────────────
+export const submitBulkOrderEnquiry = async (formData) => {
+  const payload = {
+    action: 'submitBulkOrder',
+    formType: 'bulk-order',
+    name: formData.name || '',
+    email: formData.email || '',
+    phone: formData.phone || '',
+    location: formData.location || '',
+    message: formData.message || '',
+    source: formData.source || 'Bulk Order Page'
+  };
+
+  return await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+};
+
+export const submitConsultancyEnquiry = async (formData) => {
+  const payload = {
+    action: 'submitConsultancy',
+    formType: 'design-consultancy',
+    name: formData.name || '',
+    email: formData.email || '',
+    phone: formData.phone || '',
+    location: formData.location || '',
+    message: formData.message || '',
+    source: formData.source || 'Design Consultancy Page'
+  };
+
+  return await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+};
+
+export const submitGeneralEnquiry = async (formData) => {
+  const payload = {
+    action: 'submitEnquiry',
+    formType: 'general-enquiry',
+    name: formData.name || '',
+    email: formData.email || '',
+    phone: formData.phone || '',
+    message: formData.message || '',
+    source: formData.source || 'Website Contact Form'
+  };
+
+  return await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  });
+};
 
 export default GoogleSheetsAPI;

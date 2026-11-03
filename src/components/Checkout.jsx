@@ -8,7 +8,7 @@ const Checkout = () => {
   const navigate = useNavigate();
 
   // 🔥 ADD YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
-  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzWRo8Fr7j9Kk9tfDVYs0s9I2tJnQmXzdmRrwHvp0zSvxyKZxtXhyMuquHhODy-pOIl/exec';
+  const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbycD8ax_4y5tOSwh7X-c7Me4Md17BDNovD5mSqz6ZlqVesMOuwMzkwQZls2_JeydJql/exec';
   // Example: 'https://script.google.com/macros/s/AKfycby.../exec'
 
   // Scroll to top when page loads
