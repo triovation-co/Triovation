@@ -315,12 +315,12 @@ const BulkOrder = () => {
               <p className="text-gray-800 text-sm font-semibold leading-relaxed mb-4 sm:mb-6 max-w-[280px] mx-auto flex-grow">
                 Need something unique? We're not limited to the catalogue. For customized gifting solutions
               </p>
-              <Link
-                to="/ContactUs"
-                className="mt-auto inline-block bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
+              <button
+                onClick={() => setOpenQuoteForm(true)}
+                className="mt-auto bg-gradient-to-r from-[#f47e82] to-[#fca5a5] hover:from-[#e05a5e] hover:to-[#f47e82] text-white text-sm font-medium px-8 py-2.5 rounded-full transition-all duration-200 hover:shadow-lg"
               >
                 Consult Now
-              </Link>
+              </button>
             </div>
 
             {/* Feature 3 */}
